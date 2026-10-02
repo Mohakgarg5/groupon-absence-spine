@@ -63,11 +63,13 @@ export function packIds(): string[] {
   return [...new Set(allPacks().map((p) => p.id))];
 }
 
+/** Every distinct rule in a pack (a rule shared by two buckets is counted once). */
 export function walkRules(p: Pack): RuleRef[] {
   const out: RuleRef[] = [];
+  const seen = new Set<string>();
   const visit = (o: any) => {
     if (!o || typeof o !== 'object') return;
-    if ('ruleId' in o && 'citation' in o) out.push(o);
+    if ('ruleId' in o && 'citation' in o && !seen.has(o.ruleId)) { seen.add(o.ruleId); out.push(o); }
     for (const v of Object.values(o)) visit(v);
   };
   visit(p);
