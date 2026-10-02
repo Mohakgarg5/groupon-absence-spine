@@ -10,7 +10,7 @@ Every rule in the engine carries one of three tags. None is yet "verified agains
 
 The 2026 rule packs contain **71 distinct rules: 21 checked against a source, 35 public but not yet checked, and 15 assumptions**. The **Rule packs** page shows the split per entity.
 
-**The German pilot pack: 8 of its 12 rules are now checked against the primary text.** That covers BUrlG §§3, 4, 5, 7(3), 7(4) and 9 on gesetze-im-internet.de, SGB IX §208, CJEU C-684/16 via the EU Fundamental Rights Agency's case summary, and Berlin's 8 March holiday. The remaining 4 are company-policy assumptions (24/31 Dec, automatic carry-over, contractual surplus, work location) plus the weekend-holiday rule. "Checked" means I read the text. It does not replace counsel's sign-off, which is still the first gate below.
+**The German pilot pack: 8 of its 12 rules are now checked against the primary text.** That covers BUrlG §§3, 4, 5, 7(3), 7(4) and 9 on gesetze-im-internet.de, SGB IX §208, CJEU C-684/16 via the EU Fundamental Rights Agency's case summary, and Berlin's 8 March holiday. The remaining 4 are three company-policy assumptions (work location, 24/31 December, contractual surplus days) and the rule that a weekend holiday gives no substitute day. Automatic carry-over to 31 March is also still an assumption, recorded on the otherwise-verified carry-over rule. "Checked" means I read the text. It does not replace counsel's sign-off, which is still the first gate below.
 
 The Chicago pack looks better (9 of 16 checked), but most of those checks rely on law-firm summaries, because chicago.gov blocked automated access.
 
