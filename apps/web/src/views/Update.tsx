@@ -12,7 +12,7 @@ export function Update() {
   const steps = [
     { label: '2027 holiday calendar loaded from the official source', done: next.holidays.loaded },
     { label: 'Rule changes reviewed against new legislation', done: imp.diff.ruleChanges.length === 0 ? 'none found' : false },
-    { label: `Seniority thresholds crossed: ${imp.seniorityCrossings.length}`, done: true },
+    { label: `Seniority thresholds crossed in 2027: ${imp.seniorityCrossings.length}, each topped up automatically`, done: 'listed' },
     { label: `Legal sign-off: ${next.owner.role}`, done: next.owner.signOff.status === 'signed' },
   ];
 

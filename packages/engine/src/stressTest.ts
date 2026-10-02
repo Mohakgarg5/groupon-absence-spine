@@ -117,7 +117,13 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
         verdict: over > 0 ? 'overspend' : 'ok', delta: over > 0 ? over : r1(globalDays - local),
         ...(over > 0 ? { rule: entRule } : {}),
       });
-      push({ dimension: 'seniority', global: 'Tenure bonus', local: plSen ? `Statutory seniority ${r1(plSen.years)} y (< threshold)` : 'No statutory seniority', verdict: 'ok' });
+      push({
+        dimension: 'seniority', global: `${globalDays} days (Groupon tenure ${r1(tenure)} y)`,
+        local: !plSen ? 'No statutory seniority' : plOver
+          ? `Statutory seniority ${r1(plSen.years)} y → ${local} days; the tenure bonus happens to cover it`
+          : `Statutory seniority ${r1(plSen.years)} y, under the ${pack.buckets[0].entitlement.params.thresholdYears}-year step`,
+        verdict: 'ok',
+      });
     }
 
     // Carry-over probe: 5 days unused on 31 Dec, no written warning sent.

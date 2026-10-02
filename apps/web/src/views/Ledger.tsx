@@ -23,7 +23,7 @@ export function LedgerView() {
   const hasNotice = pack.buckets.some((b) => b.carryOver.conditionalOnNotice);
 
   const events = (ledger?.events ?? []).filter((x) => bucket === 'all' || x.bucket === bucket);
-  const years = [...new Set(events.map((x) => x.leaveYear))].sort();
+  const years = [...new Set(events.map((x) => Number(x.date.slice(0, 4))))].sort();
   const multi = ledger && Object.keys(ledger.balances).length > 1;
 
   return (
@@ -98,9 +98,9 @@ export function LedgerView() {
                 {events.length === 0 && <p className="muted">No events in this window.</p>}
                 {years.map((y) => (
                   <div key={y}>
-                    <div className="tl-year">Leave year {y}<span className="muted small">{y === 2025 ? 'carried in from the legacy system' : ''}</span></div>
+                    <div className="tl-year">{y}</div>
                     <ul className="tl">
-                      {events.filter((x) => x.leaveYear === y).map((ev) => <Row key={ev.id} ev={ev} open={open === ev.id} onToggle={() => setOpen(open === ev.id ? null : ev.id)} showBucket={!!multi} />)}
+                      {events.filter((x) => x.date.startsWith(String(y))).map((ev) => <Row key={ev.id} ev={ev} open={open === ev.id} onToggle={() => setOpen(open === ev.id ? null : ev.id)} showBucket={!!multi} />)}
                     </ul>
                   </div>
                 ))}
@@ -118,7 +118,11 @@ function Row({ ev, open, onToggle, showBucket }: { ev: LedgerEvent; open: boolea
     <li>
       <button className={`tl-row ${ev.projected ? 'projected' : ''}`} aria-expanded={open} onClick={onToggle}>
         <span className="tl-date">{fmtDate(ev.date)}</span>
-        <span><span className={`evt evt-${ev.type}`}>{TYPE_LABEL[ev.type]}</span>{showBucket && <span className="muted small"> {ev.bucket}</span>}</span>
+        <span>
+          <span className={`evt evt-${ev.type}`}>{TYPE_LABEL[ev.type]}</span>
+          {showBucket && <span className="muted small"> {ev.bucket}</span>}
+          {ev.leaveYear !== Number(ev.date.slice(0, 4)) && <span className="muted small" style={{ display: 'block' }}>{ev.leaveYear} leave</span>}
+        </span>
         <span className="tl-amt"><Amount n={ev.amount} unit={ev.unit} /></span>
         <span className="small">{ev.explanation}</span>
         <span className="tl-bal" title="Balance after this event">{ev.balanceAfter !== undefined ? fmt(ev.balanceAfter) : ''}</span>

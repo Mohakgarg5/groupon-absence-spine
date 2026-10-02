@@ -18,7 +18,8 @@ export function Unify() {
   const { state, dispatch } = useApp();
   const res = useMemo(() => runStressTest(people, state.inputs), [state.rev]);
   const [cell, setCell] = useState<{ ent: string; dim: Dimension }>({ ent: 'PL', dim: 'seniority' });
-  const rows = res.rows.filter((r) => r.packId === cell.ent && r.dimension === cell.dim);
+  const ORDER = { breach: 0, overspend: 1, review: 2, ok: 3 } as const;
+  const rows = res.rows.filter((r) => r.packId === cell.ent && r.dimension === cell.dim).sort((a, b) => ORDER[a.verdict] - ORDER[b.verdict]);
   const dimInfo = DIMS.find((d) => d.id === cell.dim)!;
 
   return (

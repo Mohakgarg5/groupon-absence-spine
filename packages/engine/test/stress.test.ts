@@ -81,3 +81,11 @@ describe('annual update', () => {
     expect(diffPacks(a, b).ruleChanges).toEqual([expect.objectContaining({ path: 'buckets.annual.carryOver.max', from: 5, to: 3 })]);
   });
 });
+
+test('a PL employee over the threshold who is still covered is described correctly', () => {
+  const res = runStressTest(employees, scenario.inputs, NAIVE_GLOBAL);
+  const ewa = res.rows.find((r) => r.employeeId === 'pl-ewa' && r.dimension === 'seniority')!;
+  expect(ewa.verdict).toBe('ok');
+  expect(ewa.local).not.toMatch(/< threshold/);
+  expect(ewa.local).toMatch(/26 days/);
+});
