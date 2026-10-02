@@ -4,3 +4,5 @@ dist
 *.log
 .superpowers
 .playwright-mcp
+test-results
+playwright-report

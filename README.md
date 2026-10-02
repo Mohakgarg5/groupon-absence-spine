@@ -18,6 +18,7 @@ npm install
 npm run dev        # web app on http://localhost:5173
 npm run demo       # the whole case in the terminal, about 1 minute to read
 npm test           # 112 engine tests, one or more per legal rule
+npm run test:e2e   # 11 browser tests of the web app (downloads Chromium on first run)
 npm run build      # typecheck everything and build the web app
 ```
 
@@ -64,6 +65,7 @@ packages/engine/            pure TypeScript; no runtime dependencies
   src/diff.ts               annual update: holiday moves, rule changes, seniority crossings, HR tasks
   src/data/                 30 fictional employees plus a scenario (today = 2 Oct 2026)
   test/                     112 tests
+e2e/                        11 Playwright browser tests (no console errors allowed, 400px layout checked)
 apps/web/                   Vite + React UI, imports the engine directly
 cli/demo.ts                 terminal walkthrough
 docs/research/              raw research notes, including what was and wasn't verified
