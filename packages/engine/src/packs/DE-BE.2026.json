@@ -30,8 +30,9 @@
     "rule": {
       "ruleId": "de-counting",
       "citation": "BUrlG §3(2): Werktage exclude Sundays and statutory public holidays — holidays inside leave are not deducted",
-      "verification": "public-unverified",
-      "url": "https://www.gesetze-im-internet.de/burlg/"
+      "verification": "public-verified",
+      "url": "https://www.gesetze-im-internet.de/burlg/__3.html",
+      "note": "Text checked 2026-10-02. Converting Werktage to a 5-day week (24 × 5 ÷ 6 = 20) is settled BAG case law rather than statute text."
     }
   },
   "holidays": {
@@ -39,9 +40,9 @@
     "source": {
       "ruleId": "de-holidays",
       "citation": "Berliner Gesetz über die Sonn- und Feiertage (Feiertagsgesetz) incl. Frauentag since 2019",
-      "verification": "public-unverified",
-      "url": "https://gesetze.berlin.de/",
-      "note": "Easter-derived dates cross-checked by computus in tests."
+      "verification": "public-verified",
+      "url": "https://www.deutsche-rentenversicherung.de/DRV/DE/Ueber-uns-und-Presse/Presse/Meldungen/2024/240306_frauentag_feiertag_frei",
+      "note": "Frauentag (8 March) confirmed as a Berlin statutory holiday since 2019 (Deutsche Rentenversicherung); Easter-derived dates cross-checked by computus in tests. gesetze.berlin.de was unreachable."
     },
     "dates": [
       {
@@ -113,8 +114,9 @@
         "rule": {
           "ruleId": "de-entitlement",
           "citation": "BUrlG §3(1): at least 24 Werktage per year; converted to the employee's pattern as 24 × days-per-week ÷ 6",
-          "verification": "public-unverified",
-          "url": "https://www.gesetze-im-internet.de/burlg/"
+          "verification": "public-verified",
+          "url": "https://www.gesetze-im-internet.de/burlg/__3.html",
+          "note": "§3: \"Der Urlaub beträgt jährlich mindestens 24 Werktage.\" Checked 2026-10-02."
         }
       },
       "accrual": {
@@ -125,8 +127,9 @@
         "rule": {
           "ruleId": "de-accrual",
           "citation": "BUrlG §4 (full entitlement after 6-month waiting period) and §5 (1/12 per full month in partial years; fractions ≥ ½ day round up)",
-          "verification": "public-unverified",
-          "url": "https://www.gesetze-im-internet.de/burlg/"
+          "verification": "public-verified",
+          "url": "https://www.gesetze-im-internet.de/burlg/__5.html",
+          "note": "§4 (6-month Wartezeit) and §5 (1/12 per full month; fractions ≥ ½ day rounded up) checked 2026-10-02."
         }
       },
       "carryOver": {
@@ -136,9 +139,9 @@
         "rule": {
           "ruleId": "de-carry",
           "citation": "BUrlG §7(3): carry-over to 31 March; lapse only if the employer informed and invited the employee to take leave (CJEU C-684/16 Max-Planck, BAG 9 AZR 423/16)",
-          "verification": "public-unverified",
-          "url": "https://curia.europa.eu/juris/liste.jsf?num=C-684/16",
-          "note": "Assumes Groupon GmbH carries over automatically; statute requires urgent operational/personal reasons."
+          "verification": "public-verified",
+          "url": "https://www.gesetze-im-internet.de/burlg/__7.html",
+          "note": "§7(3) text checked (transfer only for urgent reasons; must be taken in the first three months of the next year). CJEU C-684/16 (6 Nov 2018, ECLI:EU:C:2018:874): leave is not lost unless the employer shows it exercised all due diligence to enable the worker to take it. Automatic carry-over at Groupon GmbH remains an assumption."
         }
       },
       "sickDuringLeave": {
@@ -146,8 +149,9 @@
         "rule": {
           "ruleId": "de-sick",
           "citation": "BUrlG §9: days of incapacity proven by medical certificate are not counted as leave",
-          "verification": "public-unverified",
-          "url": "https://www.gesetze-im-internet.de/burlg/"
+          "verification": "public-verified",
+          "url": "https://www.gesetze-im-internet.de/burlg/__9.html",
+          "note": "§9 checked 2026-10-02."
         }
       },
       "payoutOnTermination": {
@@ -155,8 +159,9 @@
         "rule": {
           "ruleId": "de-payout",
           "citation": "BUrlG §7(4): compensation only if leave cannot be taken because employment ends",
-          "verification": "public-unverified",
-          "url": "https://www.gesetze-im-internet.de/burlg/"
+          "verification": "public-verified",
+          "url": "https://www.gesetze-im-internet.de/burlg/__7.html",
+          "note": "§7(4) checked 2026-10-02."
         }
       }
     }
@@ -166,8 +171,9 @@
       "label": "Severe disability supplement",
       "ruleId": "de-sgb9-208",
       "citation": "SGB IX §208: +5 working days (5-day week) for severely disabled employees",
-      "verification": "public-unverified",
-      "url": "https://www.gesetze-im-internet.de/sgb_9_2018/__208.html"
+      "verification": "public-verified",
+      "url": "https://www.gesetze-im-internet.de/sgb_9_2018/__208.html",
+      "note": "§208(1) checked 2026-10-02: five working days, proportional to the working week."
     },
     {
       "label": "24 & 31 December",

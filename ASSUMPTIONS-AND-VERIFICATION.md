@@ -8,9 +8,9 @@ Every rule in the engine carries one of three tags. None is yet "verified agains
 | ◐ Public, not yet checked | Well-established public law, cited to the canonical source, but I didn't re-read the section; a lawyer must confirm the section and wording |
 | ○ Our assumption | A company-policy choice I made to make the build run; Groupon's real policy may differ |
 
-The 2026 rule packs contain **71 distinct rules: 13 checked against a source, 43 public but not yet checked, and 15 assumptions**. The **Rule packs** page shows the split per entity.
+The 2026 rule packs contain **71 distinct rules: 21 checked against a source, 35 public but not yet checked, and 15 assumptions**. The **Rule packs** page shows the split per entity.
 
-**The German pilot pack has no rules checked against the primary text.** BUrlG is well known and I'm confident in it, but confidence isn't verification, which is why legal sign-off is the first gate below.
+**The German pilot pack: 8 of its 12 rules are now checked against the primary text.** That covers BUrlG §§3, 4, 5, 7(3), 7(4) and 9 on gesetze-im-internet.de, SGB IX §208, CJEU C-684/16 via the EU Fundamental Rights Agency's case summary, and Berlin's 8 March holiday. The remaining 4 are company-policy assumptions (24/31 Dec, automatic carry-over, contractual surplus, work location) plus the weekend-holiday rule. "Checked" means I read the text. It does not replace counsel's sign-off, which is still the first gate below.
 
 The Chicago pack looks better (9 of 16 checked), but most of those checks rely on law-firm summaries, because chicago.gov blocked automated access.
 
