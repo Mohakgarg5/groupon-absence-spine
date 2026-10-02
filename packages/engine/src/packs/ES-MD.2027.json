@@ -1,0 +1,129 @@
+{
+  "id": "ES-MD",
+  "version": "2027.1",
+  "year": 2027,
+  "entity": "Groupon Spain (as listed in Exhibit 21.1)",
+  "country": "ES",
+  "region": "Comunidad de Madrid — Madrid city",
+  "summary": "30 calendar days (weekends inside a leave block count); 12 regional + 2 municipal holidays published each autumn; leave expires with the year unless illness/parental leave prevented it.",
+  "owner": {
+    "role": "Employment counsel (ES) + HR Business Partner Madrid",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "es-location",
+    "citation": "Employees assumed to work in Madrid city (municipality sets 2 local holidays)",
+    "verification": "assumption"
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "calendar-days",
+    "rule": {
+      "ruleId": "es-counting",
+      "citation": "Estatuto de los Trabajadores art. 38.1: at least 30 calendar days; holidays inside a leave block are counted",
+      "verification": "public-unverified",
+      "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+      "note": "Many convenios convert to 22 working days — Groupon Spain's applicable convenio must be checked."
+    }
+  },
+  "holidays": {
+    "loaded": false,
+    "source": {
+      "ruleId": "es-holidays",
+      "citation": "Comunidad de Madrid 2027 labour calendar decree not yet published in BOCM as of 2026-10-02 (usually late September/October)",
+      "verification": "public-verified",
+      "url": "https://www.bocm.es/",
+      "note": "Pack cannot be activated for 2027 until the decree and the Madrid city locals are loaded and signed off."
+    },
+    "dates": []
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "es-holiday-policy",
+      "citation": "ET art. 37.2: up to 14 holidays/year (2 local); a holiday on Sunday may be moved by the region",
+      "verification": "public-unverified",
+      "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+    }
+  },
+  "buckets": [
+    {
+      "id": "annual",
+      "label": "Vacaciones",
+      "unit": "days",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "calendar-days",
+        "params": {
+          "days": 30
+        },
+        "rule": {
+          "ruleId": "es-entitlement",
+          "citation": "ET art. 38.1: minimum 30 calendar days per year",
+          "verification": "public-unverified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+        }
+      },
+      "accrual": {
+        "strategy": "front-load-prorata",
+        "params": {},
+        "rule": {
+          "ruleId": "es-accrual",
+          "citation": "Proportional to time worked in the year (~2.5 calendar days/month); front-loaded on 1 January (Groupon policy assumption)",
+          "verification": "assumption",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+        }
+      },
+      "carryOver": {
+        "max": 0,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "es-carry",
+          "citation": "ET art. 38.3: leave is taken within the year; exception where incapacity/parental leave overlapped (18 months)",
+          "verification": "public-unverified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+          "note": "The incapacity exception is not modelled."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "es-sick",
+          "citation": "ET art. 38.3: if incapacity coincides with the leave period, leave can be taken afterwards",
+          "verification": "public-unverified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "es-payout",
+          "citation": "ET art. 38.1: leave cannot be replaced by money except on termination (case law)",
+          "verification": "public-unverified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Convenio colectivo",
+      "ruleId": "es-convenio",
+      "citation": "The applicable sector convenio usually defines working-day counting and may add days",
+      "verification": "assumption",
+      "note": "Request Groupon Spain's convenio before go-live."
+    }
+  ]
+}

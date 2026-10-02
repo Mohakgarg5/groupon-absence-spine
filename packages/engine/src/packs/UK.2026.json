@@ -1,0 +1,229 @@
+{
+  "id": "UK",
+  "version": "2026.1",
+  "year": 2026,
+  "entity": "Groupon UK entity (one of five listed in Exhibit 21.1 — employing entity to confirm)",
+  "country": "GB",
+  "region": "England",
+  "summary": "5.6 weeks in two buckets with different legal rules (4 weeks EU-derived, 1.6 weeks domestic), capped at 28 days; bank holidays may count toward it; no statutory right to bank holidays off.",
+  "owner": {
+    "role": "Employment counsel (UK) + HR Business Partner London",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "uk-location",
+    "citation": "Employees assumed to work in England (Scotland/NI have different bank holidays)",
+    "verification": "assumption"
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-days",
+    "rule": {
+      "ruleId": "uk-counting",
+      "citation": "WTR 1998 reg.13/13A: leave measured in weeks of the worker's own pattern",
+      "verification": "public-unverified",
+      "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "uk-holidays",
+      "citation": "Banking and Financial Dealings Act 1971 + royal proclamation; gov.uk/bank-holidays (England & Wales)",
+      "verification": "public-unverified",
+      "url": "https://www.gov.uk/bank-holidays"
+    },
+    "dates": [
+      {
+        "date": "2026-01-01",
+        "name": "New Year's Day"
+      },
+      {
+        "date": "2026-04-03",
+        "name": "Good Friday"
+      },
+      {
+        "date": "2026-04-06",
+        "name": "Easter Monday"
+      },
+      {
+        "date": "2026-05-04",
+        "name": "Early May bank holiday"
+      },
+      {
+        "date": "2026-05-25",
+        "name": "Spring bank holiday"
+      },
+      {
+        "date": "2026-08-31",
+        "name": "Summer bank holiday"
+      },
+      {
+        "date": "2026-12-25",
+        "name": "Christmas Day"
+      },
+      {
+        "date": "2026-12-28",
+        "name": "Boxing Day (substitute day)"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": true,
+    "deductOrder": [
+      "additional-1.6wk",
+      "statutory-4wk"
+    ],
+    "rule": {
+      "ruleId": "uk-bank-holidays",
+      "citation": "No statutory right to bank holidays off; Groupon assumed to count them toward the 5.6 weeks (statutory-minimum contracts)",
+      "verification": "assumption",
+      "url": "https://www.gov.uk/holiday-entitlement-rights",
+      "note": "If contracts give bank holidays in addition, set deductFromEntitlement=false — one-field change."
+    }
+  },
+  "buckets": [
+    {
+      "id": "statutory-4wk",
+      "label": "Basic leave — 4 weeks (reg.13)",
+      "unit": "days",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "weeks",
+        "params": {
+          "weeks": 4
+        },
+        "rule": {
+          "ruleId": "uk-reg13",
+          "citation": "WTR 1998 reg.13: 4 weeks' leave (EU-derived)",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      },
+      "accrual": {
+        "strategy": "uk-first-year-monthly",
+        "params": {},
+        "rule": {
+          "ruleId": "uk-accrual",
+          "citation": "WTR 1998 reg.15A: in the first year leave accrues at 1/12 per month; thereafter granted at the start of the leave year (Groupon policy assumption)",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      },
+      "carryOver": {
+        "max": 0,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "uk-carry-13",
+          "citation": "WTR 1998 reg.13(9): may not be carried forward except where sickness/family leave prevented it (reg.13(10)-(11))",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833",
+          "note": "Sickness-based 18-month carry-over not modelled."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore-on-request",
+        "rule": {
+          "ruleId": "uk-sick",
+          "citation": "WTR 1998 reg.13(9)-(11) read with CJEU Pereda (C-277/08): a worker sick during leave may take the leave later",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "uk-payout",
+          "citation": "WTR 1998 reg.14: payment in lieu only on termination, pro-rated (A × B) − C",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      }
+    },
+    {
+      "id": "additional-1.6wk",
+      "label": "Additional leave — 1.6 weeks (reg.13A)",
+      "unit": "days",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "weeks",
+        "params": {
+          "weeks": 1.6,
+          "totalCapDays": 28,
+          "capSharedWith": "statutory-4wk"
+        },
+        "rule": {
+          "ruleId": "uk-reg13a",
+          "citation": "WTR 1998 reg.13A: additional 1.6 weeks; total capped at 28 days (reg.13A(3))",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      },
+      "accrual": {
+        "strategy": "uk-first-year-monthly",
+        "params": {},
+        "rule": {
+          "ruleId": "uk-accrual",
+          "citation": "WTR 1998 reg.15A: in the first year leave accrues at 1/12 per month; thereafter granted at the start of the leave year (Groupon policy assumption)",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      },
+      "carryOver": {
+        "max": 5,
+        "expiresMonthDay": "12-31",
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "uk-carry-13a",
+          "citation": "WTR 1998 reg.13A(7): may be carried into the next leave year by relevant agreement",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833",
+          "note": "Groupon policy of up to 5 days is an assumption."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore-on-request",
+        "rule": {
+          "ruleId": "uk-sick",
+          "citation": "WTR 1998 reg.13(9)-(11) read with CJEU Pereda (C-277/08): a worker sick during leave may take the leave later",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "uk-payout",
+          "citation": "WTR 1998 reg.14: payment in lieu only on termination, pro-rated (A × B) − C",
+          "verification": "public-unverified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Irregular-hours workers",
+      "ruleId": "uk-irregular",
+      "citation": "WTR 1998 reg.15B (SI 2023/1426): 12.07% of hours worked for leave years from 1 April 2024",
+      "verification": "public-unverified",
+      "url": "https://www.legislation.gov.uk/uksi/1998/1833",
+      "note": "Not modelled — no irregular-hours staff in dataset."
+    }
+  ]
+}

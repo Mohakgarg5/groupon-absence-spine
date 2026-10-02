@@ -1,0 +1,173 @@
+{
+  "id": "IE",
+  "version": "2026.1",
+  "year": 2026,
+  "entity": "Groupon International Ltd",
+  "country": "IE",
+  "region": "National",
+  "summary": "4 working weeks, accrued monthly; the employer chooses the remedy when a public holiday falls on a day the employee does not work; leave interrupted by certified illness can be rescheduled.",
+  "owner": {
+    "role": "Employment counsel (IE) + HR Business Partner Dublin",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "ie-location",
+    "citation": "Employees assumed to work in Ireland",
+    "verification": "assumption"
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-days",
+    "rule": {
+      "ruleId": "ie-counting",
+      "citation": "OWTA 1997 s.19: annual leave measured in working weeks; public holidays are a separate entitlement (s.21)",
+      "verification": "public-unverified",
+      "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html"
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "ie-holidays",
+      "citation": "OWTA 1997 Second Schedule as amended (St Brigid's Day from 2023: first Monday in February, or 1 Feb if a Friday)",
+      "verification": "public-unverified",
+      "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html"
+    },
+    "dates": [
+      {
+        "date": "2026-01-01",
+        "name": "New Year's Day"
+      },
+      {
+        "date": "2026-02-02",
+        "name": "St Brigid's Day"
+      },
+      {
+        "date": "2026-03-17",
+        "name": "St Patrick's Day"
+      },
+      {
+        "date": "2026-04-06",
+        "name": "Easter Monday"
+      },
+      {
+        "date": "2026-05-04",
+        "name": "May Bank Holiday"
+      },
+      {
+        "date": "2026-06-01",
+        "name": "June Bank Holiday"
+      },
+      {
+        "date": "2026-08-03",
+        "name": "August Bank Holiday"
+      },
+      {
+        "date": "2026-10-26",
+        "name": "October Bank Holiday"
+      },
+      {
+        "date": "2026-12-25",
+        "name": "Christmas Day"
+      },
+      {
+        "date": "2026-12-26",
+        "name": "St Stephen's Day"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "extra-leave",
+    "minHoursInPrior5Weeks": 40,
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "ie-holiday-remedy",
+      "citation": "OWTA 1997 s.21: for a holiday the employee would not otherwise work, the employer chooses a paid day off within a month, an extra day of annual leave, or an extra day's pay. Part-timers qualify after 40 hours in the prior 5 weeks",
+      "verification": "public-verified",
+      "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
+      "note": "Choice of \"extra day of annual leave\" for Groupon is an assumption."
+    }
+  },
+  "buckets": [
+    {
+      "id": "annual",
+      "label": "Annual leave",
+      "unit": "days",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "weeks",
+        "params": {
+          "weeks": 4
+        },
+        "rule": {
+          "ruleId": "ie-entitlement",
+          "citation": "OWTA 1997 s.19(1)(a): 4 working weeks in a leave year with ≥1,365 hours worked",
+          "verification": "public-unverified",
+          "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
+          "note": "Irregular-hours staff would use the 8%-of-hours method — not modelled."
+        }
+      },
+      "accrual": {
+        "strategy": "monthly",
+        "params": {},
+        "rule": {
+          "ruleId": "ie-accrual",
+          "citation": "OWTA 1997 s.19(1)(b): ⅓ of a working week per calendar month; certified sick days count as worked (s.19(1A), WRA 2015 s.86)",
+          "verification": "public-verified",
+          "url": "https://www.irishstatutebook.ie/2015/en/act/pub/0016/sec0086.html"
+        }
+      },
+      "carryOver": {
+        "max": 5,
+        "expiresMonthDay": "06-30",
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "ie-carry",
+          "citation": "OWTA 1997 s.20(1)(c): leave may be taken within 6 months of the next year with the employee's consent",
+          "verification": "public-unverified",
+          "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
+          "note": "Cap of 5 days is a Groupon policy assumption."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore-on-request",
+        "rule": {
+          "ruleId": "ie-sick",
+          "citation": "OWTA 1997 as amended by the Work Life Balance and Miscellaneous Provisions Act 2023: certified illness during annual leave is treated as sick leave",
+          "verification": "public-unverified",
+          "url": "https://www.irishstatutebook.ie/eli/2023/act/8/enacted/en/html",
+          "note": "Exact section and commencement to verify."
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "ie-payout",
+          "citation": "OWTA 1997 s.23: compensation for untaken leave on cesser of employment",
+          "verification": "public-unverified",
+          "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Statutory sick pay",
+      "ruleId": "ie-ssp",
+      "citation": "Sick Leave Act 2022: statutory sick days (separate from annual leave) — 5 days in 2026",
+      "verification": "public-unverified",
+      "url": "https://www.irishstatutebook.ie/eli/2022/act/12/enacted/en/html",
+      "note": "Not modelled in this build."
+    }
+  ]
+}

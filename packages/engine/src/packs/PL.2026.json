@@ -1,0 +1,207 @@
+{
+  "id": "PL",
+  "version": "2026.1",
+  "year": 2026,
+  "entity": "Groupon Shared Services Poland Sp. z o.o.",
+  "country": "PL",
+  "region": "National",
+  "summary": "20 or 26 days depending on total working seniority — which counts years of education, not tenure at Groupon; 4 on-demand days; carry-over to 30 September.",
+  "owner": {
+    "role": "Employment counsel (PL) + Shared Services HR lead",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "pl-location",
+    "citation": "Employees of the shared-services entity assumed to be in Poland (national holidays only)",
+    "verification": "assumption"
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-days",
+    "rule": {
+      "ruleId": "pl-counting",
+      "citation": "Kodeks pracy art. 154² §1: leave is granted for working days per the employee's schedule; holidays are not counted",
+      "verification": "public-unverified",
+      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "pl-holidays",
+      "citation": "Ustawa z 18.01.1951 o dniach wolnych od pracy, as amended 2024 (Wigilia 24 Dec a day off from 2025) — 14 days incl. 2 Sundays",
+      "verification": "public-verified",
+      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19510040028"
+    },
+    "dates": [
+      {
+        "date": "2026-01-01",
+        "name": "Nowy Rok"
+      },
+      {
+        "date": "2026-01-06",
+        "name": "Trzech Króli"
+      },
+      {
+        "date": "2026-04-05",
+        "name": "Wielkanoc"
+      },
+      {
+        "date": "2026-04-06",
+        "name": "Poniedziałek Wielkanocny"
+      },
+      {
+        "date": "2026-05-01",
+        "name": "Święto Pracy"
+      },
+      {
+        "date": "2026-05-03",
+        "name": "Święto Konstytucji 3 Maja"
+      },
+      {
+        "date": "2026-05-24",
+        "name": "Zielone Świątki"
+      },
+      {
+        "date": "2026-06-04",
+        "name": "Boże Ciało"
+      },
+      {
+        "date": "2026-08-15",
+        "name": "Wniebowzięcie NMP"
+      },
+      {
+        "date": "2026-11-01",
+        "name": "Wszystkich Świętych"
+      },
+      {
+        "date": "2026-11-11",
+        "name": "Narodowe Święto Niepodległości"
+      },
+      {
+        "date": "2026-12-24",
+        "name": "Wigilia"
+      },
+      {
+        "date": "2026-12-25",
+        "name": "Boże Narodzenie"
+      },
+      {
+        "date": "2026-12-26",
+        "name": "Drugi dzień Bożego Narodzenia"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "designate-day-off-task",
+    "saturdayOnly": true,
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "pl-saturday",
+      "citation": "Kodeks pracy art. 130 §2: a holiday falling on a day other than Sunday reduces working time by 8h — employer must designate another day off",
+      "verification": "public-unverified",
+      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+    }
+  },
+  "buckets": [
+    {
+      "id": "annual",
+      "label": "Urlop wypoczynkowy",
+      "unit": "days",
+      "requestKinds": [
+        "annual",
+        "on-demand"
+      ],
+      "usableFromDays": 0,
+      "onDemandMax": 4,
+      "entitlement": {
+        "strategy": "pl-seniority",
+        "params": {
+          "under": 20,
+          "over": 26,
+          "thresholdYears": 10,
+          "educationYears": {
+            "none": 0,
+            "basic-vocational": 3,
+            "secondary-vocational": 5,
+            "general-secondary": 4,
+            "post-secondary": 6,
+            "higher": 8
+          }
+        },
+        "rule": {
+          "ruleId": "pl-entitlement",
+          "citation": "Kodeks pracy art. 154 §1 (20 days < 10 years, 26 days ≥ 10 years) and art. 155 §1 (education periods count toward seniority; only the highest qualification counts)",
+          "verification": "public-unverified",
+          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141",
+          "note": "Overlap between study and work periods is not de-duplicated (art. 155 §2) — verify with payroll."
+        }
+      },
+      "accrual": {
+        "strategy": "pl-proportional",
+        "params": {
+          "topUpOnThreshold": true
+        },
+        "rule": {
+          "ruleId": "pl-accrual",
+          "citation": "Kodeks pracy art. 153 §1 (first job: 1/12 after each month), art. 155¹ (proportional in year of joining/leaving), art. 155² (round up to a full day)",
+          "verification": "public-unverified",
+          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+        }
+      },
+      "carryOver": {
+        "max": null,
+        "expiresMonthDay": "09-30",
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "pl-carry",
+          "citation": "Kodeks pracy art. 168: untaken leave must be granted by 30 September of the following year",
+          "verification": "public-unverified",
+          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141",
+          "note": "Strictly, art. 168 obliges the employer to grant it; the right itself lapses only by 3-year limitation. Modelled as a hard deadline that HR must act on — verify."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "pl-sick",
+          "citation": "Kodeks pracy art. 165–166: leave is postponed/interrupted by temporary incapacity",
+          "verification": "public-unverified",
+          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "pl-payout",
+          "citation": "Kodeks pracy art. 171: ekwiwalent only on termination",
+          "verification": "public-unverified",
+          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Leave on demand",
+      "ruleId": "pl-on-demand",
+      "citation": "Kodeks pracy art. 167²: up to 4 days per year on demand, within the annual entitlement",
+      "verification": "public-unverified",
+      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+    },
+    {
+      "label": "Part-time",
+      "ruleId": "pl-part-time",
+      "citation": "Kodeks pracy art. 154 §2: part-time entitlement is proportional to FTE, rounded up to a full day",
+      "verification": "public-unverified",
+      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+    }
+  ]
+}

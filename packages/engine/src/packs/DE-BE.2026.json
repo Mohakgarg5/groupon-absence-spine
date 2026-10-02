@@ -1,0 +1,187 @@
+{
+  "id": "DE-BE",
+  "version": "2026.1",
+  "year": 2026,
+  "entity": "Groupon GmbH",
+  "country": "DE",
+  "region": "Berlin",
+  "currencyNote": null,
+  "summary": "24 Werktage statutory minimum (= 20 days on a 5-day week); 6-month waiting period; certified sickness during leave is not counted; carry-over lapses 31 March only if the employer warned the employee.",
+  "owner": {
+    "role": "Employment counsel (DE) + HR Business Partner DE",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "de-location",
+    "citation": "Groupon GmbH employees assumed to work in Berlin (Land determines public holidays)",
+    "verification": "assumption",
+    "note": "Confirm work location per employee; Bavaria/NRW would change holidays."
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-days",
+    "rule": {
+      "ruleId": "de-counting",
+      "citation": "BUrlG §3(2): Werktage exclude Sundays and statutory public holidays — holidays inside leave are not deducted",
+      "verification": "public-unverified",
+      "url": "https://www.gesetze-im-internet.de/burlg/"
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "de-holidays",
+      "citation": "Berliner Gesetz über die Sonn- und Feiertage (Feiertagsgesetz) incl. Frauentag since 2019",
+      "verification": "public-unverified",
+      "url": "https://gesetze.berlin.de/",
+      "note": "Easter-derived dates cross-checked by computus in tests."
+    },
+    "dates": [
+      {
+        "date": "2026-01-01",
+        "name": "Neujahr"
+      },
+      {
+        "date": "2026-03-08",
+        "name": "Internationaler Frauentag"
+      },
+      {
+        "date": "2026-04-03",
+        "name": "Karfreitag"
+      },
+      {
+        "date": "2026-04-06",
+        "name": "Ostermontag"
+      },
+      {
+        "date": "2026-05-01",
+        "name": "Tag der Arbeit"
+      },
+      {
+        "date": "2026-05-14",
+        "name": "Christi Himmelfahrt"
+      },
+      {
+        "date": "2026-05-25",
+        "name": "Pfingstmontag"
+      },
+      {
+        "date": "2026-10-03",
+        "name": "Tag der Deutschen Einheit"
+      },
+      {
+        "date": "2026-12-25",
+        "name": "1. Weihnachtstag"
+      },
+      {
+        "date": "2026-12-26",
+        "name": "2. Weihnachtstag"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "de-holiday-policy",
+      "citation": "No statutory substitute day when a holiday falls on a weekend",
+      "verification": "public-unverified",
+      "url": "https://www.gesetze-im-internet.de/burlg/"
+    }
+  },
+  "buckets": [
+    {
+      "id": "annual",
+      "label": "Annual leave (Erholungsurlaub)",
+      "unit": "days",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "werktage",
+        "params": {
+          "werktage": 24
+        },
+        "rule": {
+          "ruleId": "de-entitlement",
+          "citation": "BUrlG §3(1): at least 24 Werktage per year; converted to the employee's pattern as 24 × days-per-week ÷ 6",
+          "verification": "public-unverified",
+          "url": "https://www.gesetze-im-internet.de/burlg/"
+        }
+      },
+      "accrual": {
+        "strategy": "de-waiting-period",
+        "params": {
+          "waitingMonths": 6
+        },
+        "rule": {
+          "ruleId": "de-accrual",
+          "citation": "BUrlG §4 (full entitlement after 6-month waiting period) and §5 (1/12 per full month in partial years; fractions ≥ ½ day round up)",
+          "verification": "public-unverified",
+          "url": "https://www.gesetze-im-internet.de/burlg/"
+        }
+      },
+      "carryOver": {
+        "max": null,
+        "expiresMonthDay": "03-31",
+        "conditionalOnNotice": true,
+        "rule": {
+          "ruleId": "de-carry",
+          "citation": "BUrlG §7(3): carry-over to 31 March; lapse only if the employer informed and invited the employee to take leave (CJEU C-684/16 Max-Planck, BAG 9 AZR 423/16)",
+          "verification": "public-unverified",
+          "url": "https://curia.europa.eu/juris/liste.jsf?num=C-684/16",
+          "note": "Assumes Groupon GmbH carries over automatically; statute requires urgent operational/personal reasons."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore-if-certified",
+        "rule": {
+          "ruleId": "de-sick",
+          "citation": "BUrlG §9: days of incapacity proven by medical certificate are not counted as leave",
+          "verification": "public-unverified",
+          "url": "https://www.gesetze-im-internet.de/burlg/"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "de-payout",
+          "citation": "BUrlG §7(4): compensation only if leave cannot be taken because employment ends",
+          "verification": "public-unverified",
+          "url": "https://www.gesetze-im-internet.de/burlg/"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Severe disability supplement",
+      "ruleId": "de-sgb9-208",
+      "citation": "SGB IX §208: +5 working days (5-day week) for severely disabled employees",
+      "verification": "public-unverified",
+      "url": "https://www.gesetze-im-internet.de/sgb_9_2018/__208.html"
+    },
+    {
+      "label": "24 & 31 December",
+      "ruleId": "de-24-31-dec",
+      "citation": "24 and 31 December are not statutory holidays in Berlin; treated as ordinary working days",
+      "verification": "assumption",
+      "note": "Many German employers grant half days by policy or collective agreement — verify Groupon GmbH policy."
+    },
+    {
+      "label": "Collective agreements",
+      "ruleId": "de-cba",
+      "citation": "Contracts / works agreements may grant more than the statutory minimum (e.g. 25–30 days)",
+      "verification": "assumption",
+      "note": "Contractual surplus days can have different carry-over rules; not modelled until agreements are seen."
+    }
+  ]
+}
