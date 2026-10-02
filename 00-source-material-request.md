@@ -25,8 +25,29 @@ Mohak Garg
 
 ---
 
+## Follow-up: short questions that came out of the research
+
+**Subject:** Absence case study, six quick factual questions
+
+Hi again,
+
+Building the prototype turned up six questions. Each one changes a specific part of the design, so even a one-line answer helps:
+
+1. **Which HRIS holds leave balances today, per entity?** (I've assumed nothing; one search result suggested Workday, but I couldn't verify it.)
+2. **What are the German works-council structures?** Is there a Konzern- or Gesamtbetriebsrat, and an existing IT works agreement? (This decides who we consult under BetrVG §87(1) Nr. 6, and how long the pilot takes.)
+3. **Do German contracts or works agreements give more than 20 days?** And do they say anything about carry-over to 31 March, or about the annual warning that leave will lapse? (The CJEU's *Max-Planck* ruling makes the warning decisive.)
+4. **Do UK contracts treat bank holidays as part of, or on top of, the annual-leave entitlement?** (That's 8 days per person either way.)
+5. **What is Chicago HQ headcount, and does the US PTO policy grant more than the Chicago ordinance minimum?** (This affects the payout rule and Illinois wage-law treatment.)
+6. **Is Groupon, Inc. self-certified under the EU-US Data Privacy Framework for HR data?** (It decides the transfer basis for EU absence data.)
+
+Thanks,
+Mohak
+
+---
+
 **Status log**
 
 | Date | Item | Status |
 |---|---|---|
 | 2026-10-02 | Request drafted | Sent? ☐ — response pending |
+| 2026-10-02 | Follow-up questions drafted after research | Sent? ☐ — response pending |
