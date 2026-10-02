@@ -43,7 +43,7 @@ test('US-CHI banks are capped at 40 hours each', () => {
   expect(ent('US-CHI', 'paid-sick').amount).toBe(40);
 });
 
-const grad = { hireDate: '2026-03-01', pl: { priorServiceYears: 3, education: 'higher', firstJob: false } };
+const grad = { hireDate: '2026-03-01', pl: { priorServiceYears: 3, education: 'higher' as const, firstJob: false } };
 
 test('PL graduate: 8 education years + 3 prior = 11 → 26 days', () => {
   const s = plSeniorityYears(emp({ packId: 'PL', ...grad }), '2026-03-01');
