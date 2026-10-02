@@ -239,3 +239,17 @@ test('DE partial year below ½-day fraction keeps the exact twelfths (no drift)'
   const j = emp({ id: 'nov', packId: 'DE-BE', hireDate: '2026-11-01' }); // 2 × 20/12 = 3.3333 → fraction < ½ stays
   expect(buildLedger(j, emptyInputs(), '2026-12-31').balances.annual.available).toBe(3.3333);
 });
+
+test('overlapping or duplicate sickness records never restore the same day twice', () => {
+  const p = emp({ id: 'dup', packId: 'DE-BE' });
+  const inputs: Inputs = {
+    requests: [req('dup', '2026-12-21', '2026-12-31')], notices: [],
+    sickness: [
+      { id: 'a', employeeId: 'dup', from: '2026-12-29', to: '2026-12-30', certified: true },
+      { id: 'b', employeeId: 'dup', from: '2026-12-29', to: '2026-12-30', certified: true },
+      { id: 'c', employeeId: 'dup', from: '2026-12-30', to: '2026-12-31', certified: true },
+    ],
+  };
+  const l = buildLedger(p, inputs, '2026-12-31');
+  expect(sum(of(l.events, 'RESTORE'))).toBe(3); // 29, 30, 31 once each
+});

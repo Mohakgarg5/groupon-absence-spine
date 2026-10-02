@@ -51,6 +51,14 @@ export function getPack(packId: string, year: number): Pack {
   return p;
 }
 
+/** The pack as shipped in the repo, ignoring any in-memory what-if override. */
+export function getBasePack(packId: string, year: number): Pack {
+  if (!cache) cache = RAW.map(inflate);
+  const p = cache.find((x) => x.id === packId && x.year === year);
+  if (!p) throw new EngineError('PACK_NOT_FOUND', `No rule pack ${packId} for ${year}.`);
+  return p;
+}
+
 export function packIds(): string[] {
   return [...new Set(allPacks().map((p) => p.id))];
 }

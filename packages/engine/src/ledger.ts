@@ -1,7 +1,7 @@
 // The unified record. Balances are never stored: they are re-derived by replaying every rule, in date order,
 // from the employee's facts and the entity's rule packs. Every event carries the citation that produced it.
 import {
-  EngineError, type Employee, type EventType, type HrTask, type ISODate, type Inputs, type LedgerEvent, type RuleRef, type Unit,
+  EngineError, type DayLine, type Employee, type EventType, type HrTask, type ISODate, type Inputs, type LedgerEvent, type RuleRef, type Unit,
 } from './model';
 import { addDays, daysBetween, dow, endOfMonth, iso, maxDate, minDate, yearOf } from './dates';
 import { getPack } from './packs/registry';
@@ -353,17 +353,24 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
       for (const y of years) {
         const from = maxDate(ovFrom, `${y}-01-01`), to = minDate(ovTo, `${y}-12-31`);
         if (from > to) continue;
-        let amount = 0;
-        try { amount = sumCounted(expandDays(e, from, to)); } catch { continue; }
-        if (amount <= 0) continue;
-        at(from, 2, () => applySickness(s, req.id, y, from, to, amount));
+        let lines: DayLine[] = [];
+        try { lines = expandDays(e, from, to).filter((l) => l.amount > 0); } catch { continue; }
+        if (!lines.length) continue;
+        at(from, 2, () => applySickness(s, req.id, y, lines));
       }
     }
   }
 
-  function applySickness(s: Inputs['sickness'][number], reqId: string, y: number, from: ISODate, to: ISODate, amount: number) {
+  const restoredDays = new Set<string>();
+  function applySickness(s: Inputs['sickness'][number], reqId: string, y: number, allLines: DayLine[]) {
     const d = debitedBy[`${reqId}|${y}`];
     if (!d) return;
+    // A day of leave can only be given back once, however many sickness records cover it.
+    const lines = allLines.filter((l) => !restoredDays.has(`${reqId}|${l.date}`));
+    if (!lines.length) return;
+    const from = lines[0].date, to = lines[lines.length - 1].date;
+    const amount = sumCounted(lines);
+    const mark = () => lines.forEach((l) => restoredDays.add(`${reqId}|${l.date}`));
     const bucket = d.buckets[0];
     const b = bucketDef(bucket, y)!;
     const rule = b.sickDuringLeave.rule;
@@ -375,13 +382,16 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
       case 'restore-if-certified':
         if (!s.certified) return noRestore('no medical certificate provided (BUrlG §9 requires one)');
         credit('RESTORE', from, bucket, amt, y, rule, `Certified sickness ${range} during leave: ${fmt(amt)} ${unit} not counted as leave`, { requestId: reqId });
+        mark();
         return;
       case 'restore-on-request':
         if (!s.employeeAskedToReschedule) return noRestore('the employee has not asked to reschedule (right exists on request)');
         credit('RESTORE', from, bucket, amt, y, rule, `Sick ${range} during leave and employee asked to reschedule: ${fmt(amt)} ${unit} restored`, { requestId: reqId });
+        mark();
         return;
       case 'restore':
         credit('RESTORE', from, bucket, amt, y, rule, `Incapacity ${range} interrupts leave: ${fmt(amt)} ${unit} restored to be taken later`, { requestId: reqId });
+        mark();
         return;
       case 'convert-to-sick-bank': {
         const sick = bucketsOf(y).find((x) => x.requestKinds.includes('sick-bank'));
@@ -392,6 +402,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         if (use <= 0) return noRestore('no Paid Sick Leave balance available');
         credit('RESTORE', from, bucket, use, y, rule, `Sick ${range} during leave: ${fmt(use)} h moved from Paid Leave to Paid Sick Leave`, { requestId: reqId });
         debit([sick.id], use, from, y, rule, `Sick ${range} during leave: ${fmt(use)} h charged to Paid Sick Leave`, true, { requestId: reqId });
+        if (use >= amt) mark();
         return;
       }
     }

@@ -34,6 +34,7 @@ export interface PipelineResult {
   parts: RequestPart[];
   balanceBefore: Record<string, number>;
   balanceAfter: Record<string, number>;
+  bucketLabels: Record<string, string>;
   preview: LedgerEvent[];
   approverId?: string;
   payroll: PayrollLine[];
@@ -48,7 +49,7 @@ export type RequestDraft = Omit<LeaveRequest, 'status' | 'id'> & { id?: string }
 
 export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, today: ISODate): PipelineResult {
   const request: LeaveRequest = { ...draft, id: draft.id ?? `req-${e.id}-${draft.from}-${draft.kind}`, status: 'pending' };
-  const res: PipelineResult = { ok: false, request, stages: [], days: [], parts: [], balanceBefore: {}, balanceAfter: {}, preview: [], payroll: [] };
+  const res: PipelineResult = { ok: false, request, stages: [], days: [], parts: [], balanceBefore: {}, balanceAfter: {}, bucketLabels: {}, preview: [], payroll: [] };
   const stage = (id: StageId, status: Stage['status'], detail: string, rules: RuleRef[] = []) => res.stages.push({ id, label: label(id), status, detail, rules });
   const fail = (id: StageId, code: string, message: string, rules: RuleRef[] = []) => {
     stage(id, 'fail', message, rules);
@@ -98,7 +99,7 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   if (total <= 0) return fail('expand', 'ZERO_DAYS', 'The range contains no working time on this employee\'s pattern.', [p0.counting.rule]);
   stage('expand', 'ok',
     `${fmt(total)} ${unit} counted (${p0.counting.mode})${hol.length ? `; holidays not charged: ${hol.map((h) => `${h.holidayName} ${h.date}`).join(', ')}` : ''}.`,
-    [p0.counting.rule, ...years.map((y) => packs[y].holidays.source)]);
+    [p0.counting.rule, ...new Map(years.map((y) => [packs[y].holidays.source.citation, packs[y].holidays.source])).values()]);
 
   // 4. Split
   for (const y of years) {
@@ -146,7 +147,7 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   const baseIssues = new Set(buildLedger(e, { ...inputs, requests: others }, asOf, { today }).issues.map((i) => i.message));
   const newShort = future.issues.filter((i) => i.code === 'NEGATIVE_BALANCE' && !baseIssues.has(i.message));
   for (const [b, bal] of Object.entries(base.balances)) res.balanceBefore[b] = bal.available;
-  for (const [b, bal] of Object.entries(cand.balances)) res.balanceAfter[b] = bal.available;
+  for (const [b, bal] of Object.entries(cand.balances)) { res.balanceAfter[b] = bal.available; res.bucketLabels[b] = bal.label; }
   res.preview = cand.events.filter((x) => x.requestId === request.id);
   const bRules = [...new Map(res.preview.map((x) => [x.rule.ruleId, x.rule])).values()];
   if (newShort.length) return fail('balance', 'INSUFFICIENT_BALANCE', `Not enough balance: ${newShort.map((i) => i.message).join('; ')}.`, kindBuckets(years[0]).map((b) => b.entitlement.rule));

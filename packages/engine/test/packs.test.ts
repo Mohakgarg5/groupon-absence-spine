@@ -67,3 +67,14 @@ test('US-CHI company holidays fall on weekdays (observed dates)', () => {
 test('UK substitute bank holidays are weekdays', () => {
   for (const y of [2026, 2027]) for (const h of getPack('UK', y).holidays.dates) expect([1, 2, 3, 4, 5], h.date).toContain(dow(h.date));
 });
+
+test('overrides replace a pack in memory; getBasePack ignores them', async () => {
+  const { setPackOverride, getBasePack } = await import('../src/packs/registry');
+  const p = structuredClone(getPack('IE', 2026));
+  p.buckets[0].carryOver.max = 1;
+  setPackOverride(p);
+  expect(getPack('IE', 2026).buckets[0].carryOver.max).toBe(1);
+  expect(getBasePack('IE', 2026).buckets[0].carryOver.max).toBe(5);
+  setPackOverride(null, 'IE', 2026);
+  expect(getPack('IE', 2026).buckets[0].carryOver.max).toBe(5);
+});
