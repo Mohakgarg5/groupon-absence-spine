@@ -25,7 +25,9 @@ export function expandDays(e: Employee, from: ISODate, to: ISODate): DayLine[] {
     if (mode === 'calendar-days') return { date, kind: 'counted', amount: 1, unit, ...(hol ? { holidayName: hol.name } : {}) };
     if (hol && working) return { date, kind: 'holiday', holidayName: hol.name, amount: 0, unit };
     if (!working) return { date, kind: [0, 6].includes(dow(date)) ? 'weekend' : 'non-working', amount: 0, unit, ...(hol ? { holidayName: hol.name } : {}) };
-    return { date, kind: 'counted', amount: mode === 'working-hours' ? e.pattern.hoursPerDay : 1, unit };
+    const amount = mode === 'working-hours' ? e.pattern.hoursPerDay
+      : pack.counting.dayEquivalentHours ? Math.round((e.pattern.hoursPerDay / pack.counting.dayEquivalentHours) * 1e4) / 1e4 : 1;
+    return { date, kind: 'counted', amount, unit };
   });
 }
 

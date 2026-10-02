@@ -1,0 +1,637 @@
+[
+  {
+    "id": "de-max",
+    "name": "Max Vogel",
+    "title": "Team Lead, Sales DACH",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2014-02-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Approver for the Berlin team.",
+    "openingBalances": {
+      "annual": 2
+    }
+  },
+  {
+    "id": "de-lena",
+    "name": "Lena Hoffmann",
+    "title": "Senior Account Manager",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2019-04-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Pilot case: books Christmas across two leave years, then falls sick on 29 Dec.",
+    "managerId": "de-max",
+    "openingBalances": {
+      "annual": 3
+    }
+  },
+  {
+    "id": "de-jonas",
+    "name": "Jonas Becker",
+    "title": "Content Editor (3 days/week)",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2021-02-01",
+    "pattern": {
+      "days": [
+        1,
+        3,
+        4
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Part-timer: entitlement must follow his 3-day pattern.",
+    "managerId": "de-max"
+  },
+  {
+    "id": "de-mira",
+    "name": "Mira Schulz",
+    "title": "Junior Analyst",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2026-09-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Joined 1 Sep: waiting period can't complete this year, so leave accrues per month and is rounded (§5).",
+    "managerId": "de-max"
+  },
+  {
+    "id": "de-tobias",
+    "name": "Tobias Wagner",
+    "title": "Account Executive",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2017-03-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Left 31 May: first-half leaver, pro-rata 5/12 and payout.",
+    "managerId": "de-max",
+    "terminationDate": "2026-05-31"
+  },
+  {
+    "id": "de-anja",
+    "name": "Anja Richter",
+    "title": "Finance Specialist",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2016-06-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Recognised severe disability: +5 days under SGB IX §208.",
+    "managerId": "de-max",
+    "de": {
+      "severeDisability": true
+    }
+  },
+  {
+    "id": "de-felix",
+    "name": "Felix Neumann",
+    "title": "Merchant Success Manager",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2018-01-15",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Was warned in writing that 2025 leave would lapse — so it did, on 31 March.",
+    "managerId": "de-max",
+    "openingBalances": {
+      "annual": 6
+    }
+  },
+  {
+    "id": "de-sophie",
+    "name": "Sophie Krüger",
+    "title": "Merchant Success Manager",
+    "packId": "DE-BE",
+    "workLocation": "Berlin",
+    "hireDate": "2018-05-02",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Legacy system holds no warning letter — her 2025 leave cannot lapse (CJEU C-684/16).",
+    "managerId": "de-max",
+    "openingBalances": {
+      "annual": 6
+    }
+  },
+  {
+    "id": "pl-ewa",
+    "name": "Ewa Kamińska",
+    "title": "Shared Services Lead",
+    "packId": "PL",
+    "workLocation": "Warsaw",
+    "hireDate": "2015-09-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Approver for the Warsaw shared-services team.",
+    "pl": {
+      "priorServiceYears": 4,
+      "education": "higher",
+      "firstJob": false
+    }
+  },
+  {
+    "id": "pl-kasia",
+    "name": "Katarzyna Nowak",
+    "title": "Payroll Analyst",
+    "packId": "PL",
+    "workLocation": "Warsaw",
+    "hireDate": "2026-03-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Master's degree (8 yrs) + 3 yrs prior work = 11 yrs seniority on day one → 26 days. A tenure rule gives 20.",
+    "managerId": "pl-ewa",
+    "pl": {
+      "priorServiceYears": 3,
+      "education": "higher",
+      "firstJob": false
+    }
+  },
+  {
+    "id": "pl-piotr",
+    "name": "Piotr Wiśniewski",
+    "title": "AP Specialist",
+    "packId": "PL",
+    "workLocation": "Warsaw",
+    "hireDate": "2023-05-10",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Crosses 10 years' seniority on 10 May 2027 → +6 days that year (annual update).",
+    "managerId": "pl-ewa",
+    "pl": {
+      "priorServiceYears": 1,
+      "education": "secondary-vocational",
+      "firstJob": false
+    }
+  },
+  {
+    "id": "pl-ola",
+    "name": "Aleksandra Kowalczyk",
+    "title": "Junior Accountant",
+    "packId": "PL",
+    "workLocation": "Warsaw",
+    "hireDate": "2026-07-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "First-ever job: earns 1/12 after each month worked (art. 153).",
+    "managerId": "pl-ewa",
+    "pl": {
+      "priorServiceYears": 0,
+      "education": "general-secondary",
+      "firstJob": true
+    }
+  },
+  {
+    "id": "pl-marta",
+    "name": "Marta Zielińska",
+    "title": "Reporting Analyst (½ FTE)",
+    "packId": "PL",
+    "workLocation": "Warsaw",
+    "hireDate": "2020-01-13",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 4
+    },
+    "persona": "Half-time: 26 × 0.5 = 13 days, rounded up.",
+    "managerId": "pl-ewa",
+    "pl": {
+      "priorServiceYears": 6,
+      "education": "higher",
+      "firstJob": false
+    }
+  },
+  {
+    "id": "pl-tomasz",
+    "name": "Tomasz Lewandowski",
+    "title": "GL Accountant",
+    "packId": "PL",
+    "workLocation": "Warsaw",
+    "hireDate": "2024-02-05",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Under 10 years: 20 days; used one on-demand day in March.",
+    "managerId": "pl-ewa",
+    "pl": {
+      "priorServiceYears": 1,
+      "education": "general-secondary",
+      "firstJob": false
+    }
+  },
+  {
+    "id": "ie-aoife",
+    "name": "Aoife Murphy",
+    "title": "Engineering Manager",
+    "packId": "IE",
+    "workLocation": "Dublin",
+    "hireDate": "2017-08-21",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "St Stephen's Day 2026 is a Saturday → employer remedy: +1 day."
+  },
+  {
+    "id": "ie-cian",
+    "name": "Cian O'Brien",
+    "title": "Customer Ops Specialist (Tue–Sat)",
+    "packId": "IE",
+    "workLocation": "Dublin",
+    "hireDate": "2022-03-01",
+    "pattern": {
+      "days": [
+        2,
+        3,
+        4,
+        5,
+        6
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Works Tue–Sat: every Monday bank holiday is a non-working day for him → 6 remedy days in 2026.",
+    "managerId": "ie-aoife"
+  },
+  {
+    "id": "ie-niamh",
+    "name": "Niamh Kelly",
+    "title": "QA Engineer (2 days/week)",
+    "packId": "IE",
+    "workLocation": "Dublin",
+    "hireDate": "2023-10-02",
+    "pattern": {
+      "days": [
+        3,
+        4
+      ],
+      "hoursPerDay": 7
+    },
+    "persona": "Two long days a week: entitlement 8 days; still qualifies for holiday remedies (≥40h in 5 weeks).",
+    "managerId": "ie-aoife"
+  },
+  {
+    "id": "uk-hannah",
+    "name": "Hannah Clarke",
+    "title": "Head of Partnerships UK",
+    "packId": "UK",
+    "workLocation": "London",
+    "hireDate": "2013-11-04",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Approver for the London team."
+  },
+  {
+    "id": "uk-oliver",
+    "name": "Oliver Bennett",
+    "title": "Partnerships Manager",
+    "packId": "UK",
+    "workLocation": "London",
+    "hireDate": "2020-06-15",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Full-timer: 28 days of which 8 are bank holidays — and two buckets with different carry-over law.",
+    "managerId": "uk-hannah"
+  },
+  {
+    "id": "uk-priya",
+    "name": "Priya Shah",
+    "title": "Designer (Tue–Thu)",
+    "packId": "UK",
+    "workLocation": "London",
+    "hireDate": "2022-09-05",
+    "pattern": {
+      "days": [
+        2,
+        3,
+        4
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Tue–Thu part-timer: most bank holidays fall on Mondays, so fewer are deducted from her 16.8 days.",
+    "managerId": "uk-hannah"
+  },
+  {
+    "id": "uk-george",
+    "name": "George Turner",
+    "title": "Sales Executive",
+    "packId": "UK",
+    "workLocation": "London",
+    "hireDate": "2019-01-07",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Leaves 30 Nov 2026: reg.14 pro-rata and payment in lieu.",
+    "managerId": "uk-hannah",
+    "terminationDate": "2026-11-30"
+  },
+  {
+    "id": "es-lucia",
+    "name": "Lucía Fernández",
+    "title": "Local Deals Manager",
+    "packId": "ES-MD",
+    "workLocation": "Madrid",
+    "hireDate": "2018-04-09",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "30 calendar days: her 3-week August block costs 21 days including weekends."
+  },
+  {
+    "id": "es-javier",
+    "name": "Javier Ruiz",
+    "title": "Merchant Onboarding",
+    "packId": "ES-MD",
+    "workLocation": "Madrid",
+    "hireDate": "2026-07-01",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Joined 1 July: 184/365 × 30 = 15.12 days.",
+    "managerId": "es-lucia"
+  },
+  {
+    "id": "es-carmen",
+    "name": "Carmen López",
+    "title": "Sales Ops Analyst",
+    "packId": "ES-MD",
+    "workLocation": "Madrid",
+    "hireDate": "2021-11-15",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Wants January 2027 — but Madrid hasn't published its 2027 holiday decree yet, so the engine refuses to guess.",
+    "managerId": "es-lucia"
+  },
+  {
+    "id": "us-chris",
+    "name": "Chris Walker",
+    "title": "Director, People Ops",
+    "packId": "US-CHI",
+    "workLocation": "Chicago, IL",
+    "hireDate": "2012-05-14",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Approver for Chicago HQ."
+  },
+  {
+    "id": "us-ana",
+    "name": "Ana Ramirez",
+    "title": "Product Manager",
+    "packId": "US-CHI",
+    "workLocation": "Chicago, IL",
+    "hireDate": "2021-03-08",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Fell sick during Thanksgiving-week leave: hours move from Paid Leave to Paid Sick Leave.",
+    "managerId": "us-chris"
+  },
+  {
+    "id": "us-maya",
+    "name": "Maya Johnson",
+    "title": "Software Engineer",
+    "packId": "US-CHI",
+    "workLocation": "Chicago, IL",
+    "hireDate": "2026-07-20",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Day 77: Paid Sick Leave usable (day 30), Paid Leave not yet (day 90).",
+    "managerId": "us-chris"
+  },
+  {
+    "id": "us-derek",
+    "name": "Derek Thompson",
+    "title": "Account Manager",
+    "packId": "US-CHI",
+    "workLocation": "Chicago, IL",
+    "hireDate": "2023-02-13",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Leaves 30 Nov: Paid Leave paid out, Paid Sick Leave forfeited.",
+    "managerId": "us-chris",
+    "terminationDate": "2026-11-30"
+  },
+  {
+    "id": "us-sam",
+    "name": "Sam Patel",
+    "title": "Field Sales (remote)",
+    "packId": "US-CHI",
+    "workLocation": "Springfield, IL",
+    "hireDate": "2024-08-05",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Works in Springfield, not Chicago: Illinois PLAWA applies and no pack exists yet — the engine stops instead of applying Chicago rules.",
+    "managerId": "us-chris"
+  },
+  {
+    "id": "ie-sean",
+    "name": "Seán Byrne",
+    "title": "Data Engineer",
+    "packId": "IE",
+    "workLocation": "Dublin",
+    "hireDate": "2025-06-02",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "persona": "Took 4 days in late December with certified flu — asked to reschedule.",
+    "managerId": "ie-aoife"
+  }
+]

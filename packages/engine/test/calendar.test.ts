@@ -36,3 +36,10 @@ test('expansion across a year uses each year\'s pack', () => {
   const lines = expandDays(de, '2026-12-31', '2027-01-01');
   expect(lines.map((l) => l.kind)).toEqual(['counted', 'holiday']);
 });
+
+test('PL part-timer on 4h days is charged ½ leave-day per day off (1 day = 8h, art. 154²)', () => {
+  const marta = emp({ packId: 'PL', pattern: { days: [1, 2, 3, 4, 5], hoursPerDay: 4 } });
+  const lines = expandDays(marta, '2026-06-08', '2026-06-12');
+  expect(sumCounted(lines)).toBe(2.5);
+  expect(sumCounted(expandDays(emp({ packId: 'PL' }), '2026-06-08', '2026-06-12'))).toBe(5);
+});

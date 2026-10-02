@@ -1,0 +1,165 @@
+{
+  "today": "2026-10-02",
+  "requests": [
+    {
+      "id": "r-lena-summer",
+      "employeeId": "de-lena",
+      "from": "2026-07-13",
+      "to": "2026-07-24",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-06-01"
+    },
+    {
+      "id": "r-felix-feb",
+      "employeeId": "de-felix",
+      "from": "2026-02-16",
+      "to": "2026-02-17",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-02-01"
+    },
+    {
+      "id": "r-sophie-may",
+      "employeeId": "de-sophie",
+      "from": "2026-05-04",
+      "to": "2026-05-08",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-04-01"
+    },
+    {
+      "id": "r-jonas-aug",
+      "employeeId": "de-jonas",
+      "from": "2026-08-03",
+      "to": "2026-08-14",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-06-01"
+    },
+    {
+      "id": "r-anja-sep",
+      "employeeId": "de-anja",
+      "from": "2026-09-14",
+      "to": "2026-09-25",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-06-01"
+    },
+    {
+      "id": "r-kasia-aug",
+      "employeeId": "pl-kasia",
+      "from": "2026-08-17",
+      "to": "2026-08-28",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-06-01"
+    },
+    {
+      "id": "r-tomasz-od",
+      "employeeId": "pl-tomasz",
+      "from": "2026-03-02",
+      "to": "2026-03-02",
+      "kind": "on-demand",
+      "status": "approved",
+      "submittedOn": "2026-03-02"
+    },
+    {
+      "id": "r-tomasz-jul",
+      "employeeId": "pl-tomasz",
+      "from": "2026-07-06",
+      "to": "2026-07-17",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-06-01"
+    },
+    {
+      "id": "r-cian-xmas",
+      "employeeId": "ie-cian",
+      "from": "2026-12-22",
+      "to": "2026-12-31",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-09-15"
+    },
+    {
+      "id": "r-sean-xmas",
+      "employeeId": "ie-sean",
+      "from": "2026-12-28",
+      "to": "2026-12-31",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-09-20"
+    },
+    {
+      "id": "r-oliver-sep",
+      "employeeId": "uk-oliver",
+      "from": "2026-09-07",
+      "to": "2026-09-11",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-06-01"
+    },
+    {
+      "id": "r-lucia-aug",
+      "employeeId": "es-lucia",
+      "from": "2026-08-03",
+      "to": "2026-08-23",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-06-01"
+    },
+    {
+      "id": "r-carmen-jan",
+      "employeeId": "es-carmen",
+      "from": "2027-01-04",
+      "to": "2027-01-08",
+      "kind": "annual",
+      "status": "pending",
+      "submittedOn": "2026-09-28"
+    },
+    {
+      "id": "r-ana-thx",
+      "employeeId": "us-ana",
+      "from": "2026-11-23",
+      "to": "2026-11-25",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-09-10"
+    }
+  ],
+  "sickness": [
+    {
+      "id": "s-ana",
+      "employeeId": "us-ana",
+      "from": "2026-11-24",
+      "to": "2026-11-24",
+      "certified": true
+    },
+    {
+      "id": "s-sean",
+      "employeeId": "ie-sean",
+      "from": "2026-12-29",
+      "to": "2026-12-30",
+      "certified": true,
+      "employeeAskedToReschedule": true
+    }
+  ],
+  "notices": [
+    {
+      "employeeId": "de-felix",
+      "leaveYear": 2025,
+      "sentOn": "2026-01-12"
+    },
+    {
+      "employeeId": "de-felix",
+      "leaveYear": 2026,
+      "sentOn": "2026-09-30"
+    },
+    {
+      "employeeId": "de-lena",
+      "leaveYear": 2026,
+      "sentOn": "2026-09-30"
+    }
+  ]
+}

@@ -148,7 +148,7 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   for (const [b, bal] of Object.entries(base.balances)) res.balanceBefore[b] = bal.available;
   for (const [b, bal] of Object.entries(cand.balances)) res.balanceAfter[b] = bal.available;
   res.preview = cand.events.filter((x) => x.requestId === request.id);
-  const bRules = [...new Set(res.preview.map((x) => x.rule))];
+  const bRules = [...new Map(res.preview.map((x) => [x.rule.ruleId, x.rule])).values()];
   if (newShort.length) return fail('balance', 'INSUFFICIENT_BALANCE', `Not enough balance: ${newShort.map((i) => i.message).join('; ')}.`, kindBuckets(years[0]).map((b) => b.entitlement.rule));
   stage('balance', 'ok', Object.keys(res.balanceAfter).filter((b) => res.balanceBefore[b] !== res.balanceAfter[b])
     .map((b) => `${cand.balances[b].label}: ${fmt(res.balanceBefore[b])} → ${fmt(res.balanceAfter[b])} ${cand.balances[b].unit}`).join(' · ') + ' (at the end of the leave, including scheduled accruals).', bRules);

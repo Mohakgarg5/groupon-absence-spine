@@ -155,10 +155,10 @@ describe('Poland', () => {
     expect(of(buildLedger(g, emptyInputs(), '2026-12-31').events, 'GRANT')[0].amount).toBe(22);
   });
 
-  test('first-job hire accrues 1/12 after each month of work', () => {
+  test('first-job hire accrues 1/12 on completing each month of work', () => {
     const f = emp({ id: 'pl4', packId: 'PL', hireDate: '2026-07-01', pl: { priorServiceYears: 0, education: 'general-secondary', firstJob: true } });
     const l = buildLedger(f, emptyInputs(), '2026-12-31');
-    expect(of(l.events, 'ACCRUE').length).toBe(5); // Aug 1 … Dec 1
+    expect(of(l.events, 'ACCRUE').map((x) => x.date)).toEqual(['2026-07-31', '2026-08-31', '2026-09-30', '2026-10-31', '2026-11-30', '2026-12-31']);
   });
 
   test('carry-over expires 30 September of the next year', () => {
@@ -225,4 +225,17 @@ describe('invariants', () => {
     const dates = l.events.map((x) => x.date);
     expect(dates).toEqual([...dates].sort());
   });
+});
+
+test('monthly accruals sum to the exact entitlement (no 1/12 rounding drift)', () => {
+  const ie = emp({ id: 'drift', packId: 'IE', pattern: { days: [1, 2, 3, 4, 5, 6], hoursPerDay: 8 } }); // Sat holiday → no remedy; 24 days
+  const l = buildLedger(ie, emptyInputs(), '2026-12-31');
+  expect(sum(of(l.events, 'ACCRUE'))).toBe(24);
+  const pl = emp({ id: 'drift2', packId: 'PL', hireDate: '2026-01-01', pl: { priorServiceYears: 0, education: 'none', firstJob: true } });
+  expect(sum(of(buildLedger(pl, emptyInputs(), '2027-01-01').events.filter((x) => x.leaveYear === 2026), 'ACCRUE'))).toBe(20);
+});
+
+test('DE partial year below ½-day fraction keeps the exact twelfths (no drift)', () => {
+  const j = emp({ id: 'nov', packId: 'DE-BE', hireDate: '2026-11-01' }); // 2 × 20/12 = 3.3333 → fraction < ½ stays
+  expect(buildLedger(j, emptyInputs(), '2026-12-31').balances.annual.available).toBe(3.3333);
 });

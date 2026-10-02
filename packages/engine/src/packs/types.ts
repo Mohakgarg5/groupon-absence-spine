@@ -32,7 +32,7 @@ export interface Pack {
   owner: { role: string; signOff: { status: 'pending' | 'signed'; by: string | null; on: string | null } };
   locationAssumption: RuleRef;
   leaveYear: { startMonth: number; startDay: number };
-  counting: { mode: CountingMode; rule: RuleRef };
+  counting: { mode: CountingMode; dayEquivalentHours?: number; rule: RuleRef };
   holidays: { loaded: boolean; source: RuleRef; dates: Holiday[] };
   holidayPolicy: {
     onNonWorkingDay: 'nothing' | 'extra-leave' | 'designate-day-off-task';

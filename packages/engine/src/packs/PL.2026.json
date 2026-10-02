@@ -27,10 +27,11 @@
     "mode": "working-days",
     "rule": {
       "ruleId": "pl-counting",
-      "citation": "Kodeks pracy art. 154² §1: leave is granted for working days per the employee's schedule; holidays are not counted",
+      "citation": "Kodeks pracy art. 154² §1–2: leave is granted in hours of the employee's daily working time, one leave day = 8 hours — a part-timer on 4-hour days uses ½ leave-day per day off; holidays are not counted",
       "verification": "public-unverified",
       "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
-    }
+    },
+    "dayEquivalentHours": 8
   },
   "holidays": {
     "loaded": true,

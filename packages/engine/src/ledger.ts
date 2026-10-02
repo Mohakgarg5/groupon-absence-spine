@@ -197,18 +197,18 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
             });
           } else {
             // §5(1)a: waiting period cannot be completed this year → 1/12 per full month, rounded at year end.
-            const monthly = r4(full / 12);
             let k = 0;
             for (let end = addDays(addMonths(empStart, 1), -1); end <= empEnd; end = addDays(addMonths(empStart, ++k + 1), -1)) {
               const n = k + 1;
-              at(end, 0, () => credit('ACCRUE', end, b.id, monthly, y, rule, `Month ${n} of employment completed: 1/12 × ${fmt(full)} (§5(1)a, waiting period not completable this year)`));
+              const amt = r4(r4((full * n) / 12) - r4((full * (n - 1)) / 12));
+              at(end, 0, () => credit('ACCRUE', end, b.id, amt, y, rule, `Month ${n} of employment completed: 1/12 × ${fmt(full)} (§5(1)a, waiting period not completable this year)`));
             }
             const months = k;
             const close = empEnd;
             at(close, 0.5, () => {
               const exact = (full * months) / 12;
               const target = deRound(exact);
-              const diff = r4(target - r4(monthly * months));
+              const diff = r4(target - r4((full * months) / 12));
               if (diff > 0.0001) credit('ADJUST', close, b.id, diff, y, rule, `Rounding: ${fmt(exact)} days rounded up to ${fmt(target)} — fractions of at least ½ day round up (§5(2))`);
             });
           }
@@ -227,7 +227,8 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
             const s = maxDate(ms, empStart), en = minDate(me, empEnd);
             if (s > en) continue;
             const frac = (daysBetween(s, en) + 1) / (daysBetween(ms, me) + 1);
-            const amt = r4((full / 12) * frac);
+            // Whole months telescope (m/12 − (m−1)/12) so a full year sums to exactly the entitlement.
+            const amt = frac === 1 ? r4(r4((full * m) / 12) - r4((full * (m - 1)) / 12)) : r4((full / 12) * frac);
             at(en, 0, () => credit('ACCRUE', en, b.id, amt, y, rule,
               `${frac < 1 ? `Part month (${fmt(frac * 100)}%): ` : ''}⅓ working week = ${fmt(daysPerWeek(e) / 3)} days for ${ms.slice(0, 7)}`));
           }
@@ -236,10 +237,10 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         case 'pl-proportional': {
           const params = b.entitlement.params;
           if (e.pl?.firstJob && yearOf(e.hireDate) === y) {
-            const monthly = r4(full / 12);
-            for (let k = 1; addMonths(e.hireDate, k) <= empEnd; k++) {
-              const d = addMonths(e.hireDate, k);
-              at(d, 0, () => credit('ACCRUE', d, b.id, monthly, y, rule, `First job: 1/12 × ${fmt(full)} after month ${k} of work (art. 153 §1)`));
+            for (let k = 1; addDays(addMonths(e.hireDate, k), -1) <= empEnd; k++) {
+              const d = addDays(addMonths(e.hireDate, k), -1);
+              const amt = r4(r4((full * k) / 12) - r4((full * (k - 1)) / 12)); // telescoping: twelfths sum exactly
+              at(d, 0, () => credit('ACCRUE', d, b.id, amt, y, rule, `First job: 1/12 × ${fmt(full)} on completing month ${k} of work (art. 153 §1)`));
             }
           } else {
             const ms = monthsStarted(empStart, empEnd);
