@@ -89,7 +89,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
     };
     if (date > today) ev.projected = true;
     events.push(ev);
-    (ev as any).balanceAfter = balanceOf(bucket);
+    ev.balanceAfter = balanceOf(bucket);
     return ev;
   }
 

@@ -81,6 +81,8 @@ export interface LedgerEvent {
   explanation: string;
   requestId?: string;
   projected?: boolean;
+  /** Running balance of the bucket immediately after this event. */
+  balanceAfter?: number;
 }
 
 export interface DayLine {
