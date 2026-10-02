@@ -33,6 +33,8 @@ function editsFor(p: Pack): Edit[] {
   p.buckets.forEach((b: Bucket, i) => {
     const pre = p.buckets.length > 1 ? `${b.id}: ` : '';
     for (const [k, v] of Object.entries(b.entitlement.params)) if (typeof v === 'number') out.push({ path: ['buckets', i, 'entitlement', 'params', k], label: `${pre}entitlement ${k}`, kind: 'number' });
+    if (['hours-worked', 'unlimited-with-floor'].includes(b.accrual.strategy) && b.requestKinds.includes('annual'))
+      out.push({ path: ['buckets', i, 'accrual', 'strategy'], label: `${pre}accrual method`, kind: 'select', options: ['hours-worked', 'unlimited-with-floor'] });
     out.push({ path: ['buckets', i, 'usableFromDays'], label: `${pre}usable from day`, kind: 'number' });
     out.push({ path: ['buckets', i, 'carryOver', 'max'], label: `${pre}carry-over limit (blank = no limit)`, kind: 'nullableNumber' });
     out.push({ path: ['buckets', i, 'carryOver', 'expiresMonthDay'], label: `${pre}carried leave expires (MM-DD)`, kind: 'text' });

@@ -235,7 +235,15 @@
       "citation": "Groupon likely grants PTO above the ordinance minimum; surplus PTO is \"vacation\" under the Illinois Wage Payment and Collection Act and must be paid out",
       "verification": "assumption",
       "url": "https://www.ilga.gov/legislation/ilcs/ilcs3.asp?ActID=2402",
-      "note": "Need the actual US PTO policy."
+      "note": "Need the actual US PTO policy. Built In (third-party, updated Sept 2026) describes it as \"unlimited or flexible PTO\" — if confirmed, set paid-leave accrual to unlimited-with-floor."
+    },
+    {
+      "label": "Unlimited PTO option",
+      "ruleId": "chi-unlimited-payout",
+      "citation": "Chicago Paid Leave rules: an unlimited PTO policy satisfies Paid Leave and needs no carry-over, but on separation (or transfer out of Chicago) the employer must pay the equivalent of 40 hours minus the Paid Leave used in the 12-month benefit period",
+      "verification": "public-verified",
+      "url": "https://www.fisherphillips.com/en/insights/insights/chicagos-new-paid-leave-requirements",
+      "note": "Checked 2026-10-02 against a law-firm summary of the Chicago DOL rules (city site blocked automated access). Third-party profiles describe Groupon's US PTO as \"unlimited or flexible\" — unconfirmed; switch the Paid Leave accrual strategy to unlimited-with-floor on the Rule packs page to model it."
     }
   ]
 }

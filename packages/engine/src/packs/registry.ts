@@ -91,7 +91,7 @@ export function walkRules(p: Pack): RuleRef[] {
 
 const STRATS = {
   entitlement: ['werktage', 'weeks', 'calendar-days', 'pl-seniority', 'per-hours-worked'],
-  accrual: ['de-waiting-period', 'front-load-prorata', 'monthly', 'pl-proportional', 'uk-first-year-monthly', 'hours-worked'],
+  accrual: ['de-waiting-period', 'front-load-prorata', 'monthly', 'pl-proportional', 'uk-first-year-monthly', 'hours-worked', 'unlimited-with-floor'],
   sick: ['restore-if-certified', 'restore-on-request', 'restore', 'convert-to-sick-bank'],
   counting: ['working-days', 'calendar-days', 'working-hours'],
 };
@@ -124,6 +124,8 @@ export function validatePack(p: Pack): string[] {
     if (!STRATS.sick.includes(b.sickDuringLeave?.mode)) e.push(`${b.id}: sickDuringLeave.mode unknown`);
     if (b.carryOver?.expiresMonthDay && !isValidISODate(`2024-${b.carryOver.expiresMonthDay}`)) e.push(`${b.id}: carryOver.expiresMonthDay must be a real MM-DD date`);
     if (!b.requestKinds?.length) e.push(`${b.id}: requestKinds required`);
+    if (b.accrual?.strategy === 'unlimited-with-floor' && (b.unit !== 'hours' || !b.requestKinds.includes('annual')))
+      e.push(`${b.id}: unlimited-with-floor applies only to an hours-based annual (Paid Leave) bucket`);
   }
   for (const r of walkRules(p)) {
     if (!r.citation) e.push(`rule ${r.ruleId}: citation required`);

@@ -96,7 +96,7 @@ Each is small, named and tested, and the pack switches it on. But each one is co
 2. then the tests that pin them;
 3. then the system that has to pass those tests.
 
-**This build's rule packs and its 112 tests are written to become the acceptance test for whatever system Groupon buys.** If a vendor configuration can't replay Lena, Sophie and Katarzyna correctly, it isn't ready.
+**This build's rule packs and its 116 tests are written to become the acceptance test for whatever system Groupon buys.** If a vendor configuration can't replay Lena, Sophie and Katarzyna correctly, it isn't ready.
 
 **No encoding of collective agreements or contractual surplus days yet.** In Germany, Spain and Italy, collective agreements and contracts usually grant more than statute and can carry different carry-over rules. I haven't seen them, so I modelled the statutory floor and listed this as assumption #1.
 

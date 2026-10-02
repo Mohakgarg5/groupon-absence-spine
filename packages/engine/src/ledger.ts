@@ -24,7 +24,7 @@ export interface Lot {
   blocked: boolean;
 }
 export interface LedgerIssue { code: string; date: ISODate; message: string }
-export interface BucketBalance { available: number; unit: Unit; label: string; byYear: Record<number, number> }
+export interface BucketBalance { available: number; unit: Unit; label: string; byYear: Record<number, number>; unlimited?: boolean; usedByYear?: Record<number, number> }
 export interface Ledger {
   employee: Employee;
   asOf: ISODate;
@@ -69,6 +69,9 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
   const issues: LedgerIssue[] = [];
   const overdraft: Record<string, number> = {};
   const bucketMeta: Record<string, { unit: Unit; label: string }> = {};
+  // Unlimited-PTO buckets hold no lots: usage is counted, never refused, and the balance is minus the usage.
+  const unlimited = new Set<string>();
+  const unlimitedUsed: Record<string, number> = {};
   let seq = 0;
 
   const endDate = minDate(asOf, e.terminationDate ?? asOf);
@@ -80,9 +83,12 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
   for (let y = yearOf(startDate); y <= lastYear; y++) years.push(y);
   const packs: Record<number, Pack> = {};
   for (const y of years) packs[y] = getPack(e.packId, y);
-  for (const p of Object.values(packs)) for (const b of p.buckets) bucketMeta[b.id] = { unit: b.unit, label: b.label };
+  for (const p of Object.values(packs)) for (const b of p.buckets) {
+    bucketMeta[b.id] = { unit: b.unit, label: b.label };
+    if (b.accrual.strategy === 'unlimited-with-floor') unlimited.add(b.id);
+  }
 
-  const balanceOf = (bucket: string) => r4(lots.filter((l) => l.bucket === bucket).reduce((s, l) => s + l.remaining, 0) - (overdraft[bucket] ?? 0));
+  const balanceOf = (bucket: string) => r4(lots.filter((l) => l.bucket === bucket).reduce((s, l) => s + l.remaining, 0) - (overdraft[bucket] ?? 0) - (unlimitedUsed[bucket] ?? 0));
 
   function post(type: EventType, date: ISODate, bucket: string, amount: number, leaveYear: number, rule: RuleRef, explanation: string, extra: Partial<LedgerEvent> = {}) {
     const ev: LedgerEvent = {
@@ -98,6 +104,10 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
   function credit(type: EventType, date: ISODate, bucket: string, amount: number, leaveYear: number, rule: RuleRef, explanation: string, extra: Partial<LedgerEvent> = {}) {
     amount = r4(amount);
     if (amount <= 0) return;
+    if (unlimited.has(bucket)) {
+      unlimitedUsed[bucket] = r4((unlimitedUsed[bucket] ?? 0) - amount);
+      return post(type, date, bucket, amount, leaveYear, rule, explanation, extra);
+    }
     let rest = amount;
     const od = overdraft[bucket] ?? 0;
     if (od > 0) { const repay = Math.min(od, rest); overdraft[bucket] = r4(od - repay); rest = r4(rest - repay); }
@@ -128,6 +138,12 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
       l.remaining = r4(l.remaining - t);
       need = r4(need - t);
       taken[l.bucket] = r4((taken[l.bucket] ?? 0) + t);
+    }
+    const unl = bucketIds.find((b) => unlimited.has(b));
+    if (need > 0 && unl) {
+      unlimitedUsed[unl] = r4((unlimitedUsed[unl] ?? 0) + need);
+      taken[unl] = r4((taken[unl] ?? 0) + need);
+      need = 0;
     }
     if (need > 0) {
       const b = bucketIds[0];
@@ -280,6 +296,8 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
           }
           break;
         }
+        case 'unlimited-with-floor':
+          break; // nothing accrues; usage is tracked and the separation floor is applied at termination
         case 'hours-worked': {
           let cum = 0;
           for (let m = 1; m <= 12; m++) {
@@ -416,6 +434,14 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
     const td = e.terminationDate, y = yearOf(td);
     at(td, 5, () => {
       for (const b of bucketsOf(y)) {
+        if (unlimited.has(b.id)) {
+          const used = r4(-events.filter((x) => x.bucket === b.id && x.leaveYear === y).reduce((s, x) => s + x.amount, 0));
+          const floor = b.entitlement.params.capPerYear ?? 40;
+          const pay = r4(Math.max(0, floor - used));
+          const rule = packs[y].extras.find((x) => x.ruleId === 'chi-unlimited-payout') ?? b.payoutOnTermination.rule;
+          post('PAYOUT', td, b.id, 0, y, rule, `Employment ends ${td}: unlimited PTO, so pay out ${fmt(pay)} hours (${floor} h floor − ${fmt(used)} h Paid Leave used in ${y})`);
+          continue;
+        }
         const bal = balanceOf(b.id);
         if (bal < 0) { issues.push({ code: 'NEGATIVE_AT_TERMINATION', date: td, message: `${fmt(-bal)} ${b.unit} overdrawn in ${b.id} — check whether local law allows deduction from final pay` }); continue; }
         if (bal === 0) continue;
@@ -512,6 +538,12 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
       const byYear: Record<number, number> = {};
       for (const l of lots.filter((x) => x.bucket === id && x.remaining > 0)) byYear[l.leaveYear] = r4((byYear[l.leaveYear] ?? 0) + l.remaining);
       balances[id] = { available: balanceOf(id), unit: meta.unit, label: meta.label, byYear };
+      if (unlimited.has(id)) {
+        const usedByYear: Record<number, number> = {};
+        for (const ev of events.filter((x) => x.bucket === id)) usedByYear[ev.leaveYear] = r4((usedByYear[ev.leaveYear] ?? 0) - ev.amount);
+        balances[id].unlimited = true;
+        balances[id].usedByYear = usedByYear;
+      }
     }
     return { employee: e, asOf, events, balances, lots, tasks, issues };
   }

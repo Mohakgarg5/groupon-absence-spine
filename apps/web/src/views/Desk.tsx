@@ -284,7 +284,7 @@ export function Desk() {
               <div className="receipt-head"><strong>Balance today</strong><div className="muted small">{fmtDate(TODAY)}, replayed from the ledger</div></div>
               <div className="receipt-body">
                 {Object.entries(ledger.balances).map(([b, bal]) => (
-                  <div className="receipt-line" key={b}><span>{bal.label}</span><span className="num"><strong>{fmt(bal.available)}</strong> {bal.unit}</span></div>
+                  <div className="receipt-line" key={b}><span>{bal.label}</span><span className="num">{bal.unlimited ? <strong>Unlimited</strong> : <><strong>{fmt(bal.available)}</strong> {bal.unit}</>}</span></div>
                 ))}
               </div>
             </div>
@@ -327,7 +327,7 @@ function Outcome({ result, e, approvedId, onApprove, onFlash }: { result: Pipeli
         {Object.keys(result.balanceAfter).filter((b) => result.balanceBefore[b] !== result.balanceAfter[b]).map((b) => (
           <div className="receipt-line" key={b}>
             <span>{result.bucketLabels[b] ?? b}, balance at end of leave</span>
-            <span className="num">{fmt(result.balanceBefore[b])} to <strong>{fmt(result.balanceAfter[b])}</strong> {unit}</span>
+            <span className="num">{result.balanceAfter[b] < 0 && result.balanceBefore[b] <= 0 ? <>unlimited, <strong>{fmt(-result.balanceAfter[b])}</strong> {unit} used</> : <>{fmt(result.balanceBefore[b])} to <strong>{fmt(result.balanceAfter[b])}</strong> {unit}</>}</span>
           </div>
         ))}
         <details style={{ marginTop: '0.6rem' }}>

@@ -106,3 +106,13 @@ test('every view fits a 400px phone without sideways scrolling', async ({ page }
     expect(sw, name).toBeLessThanOrEqual(cw);
   }
 });
+
+test('Chicago unlimited-PTO option: switching the strategy applies the 40-hour separation floor', async ({ page }) => {
+  await nav(page, 'Rule packs');
+  await page.getByRole('group', { name: 'Entity' }).getByRole('button', { name: 'US-CHI' }).click();
+  await page.getByLabel('paid-leave: accrual method').selectOption('unlimited-with-floor');
+  await expect(page.getByRole('heading', { name: 'Who this changes' })).toBeVisible();
+  await nav(page, 'Ledger');
+  await page.getByRole('button', { name: /Derek Thompson/ }).click();
+  await expect(page.getByText(/unlimited PTO, so pay out 40 hours/)).toBeVisible();
+});

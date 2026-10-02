@@ -56,8 +56,12 @@ export function LedgerView() {
                   <button key={id} className="tile" style={{ textAlign: 'left', cursor: multi ? 'pointer' : 'default', outline: bucket === id ? '2px solid var(--spine)' : undefined }}
                     onClick={() => multi && setBucket(bucket === id ? 'all' : id)} aria-pressed={bucket === id}>
                     <div className="small muted">{b.label}</div>
-                    <div><span className="tile-v">{fmt(b.available)}</span><span className="tile-u">{b.unit} on {fmtDate(asOf)}</span></div>
-                    {Object.keys(b.byYear).length > 0 && (
+                    {b.unlimited ? (
+                      <div><span className="tile-v">Unlimited</span><span className="tile-u">{Object.entries(b.usedByYear ?? {}).map(([y, v]) => `${fmt(v)} h used in ${y}`).join(', ') || 'none used yet'}</span></div>
+                    ) : (
+                      <div><span className="tile-v">{fmt(b.available)}</span><span className="tile-u">{b.unit} on {fmtDate(asOf)}</span></div>
+                    )}
+                    {!b.unlimited && Object.keys(b.byYear).length > 0 && (
                       <div className="small muted">{Object.entries(b.byYear).map(([y, v]) => `${fmt(v)} from ${y}`).join(', ')}</div>
                     )}
                   </button>
