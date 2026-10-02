@@ -7,3 +7,4 @@ dist
 test-results
 playwright-report
 AI-Builder-SWAT-case-study-absence-management.md
+.vercel
