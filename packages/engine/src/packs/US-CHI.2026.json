@@ -113,10 +113,7 @@
       },
       "accrual": {
         "strategy": "hours-worked",
-        "params": {
-          "per": 35,
-          "capPerYear": 40
-        },
+        "params": {},
         "rule": {
           "ruleId": "paid-leave-accrual",
           "citation": "Chicago Ord. 6-130: 1 hour per 35 hours worked, up to 40 hours per 12-month period (accrual method assumed; front-loading is also permitted)",
@@ -180,10 +177,7 @@
       },
       "accrual": {
         "strategy": "hours-worked",
-        "params": {
-          "per": 35,
-          "capPerYear": 40
-        },
+        "params": {},
         "rule": {
           "ruleId": "paid-sick-accrual",
           "citation": "Chicago Ord. 6-130: 1 hour per 35 hours worked, up to 40 hours per 12-month period (accrual method assumed; front-loading is also permitted)",

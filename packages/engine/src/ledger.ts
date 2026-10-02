@@ -48,9 +48,11 @@ const ukRound = (x: number) => {
   if (f === 0 || f === 0.5) return r4(x);
   return f < 0.5 ? Math.floor(x) + 0.5 : Math.ceil(x);
 };
+/** Same day k months later, clamped to month end (31 Jan + 1 month = 28/29 Feb). */
 const addMonths = (d: ISODate, k: number) => {
   const [y, m, day] = d.split('-').map(Number);
-  return iso(y, m + k, day);
+  const last = Number(endOfMonth(iso(y, m + k, 1)).slice(8));
+  return iso(y, m + k, Math.min(day, last));
 };
 const monthsStarted = (from: ISODate, to: ISODate) =>
   (yearOf(to) * 12 + Number(to.slice(5, 7))) - (yearOf(from) * 12 + Number(from.slice(5, 7))) + 1;
@@ -175,7 +177,8 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
       const ent = annualEntitlement(e, pack, b.id, y);
       const full = totalEntitlement(ent);
       const rule = b.accrual.rule;
-      const p = b.accrual.params;
+      // Rates and caps live once, in entitlement.params; accrual.params only holds accrual-specific switches.
+      const p = { ...b.entitlement.params, ...b.accrual.params };
 
       switch (b.accrual.strategy) {
         case 'de-waiting-period': {
@@ -248,7 +251,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
             at(empStart, 0, () => credit('GRANT', empStart, b.id, amt, y, ms >= 12 ? ent.rule : rule,
               ms >= 12 ? ent.explanation : `Proportional: ${ms}/12 months (incomplete months round up) × ${fmt(full)} = ${fmt((full * ms) / 12)} → ${amt} days (art. 155¹–155²)`));
           }
-          const crossing = plThresholdCrossingDate(e, y, params.thresholdYears);
+          const crossing = plThresholdCrossingDate(e, y, params.thresholdYears, params.educationYears);
           if (p.topUpOnThreshold && crossing && crossing <= empEnd && crossing > empStart) {
             const fte = weeklyHours(e) / 40;
             const days = (n: number) => (fte >= 1 ? n : Math.ceil(n * fte));

@@ -99,7 +99,7 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
 
     // Entitlement & seniority
     const entRule = annual[0].entitlement.rule;
-    const plSen = pack.buckets[0].entitlement.strategy === 'pl-seniority' ? plSeniorityYears(e, `${YEAR}-01-01` > e.hireDate ? `${YEAR}-01-01` : e.hireDate) : null;
+    const plSen = pack.buckets[0].entitlement.strategy === 'pl-seniority' ? plSeniorityYears(e, `${YEAR}-01-01` > e.hireDate ? `${YEAR}-01-01` : e.hireDate, pack.buckets[0].entitlement.params.educationYears) : null;
     const plOver = plSen && plSen.years >= pack.buckets[0].entitlement.params.thresholdYears;
     if (globalDays < local - 0.05) {
       if (plOver) {

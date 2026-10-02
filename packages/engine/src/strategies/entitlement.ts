@@ -54,7 +54,7 @@ export function annualEntitlement(e: Employee, pack: Pack, bucketId: string, yea
     case 'calendar-days':
       return { amount: params.days, rule, explanation: `${params.days} calendar days (pattern-independent; weekends inside a block count)` };
     case 'pl-seniority': {
-      const s = plSeniorityYears(e, `${year}-01-01` > e.hireDate ? `${year}-01-01` : e.hireDate);
+      const s = plSeniorityYears(e, `${year}-01-01` > e.hireDate ? `${year}-01-01` : e.hireDate, params.educationYears);
       const base = s.years >= params.thresholdYears ? params.over : params.under;
       const fte = weeklyHours(e) / 40;
       const amount = fte >= 1 ? base : Math.ceil(base * fte);

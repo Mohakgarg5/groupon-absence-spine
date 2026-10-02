@@ -17,7 +17,7 @@ git clone <this repo> && cd <repo>
 npm install
 npm run dev        # web app on http://localhost:5173
 npm run demo       # the whole case in the terminal, about 1 minute to read
-npm test           # 102 engine tests, one or more per legal rule
+npm test           # 112 engine tests, one or more per legal rule
 npm run build      # typecheck everything and build the web app
 ```
 
@@ -63,7 +63,7 @@ packages/engine/            pure TypeScript; no runtime dependencies
   src/stressTest.ts         the force-unify comparison
   src/diff.ts               annual update: holiday moves, rule changes, seniority crossings, HR tasks
   src/data/                 30 fictional employees plus a scenario (today = 2 Oct 2026)
-  test/                     102 tests
+  test/                     112 tests
 apps/web/                   Vite + React UI, imports the engine directly
 cli/demo.ts                 terminal walkthrough
 docs/research/              raw research notes, including what was and wasn't verified

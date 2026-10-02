@@ -57,7 +57,12 @@ Some rules can't be expressed as data. Each of these is a named **hook** in code
 - `plSeniorityYears`: Polish seniority depends on a person's whole working life and education.
 - `resolvePackId`: in the US, the law follows physical work location, not the employing entity.
 
-There are only two hooks across six entities. Everything else is parameters.
+Those are the only two hooks, but I don't want to overstate how much is pure data:
+
+- **Accrual strategies.** Three are country-specific functions: `de-waiting-period`, `pl-proportional` and `uk-first-year-monthly`. The pack selects them by name.
+- **Rule ids referenced in code.** A few rules are looked up by id: Polish leave on demand, the Irish holiday remedy, Polish Saturday holidays, and the German 24/31 December note.
+
+Each is small, named and tested, and the pack switches it on. But each one is code, and a new country may need one more. Keeping that list visible is the point: it is exactly the list of what can't be unified.
 
 ## What the build shows
 
@@ -71,7 +76,8 @@ There are only two hooks across six entities. Everything else is parameters.
 2. **The edge case.** She is certified sick on 29–30 December.
    - BUrlG §9: certified incapacity during leave isn't leave, so the ledger restores 2 days and cites §9.
    - Without a certificate, nothing is restored, and the ledger says why.
-   - A single global policy ("sick days on holiday stay used") breaches German, Polish and Spanish law here, and UK and Irish law whenever the employee asks to reschedule.
+   - A single global policy ("sick days on holiday stay used") breaches German, Polish, Spanish and Irish law in this case (each restores certified sick days).
+   - In the UK the right exists when the employee asks to reschedule. The force-unify test counts the UK rows as breaches on that basis, so 4 of its 54 breaches are conditional on the employee asking.
 3. **The edge case that matters most for migration.** The CJEU's *Max-Planck* ruling (C-684/16) means German leave only lapses on 31 March if the employer warned the employee in writing.
    - Felix was warned, so his leftover leave lapses.
    - Sophie's warning isn't in the legacy system, so hers can't lapse.
@@ -90,7 +96,7 @@ There are only two hooks across six entities. Everything else is parameters.
 2. then the tests that pin them;
 3. then the system that has to pass those tests.
 
-**This build's rule packs and its 102 tests are written to become the acceptance test for whatever system Groupon buys.** If a vendor configuration can't replay Lena, Sophie and Katarzyna correctly, it isn't ready.
+**This build's rule packs and its 112 tests are written to become the acceptance test for whatever system Groupon buys.** If a vendor configuration can't replay Lena, Sophie and Katarzyna correctly, it isn't ready.
 
 **No encoding of collective agreements or contractual surplus days yet.** In Germany, Spain and Italy, collective agreements and contracts usually grant more than statute and can carry different carry-over rules. I haven't seen them, so I modelled the statutory floor and listed this as assumption #1.
 
@@ -108,7 +114,7 @@ The full register, with owners and verification methods, is in [ASSUMPTIONS-AND-
 2. **Groupon's process map has the shape I assumed:** one approval step, and a hand-off to payroll each month. I've requested the map.
 3. **Berlin is the German work location.**
 4. **German carry-over is automatic to 31 March,** and no written lapse warnings are sent today.
-5. **UK bank holidays count toward 5.6 weeks.** If contracts give them on top, it's a one-field correction worth 8 days per UK person.
+5. **UK bank holidays count toward 5.6 weeks.** If contracts give them on top, it's a one-field correction worth 8 days a year for each full-time UK employee, and fewer for part-timers whose working days miss some bank holidays.
 
 ## Before this could ship
 

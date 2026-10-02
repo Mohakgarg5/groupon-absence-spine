@@ -48,7 +48,7 @@ const fmt = (n: number) => String(Math.round(n * 100) / 100);
 export type RequestDraft = Omit<LeaveRequest, 'status' | 'id'> & { id?: string };
 
 export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, today: ISODate): PipelineResult {
-  const request: LeaveRequest = { ...draft, id: draft.id ?? `req-${e.id}-${draft.from}-${draft.kind}`, status: 'pending' };
+  const request: LeaveRequest = { ...draft, id: draft.id ?? `req-${e.id}-${draft.from}-${draft.to}-${draft.kind}-${inputs.requests.length + 1}`, status: 'pending' };
   const res: PipelineResult = { ok: false, request, stages: [], days: [], parts: [], balanceBefore: {}, balanceAfter: {}, bucketLabels: {}, preview: [], payroll: [] };
   const stage = (id: StageId, status: Stage['status'], detail: string, rules: RuleRef[] = []) => res.stages.push({ id, label: label(id), status, detail, rules });
   const fail = (id: StageId, code: string, message: string, rules: RuleRef[] = []) => {
@@ -83,7 +83,8 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   if (unsupported) return fail('validate', 'PACK_NOT_FOUND', `No signed-off rule pack for ${packId} ${unsupported}. Leave in a year needs that year's pack first.`);
   const packs = Object.fromEntries(years.map((y) => [y, getPack(packId, y)]));
   const p0 = packs[years[0]];
-  const clash = inputs.requests.find((r) => r.employeeId === e.id && r.id !== request.id && r.status !== 'rejected' && r.from <= request.to && r.to >= request.from);
+  // Only a pending request being re-processed may share an id with this one; an approved booking always clashes.
+  const clash = inputs.requests.find((r) => r.employeeId === e.id && !(r.id === request.id && r.status === 'pending') && r.status !== 'rejected' && r.from <= request.to && r.to >= request.from);
   if (clash) return fail('validate', 'OVERLAP', `Overlaps ${clash.status} request ${clash.from} → ${clash.to}.`);
   const kindBuckets = (y: number) => packs[y].buckets.filter((b) => b.requestKinds.includes(request.kind));
   if (!kindBuckets(years[0]).length) return fail('validate', 'KIND_NOT_ALLOWED', `${p0.entity} has no "${request.kind}" leave type.`, [p0.counting.rule]);
@@ -121,9 +122,10 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
     const ob = packs[part.leaveYear].buckets.find((b) => b.onDemandMax);
     if (request.kind === 'on-demand' && ob) {
       const used = inputs.requests.filter((r) => r.employeeId === e.id && r.kind === 'on-demand' && r.status === 'approved' && yearOf(r.from) === part.leaveYear && r.id !== request.id)
-        .reduce((s, r) => s + sumCounted(expandDays(e, r.from, r.to)), 0);
+        .reduce((s, r) => s + expandDays(e, r.from, r.to).filter((d) => d.amount > 0).length, 0);
+      const days = res.days.filter((d) => d.amount > 0 && d.date >= part.from && d.date <= part.to).length;
       const rule = packs[part.leaveYear].extras.find((x) => x.ruleId === 'pl-on-demand')!;
-      if (used + part.amount > ob.onDemandMax!) return fail('policy', 'ON_DEMAND_LIMIT', `Already ${used} of ${ob.onDemandMax} on-demand days used in ${part.leaveYear}.`, [rule]);
+      if (used + days > ob.onDemandMax!) return fail('policy', 'ON_DEMAND_LIMIT', `Already ${used} of ${ob.onDemandMax} on-demand days used in ${part.leaveYear}.`, [rule]);
       pRules.push(rule);
     }
   }
@@ -137,9 +139,10 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
 
   // 6. Balance — replay the ledger with and without the request.
   const horizon = `${SUPPORTED_YEARS[SUPPORTED_YEARS.length - 1]}-12-31`;
-  const others = inputs.requests.filter((r) => r.id !== request.id);
+  const others = inputs.requests.filter((r) => !(r.id === request.id && r.status === 'pending'));
   const lastTo = [request.to, ...others.filter((r) => r.employeeId === e.id).map((r) => r.to)].sort().at(-1)!;
-  const asOf = minDate(lastTo, minDate(horizon, e.terminationDate ?? horizon));
+  // Replay to the end of the latest affected leave year so later scheduled debits (e.g. UK bank holidays) are seen.
+  const asOf = minDate(`${yearOf(lastTo)}-12-31`, minDate(horizon, e.terminationDate ?? horizon));
   const base = buildLedger(e, { ...inputs, requests: others }, request.to, { today });
   const withReq = { ...inputs, requests: [...others, { ...request, status: 'approved' as const }] };
   const cand = buildLedger(e, withReq, request.to, { today });

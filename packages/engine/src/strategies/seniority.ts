@@ -7,11 +7,20 @@ export const PL_EDUCATION_YEARS: Record<string, number> = {
   none: 0, 'basic-vocational': 3, 'secondary-vocational': 5, 'general-secondary': 4, 'post-secondary': 6, higher: 8,
 };
 
-const tenureYears = (hire: ISODate, on: ISODate) => Math.max(0, daysBetween(hire, on) / 365.25);
+/** Whole years by anniversary, plus the fraction of the current year — so exactly one year after hiring is 1.0. */
+function tenureYears(hire: ISODate, on: ISODate): number {
+  if (on <= hire) return 0;
+  const [hy, hm, hd] = hire.split('-').map(Number);
+  let years = yearOf(on) - hy;
+  if (iso(hy + years, hm, hd) > on) years--;
+  const anniv = iso(hy + years, hm, hd);
+  const next = iso(hy + years + 1, hm, hd);
+  return years + daysBetween(anniv, on) / daysBetween(anniv, next);
+}
 
-export function plSeniorityYears(e: Employee, onDate: ISODate) {
+export function plSeniorityYears(e: Employee, onDate: ISODate, educationYears: Record<string, number> = PL_EDUCATION_YEARS) {
   const prior = e.pl?.priorServiceYears ?? 0;
-  const edu = PL_EDUCATION_YEARS[e.pl?.education ?? 'none'] ?? 0;
+  const edu = educationYears[e.pl?.education ?? 'none'] ?? 0;
   const tenure = tenureYears(e.hireDate, onDate);
   const years = Math.floor((prior + edu + tenure) * 100) / 100;
   const eduLabel = (e.pl?.education ?? 'none').replace('-', ' ');
@@ -22,9 +31,9 @@ export function plSeniorityYears(e: Employee, onDate: ISODate) {
 }
 
 /** Date in `year` on which statutory seniority first reaches `threshold`, or null if it doesn't cross during that year. */
-export function plThresholdCrossingDate(e: Employee, year: number, threshold: number): ISODate | null {
+export function plThresholdCrossingDate(e: Employee, year: number, threshold: number, educationYears: Record<string, number> = PL_EDUCATION_YEARS): ISODate | null {
   const prior = e.pl?.priorServiceYears ?? 0;
-  const edu = PL_EDUCATION_YEARS[e.pl?.education ?? 'none'] ?? 0;
+  const edu = educationYears[e.pl?.education ?? 'none'] ?? 0;
   const needTenure = threshold - prior - edu;
   if (needTenure <= 0) return null; // already over threshold at hire
   const [y, m, d] = e.hireDate.split('-').map(Number);

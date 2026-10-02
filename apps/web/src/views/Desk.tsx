@@ -165,10 +165,12 @@ export function Desk() {
     setTo(d);
   }
 
-  function run(f = from, t = to, k = kind) {
+  function run(f = from, t = to, k = kind, existingId?: string) {
     if (!f || !t) return;
     if (timer.current) window.clearInterval(timer.current);
-    const r = submitRequest(e, { employeeId: e.id, from: f, to: t, kind: k, submittedOn: TODAY }, state.inputs, TODAY);
+    // New requests get a unique id; re-processing a pending one keeps its id so approval replaces it.
+    const id = existingId ?? `req-${e.id}-${f}-${t}-${k}-${Date.now().toString(36)}`;
+    const r = submitRequest(e, { id, employeeId: e.id, from: f, to: t, kind: k, submittedOn: TODAY }, state.inputs, TODAY);
     setResult(r); setApprovedId(null);
     if (reduceMotion()) { setShown(r.stages.length); return; }
     setShown(0);
@@ -259,7 +261,7 @@ export function Desk() {
                         <td>{KIND_LABEL[r.kind]}</td>
                         <td><span className={`chip ${r.status === 'approved' ? 'v-ok' : r.status === 'pending' ? 'v-review' : 'v-breach'}`}>{r.status}</span></td>
                         <td style={{ textAlign: 'right' }}>
-                          {r.status === 'pending' && <button className="btn btn-quiet small" onClick={() => { setFrom(r.from); setTo(r.to); setKind(r.kind); setCursor({ y: yearOf(r.from), m: Number(r.from.slice(5, 7)) }); dispatch({ type: 'removeRequest', id: r.id }); setTimeout(() => run(r.from, r.to, r.kind), 50); }}>Process</button>}
+                          {r.status === 'pending' && <button className="btn btn-quiet small" onClick={() => { setFrom(r.from); setTo(r.to); setKind(r.kind); setCursor({ y: yearOf(r.from), m: Number(r.from.slice(5, 7)) }); run(r.from, r.to, r.kind, r.id); }}>Process</button>}
                           {r.status === 'approved' && r.submittedOn === TODAY && <button className="btn btn-quiet small" onClick={() => { dispatch({ type: 'removeRequest', id: r.id }); clearRun(); flash('Request withdrawn; ledger replayed'); }}>Withdraw</button>}
                         </td>
                       </tr>
@@ -276,7 +278,7 @@ export function Desk() {
             <h2 className="h3">The spine</h2>
             <StageRail result={result} shown={shown} />
           </div>
-          {finished && result && <Outcome result={result} e={e} approvedId={approvedId} onApprove={approve} onFlash={flash} />}
+          {finished && result && <Outcome key={result.request.id} result={result} e={e} approvedId={approvedId} onApprove={approve} onFlash={flash} />}
           {!result && ledger && (
             <div className="receipt">
               <div className="receipt-head"><strong>Balance today</strong><div className="muted small">{fmtDate(TODAY)}, replayed from the ledger</div></div>

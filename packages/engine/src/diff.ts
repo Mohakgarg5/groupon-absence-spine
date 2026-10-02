@@ -72,7 +72,7 @@ export function annualUpdateImpact(packId: string, fromYear: number, toYear: num
     const bucket = b.buckets[0];
     if (bucket.entitlement.strategy === 'pl-seniority') {
       const p = bucket.entitlement.params;
-      const date = plThresholdCrossingDate(e, toYear, p.thresholdYears);
+      const date = plThresholdCrossingDate(e, toYear, p.thresholdYears, p.educationYears);
       if (date) imp.seniorityCrossings.push({ employeeId: e.id, date, from: p.under, to: p.over });
     }
     try {

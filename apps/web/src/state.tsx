@@ -1,6 +1,6 @@
 import { createContext, useContext, useEffect, useMemo, useReducer, type ReactNode } from 'react';
 import {
-  employees, scenario, setPackOverride, getPack, inflate,
+  employees, scenario, setPackOverride, getPack, inflate, validatePack,
   type Inputs, type LeaveRequest, type SicknessRecord, type Pack,
 } from '@spine/engine';
 
@@ -70,7 +70,8 @@ export function StateProvider({ children }: { children: ReactNode }) {
     const s = load();
     // Re-inflate stored overrides so citations keep their pack stamp, then apply them before first render.
     s.overrides = s.overrides.filter((o) => { try { getPack(o.id, o.year); return true; } catch { return false; } })
-      .map((o) => ({ ...o, pack: inflate(o.pack) }));
+      .map((o) => ({ ...o, pack: inflate(o.pack) }))
+      .filter((o) => validatePack(o.pack).length === 0); // drop stale or invalid corrections instead of crashing
     syncOverrides(s.overrides);
     return s;
   });

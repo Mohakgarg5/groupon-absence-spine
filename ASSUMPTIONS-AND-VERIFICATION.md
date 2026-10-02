@@ -27,7 +27,7 @@ Ranked by what it would cost to be wrong.
 | 5 | Groupon issues no written lapse warnings today | Probably true. If so, every German carry-over balance survives indefinitely, a real liability on the balance sheet | HR Ops DE, with Finance | Search for the annual reminder email; quantify untaken leave |
 | 6 | The Chicago employer has more than 100 covered employees, so unused Paid Leave is paid out | The payout rule flips | People Ops US | Headcount in Chicago (about 377 reported in 2026 coverage, unconfirmed) |
 | 7 | Chicago accrual is per hours worked (front-loading is also lawful) | The balances shown are different but still lawful | People Ops US | Read the US PTO policy. Groupon probably grants PTO above the ordinance, and that surplus is "vacation" under IWPCA |
-| 8 | The UK counts bank holidays toward 5.6 weeks | Every UK balance is 8 days too low | HR BP UK | Read the contract. If it's wrong, it's a one-field fix (try it on the Rule packs page) |
+| 8 | The UK counts bank holidays toward 5.6 weeks | Every full-time UK balance is 8 days too low (part-timers fewer) | HR BP UK | Read the contract. If it's wrong, it's a one-field fix (try it on the Rule packs page) |
 | 9 | Ireland's public-holiday remedy is "an extra day of annual leave" | A different remedy (paid day off or extra pay) changes payroll, not balances | HR BP IE | Ask payroll what is done today |
 | 10 | Spain counts 30 calendar days | Many convenios use 22 working days instead | Employment counsel ES | Identify Groupon Spain's applicable convenio |
 | 11 | Polish study and work periods are not de-duplicated | Seniority is overstated for people who worked while studying | Payroll PL | Check against the świadectwa pracy held for each employee |

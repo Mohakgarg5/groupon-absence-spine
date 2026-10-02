@@ -34,13 +34,26 @@ export function inflate(raw: any): Pack {
 let cache: Pack[] | null = null;
 let overrides: Pack[] = [];
 
+function loadAll(): Pack[] {
+  const packs = RAW.map(inflate);
+  for (const p of packs) {
+    const errs = validatePack(p);
+    if (errs.length) throw new EngineError('INVALID_PACK', `${p.id}@${p.version}: ${errs.join('; ')}`);
+  }
+  return packs;
+}
+
 export function allPacks(): Pack[] {
-  if (!cache) cache = RAW.map(inflate);
+  if (!cache) cache = loadAll();
   return [...cache.filter((p) => !overrides.some((o) => o.id === p.id && o.year === p.year)), ...overrides];
 }
 
 /** For "what-if" editing in the UI and tests: replace a pack in memory. */
 export function setPackOverride(p: Pack | null, id?: string, year?: number) {
+  if (p) {
+    const errs = validatePack(p);
+    if (errs.length) throw new EngineError('INVALID_PACK', `${p.id}@${p.version}: ${errs.join('; ')}`);
+  }
   if (p) overrides = [...overrides.filter((o) => !(o.id === p.id && o.year === p.year)), p];
   else overrides = overrides.filter((o) => !(o.id === id && o.year === year));
 }
@@ -53,7 +66,7 @@ export function getPack(packId: string, year: number): Pack {
 
 /** The pack as shipped in the repo, ignoring any in-memory what-if override. */
 export function getBasePack(packId: string, year: number): Pack {
-  if (!cache) cache = RAW.map(inflate);
+  if (!cache) cache = loadAll();
   const p = cache.find((x) => x.id === packId && x.year === year);
   if (!p) throw new EngineError('PACK_NOT_FOUND', `No rule pack ${packId} for ${year}.`);
   return p;
@@ -109,7 +122,7 @@ export function validatePack(p: Pack): string[] {
     if (!STRATS.entitlement.includes(b.entitlement?.strategy)) e.push(`${b.id}: entitlement.strategy unknown`);
     if (!STRATS.accrual.includes(b.accrual?.strategy)) e.push(`${b.id}: accrual.strategy unknown`);
     if (!STRATS.sick.includes(b.sickDuringLeave?.mode)) e.push(`${b.id}: sickDuringLeave.mode unknown`);
-    if (b.carryOver?.expiresMonthDay && !/^\d{2}-\d{2}$/.test(b.carryOver.expiresMonthDay)) e.push(`${b.id}: carryOver.expiresMonthDay must be MM-DD`);
+    if (b.carryOver?.expiresMonthDay && !isValidISODate(`2024-${b.carryOver.expiresMonthDay}`)) e.push(`${b.id}: carryOver.expiresMonthDay must be a real MM-DD date`);
     if (!b.requestKinds?.length) e.push(`${b.id}: requestKinds required`);
   }
   for (const r of walkRules(p)) {

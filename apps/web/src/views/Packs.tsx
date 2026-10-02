@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import {
-  buildLedger, getBasePack, getPack, setPackOverride, walkRules, resolvePackId,
+  buildLedger, getBasePack, getPack, setPackOverride, validatePack, walkRules, resolvePackId,
   type Pack, type RuleRef, type Bucket,
 } from '@spine/engine';
 import { useApp, people, personById, ENTITY_ORDER, TODAY } from '../state';
@@ -59,10 +59,14 @@ export function Packs() {
   const rules = walkRules(pack);
   const edits = editsFor(pack);
 
+  const [invalid, setInvalid] = useState<string | null>(null);
   function change(path: (string | number)[], v: unknown) {
     const next = structuredClone(pack);
     setAt(next, path, v);
     next.owner = { ...next.owner, signOff: { status: 'pending', by: null, on: null } };
+    const errs = validatePack(next);
+    if (errs.length) { setInvalid(errs.join('; ')); return; }
+    setInvalid(null);
     dispatch({ type: 'override', id, year, pack: JSON.stringify(stripStamp(next)) === JSON.stringify(stripStamp(base)) ? null : next });
   }
 
@@ -158,7 +162,7 @@ export function Packs() {
                     ) : ed.kind === 'select' ? (
                       <select value={String(v)} onChange={(x) => change(ed.path, x.target.value)}>{ed.options!.map((o) => <option key={o}>{o}</option>)}</select>
                     ) : ed.kind === 'text' ? (
-                      <input value={v ?? ''} placeholder="none" onChange={(x) => { const t = x.target.value.trim(); if (t === '' || /^\d{2}-\d{2}$/.test(t)) change(ed.path, t || null); }} />
+                      <DraftText key={`${id}-${year}-${key}-${String(v)}`} value={(v as string | null) ?? ''} onCommit={(t) => change(ed.path, t || null)} />
                     ) : (
                       <input type="number" step="any" min={0} value={v ?? ''} placeholder={ed.kind === 'nullableNumber' ? 'no limit' : ''}
                         onChange={(x) => { const t = x.target.value; if (t === '' && ed.kind === 'nullableNumber') change(ed.path, null); else if (t !== '' && Number(t) >= 0) change(ed.path, Number(t)); }} />
@@ -167,6 +171,7 @@ export function Packs() {
                 );
               })}
             </div>
+            {invalid && <p className="callout bad small" role="alert" style={{ marginBottom: 0 }}>Not applied: {invalid}</p>}
             {corrected && (
               <div className="row" style={{ marginTop: '0.8rem' }}>
                 <span className="chip v-review">Draft correction, sign-off reset to pending</span>
@@ -200,6 +205,13 @@ export function Packs() {
       </div>
     </div>
   );
+}
+
+/** Text field that keeps a local draft while typing and commits on blur or Enter. */
+function DraftText({ value, onCommit }: { value: string; onCommit: (v: string) => void }) {
+  const [draft, setDraft] = useState(value);
+  const commit = () => { const t = draft.trim(); if (t !== value) onCommit(t); };
+  return <input value={draft} placeholder="none (MM-DD)" onChange={(x) => setDraft(x.target.value)} onBlur={commit} onKeyDown={(x) => { if (x.key === 'Enter') commit(); }} />;
 }
 
 function stripStamp(p: Pack) {

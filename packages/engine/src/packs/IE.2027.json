@@ -140,10 +140,10 @@
         }
       },
       "sickDuringLeave": {
-        "mode": "restore-on-request",
+        "mode": "restore-if-certified",
         "rule": {
           "ruleId": "ie-sick",
-          "citation": "OWTA 1997 as amended by the Work Life Balance and Miscellaneous Provisions Act 2023: certified illness during annual leave is treated as sick leave",
+          "citation": "OWTA 1997 s.19 as amended by the Work Life Balance and Miscellaneous Provisions Act 2023: days of illness during annual leave covered by a medical certificate are not counted as annual leave",
           "verification": "public-unverified",
           "url": "https://www.irishstatutebook.ie/eli/2023/act/8/enacted/en/html",
           "note": "Exact section and commencement to verify."
