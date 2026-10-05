@@ -116,3 +116,39 @@ test('Chicago unlimited-PTO option: switching the strategy applies the 40-hour s
   await page.getByRole('button', { name: /Derek Thompson/ }).click();
   await expect(page.getByText(/unlimited PTO, so pay out 40 hours/)).toBeVisible();
 });
+
+test('guided tour walks all eight steps across the app', async ({ page }) => {
+  await page.getByRole('button', { name: 'Take the 3-minute guided tour' }).click();
+  const tour = page.getByRole('dialog', { name: 'Guided tour' });
+  await expect(tour).toContainText('step 1 of 8');
+  await tour.getByRole('button', { name: /^Next/ }).click();
+  await expect(page.locator('.rail-step.ok, .rail-step.warn')).toHaveCount(9);
+  for (let i = 3; i <= 8; i++) {
+    await tour.getByRole('button', { name: /^Next/ }).click();
+    await expect(tour).toContainText(`step ${i} of 8`);
+  }
+  await expect(page.getByRole('heading', { name: /Decision: unify the process and the record/ })).toBeVisible();
+  await tour.getByRole('button', { name: 'Finish the tour' }).click();
+  await expect(tour).toHaveCount(0);
+});
+
+test('tour step 4 lands on Sophie, step 7 on the blocked Spanish pack', async ({ page }) => {
+  await page.getByRole('button', { name: 'Take the 3-minute guided tour' }).click();
+  const tour = page.getByRole('dialog', { name: 'Guided tour' });
+  for (let i = 0; i < 3; i++) await tour.getByRole('button', { name: /^Next/ }).click();
+  await expect(page.getByText('Lapse blocked').first()).toBeVisible();
+  for (let i = 0; i < 3; i++) await tour.getByRole('button', { name: /^Next/ }).click();
+  await expect(page.getByText(/decree not yet published/).first()).toBeVisible();
+});
+
+test('policy simulator: presets move from 54 breaches to the UK units trap to zero, with the cost shown', async ({ page }) => {
+  await nav(page, 'Force-unify test');
+  await expect(page.getByText(/breaks local law 54 times/)).toBeVisible();
+  await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Generous global policy' }).click();
+  await expect(page.getByText(/breaks local law 1 time,/)).toBeVisible();
+  await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Zero-breach policy' }).click();
+  await expect(page.getByText(/Zero breaches, but only because/)).toBeVisible();
+  await expect(page.getByText(/days a year above the legal minimum/)).toBeVisible();
+  await page.getByLabel('Days a year').fill('20');
+  await expect(page.getByText(/breaks local law \d+ times/)).toBeVisible();
+});

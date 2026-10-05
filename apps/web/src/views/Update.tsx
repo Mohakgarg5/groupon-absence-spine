@@ -1,11 +1,12 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { annualUpdateImpact, getPack } from '@spine/engine';
 import { useApp, people, personById, ENTITY_ORDER } from '../state';
 import { Citation, Ent, fmtDate } from '../components/bits';
 
 export function Update() {
   const { state, dispatch } = useApp();
-  const [id, setId] = useState('PL');
+  const [id, setId] = useState(state.focus && ENTITY_ORDER.includes(state.focus) ? state.focus : 'PL');
+  useEffect(() => { if (state.focus && ENTITY_ORDER.includes(state.focus)) setId(state.focus); }, [state.focus]);
   const imp = useMemo(() => annualUpdateImpact(id, 2026, 2027, people, state.inputs), [id, state.rev]);
   const all = useMemo(() => ENTITY_ORDER.map((e) => annualUpdateImpact(e, 2026, 2027, people, state.inputs)), [state.rev]);
   const next = getPack(id, 2027);

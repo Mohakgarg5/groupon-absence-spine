@@ -8,6 +8,7 @@ import { Unify } from './views/Unify';
 import { Packs } from './views/Packs';
 import { Update } from './views/Update';
 import { Docs } from './views/Docs';
+import { Tour } from './components/Tour';
 
 const NAV: { id: View; label: string }[] = [
   { id: 'overview', label: 'Overview' },
@@ -63,6 +64,7 @@ export function App() {
         {state.view === 'update' && <Update />}
         {state.view === 'docs' && <Docs />}
       </main>
+      <Tour />
       <footer className="footer">
         Prototype for the Groupon HR Transformation case study. All employees are fictional. Rules come from public sources and are marked
         by verification status; nothing here has been signed off by Groupon legal.

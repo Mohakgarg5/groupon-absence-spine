@@ -1,6 +1,7 @@
 import { useMemo } from 'react';
 import { allPacks, runStressTest, STAGES, walkRules } from '@spine/engine';
 import { useApp, people, ENTITY_ORDER } from '../state';
+import { goToStep } from '../components/Tour';
 
 const LOCAL_STAGES = new Set(['jurisdiction', 'expand', 'policy', 'balance']);
 
@@ -18,10 +19,11 @@ export function Overview() {
           imposes lives in a versioned, cited rule pack with a named legal owner, so a change in Polish law edits one file, not the system.
         </p>
         <div className="row" style={{ marginTop: '1.25rem' }}>
-          <button className="btn btn-primary" onClick={() => dispatch({ type: 'go', view: 'desk', employeeId: 'de-lena', deskPreset: { from: '2026-12-21', to: '2027-01-08', autorun: true } })}>
+          <button className="btn btn-primary" onClick={() => goToStep(dispatch, 0)}>Take the 3-minute guided tour</button>
+          <button className="btn" onClick={() => dispatch({ type: 'go', view: 'desk', employeeId: 'de-lena', deskPreset: { from: '2026-12-21', to: '2027-01-08', autorun: true } })}>
             Run the Berlin pilot request
           </button>
-          <button className="btn" onClick={() => dispatch({ type: 'go', view: 'unify' })}>See what one global policy breaks</button>
+          <button className="btn" onClick={() => dispatch({ type: 'go', view: 'unify' })}>Try to write one global policy</button>
           <button className="btn btn-quiet" onClick={() => dispatch({ type: 'go', view: 'docs' })}>Read the decision</button>
         </div>
       </section>
@@ -83,7 +85,7 @@ export function Overview() {
         </p>
         <div className="row">
           <button className="btn" onClick={() => dispatch({ type: 'go', view: 'unify' })}>Open the force-unify test</button>
-          <span className="muted small">Policy tested: {stress.policy.description.join('; ')}.</span>
+          <span className="muted small">Policy tested: {stress.policy.description!.join('; ')}.</span>
         </div>
       </section>
 

@@ -6,9 +6,10 @@ import {
 
 export type View = 'overview' | 'desk' | 'ledger' | 'unify' | 'packs' | 'update' | 'docs';
 interface Override { id: string; year: number; pack: Pack }
-interface State { view: View; employeeId: string; inputs: Inputs; overrides: Override[]; rev: number; deskPreset?: { from: string; to: string; autorun: boolean } }
+interface State { view: View; employeeId: string; inputs: Inputs; overrides: Override[]; rev: number; deskPreset?: { from: string; to: string; autorun: boolean }; focus?: string; tour: number | null }
 type Action =
-  | { type: 'go'; view: View; employeeId?: string; deskPreset?: State['deskPreset'] }
+  | { type: 'go'; view: View; employeeId?: string; deskPreset?: State['deskPreset']; focus?: string }
+  | { type: 'tour'; step: number | null }
   | { type: 'select'; employeeId: string }
   | { type: 'addRequest'; request: LeaveRequest }
   | { type: 'removeRequest'; id: string }
@@ -20,7 +21,7 @@ type Action =
   | { type: 'reset' };
 
 const KEY = 'spine-state-v1';
-const fresh = (): State => ({ view: 'overview', employeeId: 'de-lena', inputs: structuredClone(scenario.inputs), overrides: [], rev: 0 });
+const fresh = (): State => ({ view: 'overview', employeeId: 'de-lena', inputs: structuredClone(scenario.inputs), overrides: [], rev: 0, tour: null });
 
 function load(): State {
   try {
@@ -28,7 +29,7 @@ function load(): State {
     if (!raw) return fresh();
     const s = JSON.parse(raw);
     if (!s?.inputs?.requests) return fresh();
-    return { ...fresh(), ...s, view: 'overview', deskPreset: undefined };
+    return { ...fresh(), ...s, view: 'overview', deskPreset: undefined, focus: undefined, tour: null };
   } catch { return fresh(); }
 }
 
@@ -40,7 +41,8 @@ function syncOverrides(list: Override[]) {
 function reducer(s: State, a: Action): State {
   const bump = (n: Partial<State>): State => ({ ...s, ...n, rev: s.rev + 1 });
   switch (a.type) {
-    case 'go': return { ...s, view: a.view, employeeId: a.employeeId ?? s.employeeId, deskPreset: a.deskPreset };
+    case 'go': return { ...s, view: a.view, employeeId: a.employeeId ?? s.employeeId, deskPreset: a.deskPreset, focus: a.focus };
+    case 'tour': return { ...s, tour: a.step };
     case 'select': return { ...s, employeeId: a.employeeId };
     case 'consumePreset': return { ...s, deskPreset: undefined };
     case 'addRequest': return bump({ inputs: { ...s.inputs, requests: [...s.inputs.requests.filter((r) => r.id !== a.request.id), a.request] } });
@@ -59,7 +61,7 @@ function reducer(s: State, a: Action): State {
       syncOverrides(overrides);
       return bump({ overrides });
     }
-    case 'reset': syncOverrides([]); return { ...fresh(), view: s.view, rev: s.rev + 1 };
+    case 'reset': syncOverrides([]); return { ...fresh(), view: s.view, rev: s.rev + 1, tour: s.tour };
   }
 }
 
@@ -76,7 +78,7 @@ export function StateProvider({ children }: { children: ReactNode }) {
     return s;
   });
   useEffect(() => {
-    try { localStorage.setItem(KEY, JSON.stringify({ ...state, deskPreset: undefined })); } catch { /* storage unavailable: state stays in memory */ }
+    try { localStorage.setItem(KEY, JSON.stringify({ ...state, deskPreset: undefined, tour: null })); } catch { /* storage unavailable: state stays in memory */ }
   }, [state]);
   const value = useMemo(() => ({ state, dispatch }), [state]);
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

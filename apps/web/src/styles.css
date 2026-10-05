@@ -349,3 +349,13 @@ a { color: var(--spine-ink); text-underline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation: none !important; transition: none !important; }
 }
+
+/* ---------- guided tour ---------- */
+.tour {
+  position: fixed; z-index: 40; right: clamp(0.75rem, 2vw, 1.5rem); bottom: calc(clamp(0.75rem, 2vw, 1.5rem) + env(safe-area-inset-bottom, 0px));
+  width: min(380px, calc(100vw - 1.5rem)); background: var(--surface); border: 1px solid var(--line-2); border-top: 4px solid var(--spine);
+  border-radius: var(--radius-m); padding: 0.9rem 1rem 1rem; box-shadow: var(--shadow-pop);
+}
+.tour-bar { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 0.4rem; }
+.tour-bar span { display: block; height: 100%; background: var(--spine); transition: width 0.25s ease; }
+.main { padding-bottom: 14rem; }

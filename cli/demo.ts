@@ -116,7 +116,7 @@ for (const ev of derek.events.filter((x) => x.date === '2026-11-30' && x.amount 
 
 // 6 ──────────────────────────────────────────────────────────────
 h1(6, 'Force-unify: run one global policy against all 30 people',
-  'Policy: ' + runStressTest(employees, inputs).policy.description.join(' · '));
+  'Policy: ' + runStressTest(employees, inputs).policy.description!.join(' · '));
 const st = runStressTest(employees, inputs);
 console.log(` ${red(bold(st.summary.breaches + ' statutory breaches'))} affecting ${bold(st.summary.employeesAffected)} of ${employees.length} people · ${amber(st.summary.overspendDays + ' days')} of part-timer overspend · ${blue(st.summary.reviews + ' need legal review')}\n`);
 console.log(dim(' Entity     People  Breaches  Overspend(d)'));

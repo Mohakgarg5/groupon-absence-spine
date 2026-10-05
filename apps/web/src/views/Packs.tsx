@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import {
   buildLedger, getBasePack, getPack, setPackOverride, validatePack, walkRules, resolvePackId,
   type Pack, type RuleRef, type Bucket,
@@ -51,8 +51,9 @@ function setAt(o: any, path: (string | number)[], v: unknown) { const last = pat
 
 export function Packs() {
   const { state, dispatch } = useApp();
-  const initial = personById(state.employeeId).packId;
+  const initial = state.focus && ENTITY_ORDER.includes(state.focus) ? state.focus : personById(state.employeeId).packId;
   const [id, setId] = useState(ENTITY_ORDER.includes(initial) ? initial : 'DE-BE');
+  useEffect(() => { if (state.focus && ENTITY_ORDER.includes(state.focus)) setId(state.focus); }, [state.focus]);
   const [year, setYear] = useState(2026);
   const [raw, setRaw] = useState(false);
   const pack = useMemo(() => getPack(id, year), [id, year, state.rev]);
