@@ -25,7 +25,7 @@ const WORKING_DAYS_PER_FTE = 220; // assumption for scaling only
 function PolicyDesigner({ policy, onChange }: { policy: GlobalPolicy; onChange: (p: GlobalPolicy) => void }) {
   const set = <K extends keyof GlobalPolicy>(k: K, v: GlobalPolicy[K]) => onChange({ ...policy, [k]: v, name: 'Your global policy' });
   return (
-    <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 200px), 1fr))', gap: '0.7rem' }}>
+    <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '0.7rem' }}>
       <label className="field">Days a year
         <input type="number" min={15} max={40} value={policy.daysPerYear} onChange={(x) => { const n = Number(x.target.value); if (n >= 15 && n <= 40) set('daysPerYear', n); }} />
       </label>

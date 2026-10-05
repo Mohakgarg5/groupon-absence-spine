@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { useApp, type View } from '../state';
 
 interface Step { title: string; body: string; view: View; employeeId?: string; focus?: string; desk?: boolean }
@@ -29,14 +30,21 @@ export function goToStep(dispatch: ReturnType<typeof useApp>['dispatch'], i: num
 
 export function Tour() {
   const { state, dispatch } = useApp();
+  const [min, setMin] = useState(false);
   if (state.tour === null) return null;
   const i = state.tour;
   const s = TOUR[i];
+  if (min) return (
+    <aside className="tour min" role="dialog" aria-label="Guided tour">
+      <button className="btn btn-quiet small" onClick={() => setMin(false)}>Show tour, step {i + 1} of {TOUR.length}</button>
+    </aside>
+  );
   return (
     <aside className="tour reveal" role="dialog" aria-label="Guided tour" aria-live="polite">
       <div className="row">
         <span className="small muted">Guided tour, step {i + 1} of {TOUR.length}</span>
         <span className="spacer" />
+        <button className="btn btn-quiet small" onClick={() => setMin(true)} aria-label="Minimise the tour">Minimise</button>
         <button className="btn btn-quiet small" onClick={() => dispatch({ type: 'tour', step: null })} aria-label="Close the tour">Close</button>
       </div>
       <div className="tour-bar" aria-hidden><span style={{ width: `${((i + 1) / TOUR.length) * 100}%` }} /></div>
