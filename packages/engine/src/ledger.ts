@@ -74,7 +74,8 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
   const unlimitedUsed: Record<string, number> = {};
   let seq = 0;
 
-  const endDate = minDate(asOf, e.terminationDate ?? asOf);
+  const horizon = `${SUPPORTED_YEARS[SUPPORTED_YEARS.length - 1]}-12-31`;
+  const endDate = minDate(minDate(asOf, horizon), e.terminationDate ?? asOf);
   const startDate = maxDate(LEDGER_START, e.hireDate);
   const lastYear = Math.min(yearOf(endDate), SUPPORTED_YEARS[SUPPORTED_YEARS.length - 1]);
   if (startDate > endDate) return finish();
@@ -198,7 +199,9 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
 
       switch (b.accrual.strategy) {
         case 'de-waiting-period': {
-          const waitDone = addMonths(e.hireDate, p.waitingMonths);
+          // BGB §§187(2), 188(2): a period starting on the hire day ends the day before the same date 6 months later.
+          const waitNext = addMonths(e.hireDate, p.waitingMonths);
+          const waitDone = addDays(waitNext, -1);
           const proRata = (months: number, why: string, date: ISODate) => {
             const amt = deRound((full * months) / 12);
             at(date, 0, () => credit('GRANT', date, b.id, amt, y, rule, `${why}: ${months}/12 × ${fmt(full)} = ${fmt((full * months) / 12)} → ${fmt(amt)} days (§5)`));
@@ -208,7 +211,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
           } else if (leaving && e.terminationDate! < waitDone) {
             proRata(Math.max(0, monthsBetweenFull(empStart, empEnd)), 'Leaving before the waiting period ends (§5(1)b)', empStart);
           } else if (waitDone <= `${y}-12-31`) {
-            const date = maxDate(empStart, waitDone);
+            const date = maxDate(empStart, minDate(waitNext, `${y}-12-31`));
             const why = waitDone > `${y}-01-01` ? `Waiting period completed on ${waitDone} (§4) — full entitlement` : 'Full annual entitlement';
             at(date, 0, () => {
               credit('GRANT', date, b.id, ent.amount, y, ent.rule, `${why}: ${ent.explanation}`);
@@ -278,12 +281,15 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         }
         case 'uk-first-year-monthly': {
           if (e.hireDate > `${y}-01-01` && yearOf(e.hireDate) === y) {
+            // reg.13(5): the hire-year entitlement is the proportion of the leave year employed; reg.15A paces it monthly.
+            const cap = r4((full * (daysBetween(empStart, empEnd) + 1)) / daysInYear(y));
             let prev = 0;
             for (let k = 0; addMonths(e.hireDate, k) <= empEnd; k++) {
               const d = addMonths(e.hireDate, k);
-              const target = Math.min(full, ukRound((full * (k + 1)) / 12));
+              const target = Math.min(cap, ukRound((full * (k + 1)) / 12));
               const amt = r4(target - prev);
               prev = target;
+              if (amt <= 0) continue;
               const n = k + 1;
               at(d, 0, () => credit('ACCRUE', d, b.id, amt, y, rule, `First year: month ${n} — 1/12 of ${fmt(full)} accrues at the start of each month, rounded to ½ days (reg.15A)`));
             }
@@ -355,7 +361,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
   }
 
   // ---------- requests & sickness ----------
-  const debitedBy: Record<string, { buckets: string[]; amount: number }> = {};
+  const debitedBy: Record<string, { buckets: string[]; amount: number; taken: Record<string, number>; given: Record<string, number> }> = {};
   const approved = inputs.requests.filter((r) => r.employeeId === e.id && r.status === 'approved');
   for (const req of approved) {
     for (const y of years) {
@@ -373,7 +379,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
       at(from, 1, () => {
         const taken = debit(bks, amount, from, y, packs[y].counting.rule,
           `${req.kind === 'on-demand' ? 'Leave on demand' : req.kind === 'sick-bank' ? 'Sick leave' : 'Leave'} ${from} → ${to}: ${fmt(amount)} ${unit}`, false, { requestId: req.id });
-        debitedBy[`${req.id}|${y}`] = { buckets: Object.keys(taken), amount };
+        debitedBy[`${req.id}|${y}`] = { buckets: Object.keys(taken), amount, taken, given: {} };
       });
     }
   }
@@ -388,12 +394,14 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         let lines: DayLine[] = [];
         try { lines = expandDays(e, from, to).filter((l) => l.amount > 0); } catch { continue; }
         if (!lines.length) continue;
-        at(from, 2, () => applySickness(s, req.id, y, lines));
+        // Post on the first counted sick day, so the event sits where it happens in the replay.
+        at(lines[0].date, 2, () => applySickness(s, req.id, y, lines));
       }
     }
   }
 
   const restoredDays = new Set<string>();
+  const restoredAmt: Record<string, number> = {};
   function applySickness(s: Inputs['sickness'][number], reqId: string, y: number, allLines: DayLine[]) {
     const d = debitedBy[`${reqId}|${y}`];
     if (!d) return;
@@ -403,37 +411,59 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
     const from = lines[0].date, to = lines[lines.length - 1].date;
     const amount = sumCounted(lines);
     const mark = () => lines.forEach((l) => restoredDays.add(`${reqId}|${l.date}`));
+    const key = `${reqId}|${y}`;
+    const room = r4(d.amount - (restoredAmt[key] ?? 0)); // never give back more than the request took
     const bucket = d.buckets[0];
     const b = bucketDef(bucket, y)!;
     const rule = b.sickDuringLeave.rule;
-    const amt = Math.min(amount, d.amount);
+    const amt = Math.min(amount, room);
+    if (amt <= 0) return;
+    const track = (n: number) => { restoredAmt[key] = r4((restoredAmt[key] ?? 0) + n); };
+    // Give days back to the buckets they were taken from, never more than each one gave.
+    const restoreTo = (n: number, explain: (a: number) => string) => {
+      let left = r4(n);
+      for (const bk of d.buckets) {
+        if (left <= 0) break;
+        const roomB = r4((d.taken[bk] ?? 0) - (d.given[bk] ?? 0));
+        const a = Math.min(left, roomB);
+        if (a <= 0) continue;
+        credit('RESTORE', from, bk, a, y, rule, explain(a), { requestId: reqId });
+        d.given[bk] = r4((d.given[bk] ?? 0) + a);
+        left = r4(left - a);
+      }
+    };
     const range = from === to ? from : `${from} → ${to}`;
     const unit = b.unit;
     const noRestore = (why: string) => post('ADJUST', from, bucket, 0, y, rule, `Sick ${range} during leave — not restored: ${why}`, { requestId: reqId });
     switch (b.sickDuringLeave.mode) {
       case 'restore-if-certified':
         if (!s.certified) return noRestore('no medical certificate provided (BUrlG §9 requires one)');
-        credit('RESTORE', from, bucket, amt, y, rule, `Certified sickness ${range} during leave: ${fmt(amt)} ${unit} not counted as leave`, { requestId: reqId });
-        mark();
+        restoreTo(amt, (a) => `Certified sickness ${range} during leave: ${fmt(a)} ${unit} not counted as leave`);
+        mark(); track(amt);
         return;
       case 'restore-on-request':
         if (!s.employeeAskedToReschedule) return noRestore('the employee has not asked to reschedule (right exists on request)');
-        credit('RESTORE', from, bucket, amt, y, rule, `Sick ${range} during leave and employee asked to reschedule: ${fmt(amt)} ${unit} restored`, { requestId: reqId });
-        mark();
+        restoreTo(amt, (a) => `Sick ${range} during leave and employee asked to reschedule: ${fmt(a)} ${unit} restored`);
+        mark(); track(amt);
         return;
       case 'restore':
-        credit('RESTORE', from, bucket, amt, y, rule, `Incapacity ${range} interrupts leave: ${fmt(amt)} ${unit} restored to be taken later`, { requestId: reqId });
-        mark();
+        restoreTo(amt, (a) => `Incapacity ${range} interrupts leave: ${fmt(a)} ${unit} restored to be taken later`);
+        mark(); track(amt);
         return;
       case 'convert-to-sick-bank': {
         const sick = bucketsOf(y).find((x) => x.requestKinds.includes('sick-bank'));
         if (!sick) return noRestore('no sick bank in this pack');
         if (addDays(e.hireDate, sick.usableFromDays) > from) return noRestore(`sick leave usable only from day ${sick.usableFromDays} of employment`);
-        const avail = Math.max(0, balanceOf(sick.id));
+        // Keep what already-approved sick-bank requests later in the year will need.
+        // Includes bookings after year end: carried-over sick hours are what fund them.
+        const reserved = approved.filter((r) => r.kind === 'sick-bank' && r.from > from)
+          .reduce((s2, r) => { try { return s2 + sumCounted(expandDays(e, r.from, minDate(r.to, endDate))); } catch { return s2; } }, 0);
+        const avail = Math.max(0, r4(balanceOf(sick.id) - reserved));
         const use = Math.min(amt, avail);
         if (use <= 0) return noRestore('no Paid Sick Leave balance available');
-        credit('RESTORE', from, bucket, use, y, rule, `Sick ${range} during leave: ${fmt(use)} h moved from Paid Leave to Paid Sick Leave`, { requestId: reqId });
+        restoreTo(use, (a) => `Sick ${range} during leave: ${fmt(a)} h moved from Paid Leave to Paid Sick Leave`);
         debit([sick.id], use, from, y, rule, `Sick ${range} during leave: ${fmt(use)} h charged to Paid Sick Leave`, true, { requestId: reqId });
+        track(use);
         if (use >= amt) mark();
         return;
       }

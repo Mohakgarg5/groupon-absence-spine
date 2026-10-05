@@ -1,6 +1,6 @@
 // The unified request pipeline. Same nine stages for every entity; only the rule pack differs.
 import {
-  EngineError, type DayLine, type Employee, type ISODate, type Inputs, type LeaveRequest, type LedgerEvent, type RuleRef, type Unit,
+  EngineError, isValidPattern, type DayLine, type Employee, type ISODate, type Inputs, type LeaveRequest, type LedgerEvent, type RuleRef, type Unit,
 } from './model';
 import { isValidISODate, maxDate, minDate, yearOf, addDays } from './dates';
 import { getPack } from './packs/registry';
@@ -68,9 +68,12 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   if (typeof packId !== 'string') return packId;
   {
     const y0 = isValidISODate(request.from) && SUPPORTED_YEARS.includes(yearOf(request.from)) ? yearOf(request.from) : SUPPORTED_YEARS[0];
-    const jp = getPack(packId, y0);
+    const jp = safe('jurisdiction', () => getPack(packId, y0));
+    if ('stages' in jp) return jp;
     stage('jurisdiction', 'ok', `${e.workLocation} → ${jp.entity} · rule pack ${packId}`, [jp.locationAssumption]);
   }
+  if (!isValidPattern(e.pattern))
+    return fail('validate', 'INVALID_PATTERN', 'The employee\'s working pattern is invalid: working days must be distinct weekdays and hours per day between 0 and 24.');
 
   // 2. Validate
   if (!isValidISODate(request.from) || !isValidISODate(request.to)) return fail('validate', 'INVALID_RANGE', `Dates must be real calendar dates (got ${request.from} → ${request.to}).`);
@@ -121,8 +124,9 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
     }
     const ob = packs[part.leaveYear].buckets.find((b) => b.onDemandMax);
     if (request.kind === 'on-demand' && ob) {
-      const used = inputs.requests.filter((r) => r.employeeId === e.id && r.kind === 'on-demand' && r.status === 'approved' && yearOf(r.from) === part.leaveYear && r.id !== request.id)
-        .reduce((s, r) => s + expandDays(e, r.from, r.to).filter((d) => d.amount > 0).length, 0);
+      // Count only the days that fall in this leave year, so a Dec→Jan request is split correctly.
+      const used = inputs.requests.filter((r) => r.employeeId === e.id && r.kind === 'on-demand' && r.status === 'approved' && r.id !== request.id && r.from <= `${part.leaveYear}-12-31` && r.to >= `${part.leaveYear}-01-01`)
+        .reduce((s, r) => s + expandDays(e, maxDate(r.from, `${part.leaveYear}-01-01`), minDate(r.to, `${part.leaveYear}-12-31`)).filter((d) => d.amount > 0).length, 0);
       const days = res.days.filter((d) => d.amount > 0 && d.date >= part.from && d.date <= part.to).length;
       const rule = packs[part.leaveYear].extras.find((x) => x.ruleId === 'pl-on-demand')!;
       if (used + days > ob.onDemandMax!) return fail('policy', 'ON_DEMAND_LIMIT', `Already ${used} of ${ob.onDemandMax} on-demand days used in ${part.leaveYear}.`, [rule]);

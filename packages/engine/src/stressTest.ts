@@ -1,6 +1,6 @@
 // "Force-unify": apply one naive global policy to every employee and compare with what local law requires.
 // Local outcomes come from the same engine and rule packs that process real requests.
-import { EngineError, type Employee, type Inputs, type RuleRef } from './model';
+import { EngineError, isValidPattern, type Employee, type Inputs, type RuleRef } from './model';
 import { daysBetween } from './dates';
 import { getPack } from './packs/registry';
 import type { Pack } from './packs/types';
@@ -114,6 +114,10 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
         continue;
       }
       throw err;
+    }
+    if (!isValidPattern(e.pattern)) {
+      push({ dimension: 'jurisdiction', global: 'Cannot be assessed', local: 'Invalid working pattern in the HR data — fix the record first', verdict: 'review' });
+      continue;
     }
     const pack = getPack(e.packId, YEAR);
     const annual = pack.buckets.filter((b) => b.requestKinds.includes('annual'));

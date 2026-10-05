@@ -43,30 +43,33 @@ Messages I would not send:
 **Why not big-bang:**
 
 - The riskiest single event is importing legacy balances.
-- Every entity has a different legal clock: the German carry-over lapse on 31 March, the Polish deadline on 30 September, the Spanish holiday decree each autumn.
+- Every entity has a different legal clock: the German carry-over lapse on 31 March, the Polish grant deadline on 30 September, the Spanish holiday decree each autumn (Madrid's 2027 decree arrived on 1 October 2026, mid-build).
 - Two jurisdictions need representative consent before go-live.
 
 A big-bang go-live would have to clear every one of those at once.
 
-**Why Germany first, despite it being the hardest:**
+**Why Warsaw runs the operational pilot, with Germany shadowing it as the legal test.**
 
-- It has the most rules that break unify-everything: the waiting period, §9 sickness, conditional lapse, regional holidays.
-- It has the strongest employee representation.
-- If the design survives Germany, it survives anywhere. If it doesn't, we learn that on one entity.
+Public evidence: Groupon's own postings, the FY2025 10-K, and the shared-services and payroll roles.
+
+- **Warsaw is where the work and the payroll owners are.** Groupon Shared Services Poland is a live hiring hub, and its payroll analysts run payroll for several countries through an external provider, using Workday. A pilot proves the process with the people who will run it, at real volume.
+- **Polish rules are a serious test in their own right:** seniority counts education, there are 4 days of leave on demand, part-time leave is counted in hours, and leave never lapses.
+- **Germany has the hardest rules and the strongest employee representation:** the waiting period, §9 sickness, conditional lapse, and works-council co-determination. But public evidence suggests few staff in 2026: no Berlin postings, and German-speaking sales roles sit in Valencia. So Germany shadows the pilot from day one, on the same engine, through the 31 March lapse. If the design survives German law, it survives anywhere.
+- **If Groupon's HRIS shows Germany is large,** the order flips. The gates don't change.
 
 | Phase | Dates | What happens | Gate to proceed |
 |---|---|---|---|
-| 0. Discovery | Oct–Nov 2026 | Map the as-is process per entity, starting from Groupon's internal process map. Take a time baseline (see §5). Collect contracts and works agreements. Start the DPIA. Formally inform DE works councils. Check whether Groupon is self-certified under the EU-US Data Privacy Framework (otherwise SCCs) | Process map reviewed; baseline captured; DE works-council talks open |
-| 1. DE readiness | Nov 2026–Feb 2027 | Counsel signs off the DE-BE pack. Negotiate a works agreement, or at least a pilot agreement covering the shadow run (I'm assuming 3–9 months for the full agreement). Do a migration dry run: import, replay, reconcile | Pack signed; a pilot agreement in place; every dry-run difference over 0.5 days explained |
-| 2. DE parallel run | Jan–Apr 2027 | The old process stays the system of record. The engine shadows every request. Differences are logged daily and triaged weekly by the German admins. **Spans year-end 2026 and the 31 March 2027 lapse** | Two consecutive months with no unexplained differences; lapse-warning letters sent and recorded |
-| 3. DE cutover | May 2027 | Germany switches. Old process read-only for 12 months | Month-3 review: measured time saving, error count, employee queries |
-| 4. PL, IE | H2 2027 | Warsaw shared services goes first. Its admins become the champions network, and the Polish 30 Sept deadline is the stress point | Same gates per entity |
-| 5. UK, US-CHI, ES | Late 2027, ready for the 2028 leave year | The UK needs a contract review (does the bank-holiday assumption hold?). Chicago gets an Illinois PLAWA pack for staff outside Chicago. Spain needs its convenio reviewed and the 2028 Madrid decree loaded | Same |
-| 6. Remaining entities | 2028 | FR, NL (consent needed), BE, CH, AU and any others that employ people | Same |
+| 0. Discovery | Oct–Nov 2026 | Map the as-is process per entity, starting from Groupon's internal process map and Workday's absence setup. Take a time baseline (see §5). Collect contracts and works agreements. Start the DPIA. Formally inform the DE works council and the PL employee representatives. Check whether Groupon is self-certified under the EU-US Data Privacy Framework (otherwise SCCs) | Process map reviewed; baseline captured; representative talks open |
+| 1. Readiness (PL, plus DE shadow) | Nov 2026–Feb 2027 | Counsel signs off the PL and DE-BE packs. Configure Workday Absence against the packs until it passes the tests. In Germany, a pilot agreement covers the shadow run (I'm assuming 3–9 months for a full works agreement). Do a migration dry run in both: import, replay, reconcile. Collect art. 302¹ seniority documents from Polish staff | Packs signed; Workday passes the tests; every dry-run difference over 0.5 days explained |
+| 2. Parallel run | Jan–Apr 2027 | The old process stays the system of record. The engine shadows every request in Warsaw (the pilot) and Berlin (the shadow). Differences are logged daily and triaged weekly by the local admins. **Spans year-end 2026 and the 31 March 2027 German lapse** | Two consecutive months with no unexplained differences; DE and UK lapse-warning letters sent and recorded |
+| 3. PL cutover | May 2027 | Poland switches. The old process is read-only for 12 months. Warsaw admins become the champions network for the rollout. The 30 September grant deadline is the first live test | Month-3 review: measured time saving, error count, employee queries |
+| 4. DE, IE | H2 2027 | Germany cuts over once its works agreement is signed. Ireland follows | Same gates per entity |
+| 5. UK, US, ES | Late 2027, ready for the 2028 leave year | The UK needs a contract review (does the bank-holiday assumption hold? is there a relevant agreement for a calendar leave year?). The US needs packs for Dallas and for Illinois staff outside Chicago, and a decision on flexible PTO. Spain needs its convenio reviewed, a Valencia pack alongside Madrid, and the 2028 decrees loaded | Same |
+| 6. Remaining entities | 2028 | FR, NL (consent needed), BE, CH, AU, India, and the vehicle that employs Prague staff (no Czech entity in Exhibit 21.1) | Same |
 
 **What happens to the people doing this work today, during the transition.**
 
-The parallel run is *more* work for them, not less: they run the old process and also triage every difference. I estimate about a 50% increase in absence-admin time for German admins over four months. That is a planning assumption, to be measured in Phase 0. The plan:
+The parallel run is *more* work for them, not less: they run the old process and also triage every difference. I estimate about a 50% increase in absence-admin time for the pilot admins over four months. That is a planning assumption, to be measured in Phase 0. The plan:
 
 - **Backfill** that load with temporary capacity, ideally from Warsaw shared services, so it builds cross-entity knowledge.
 - **Make them the experts of record.** They co-author and test their entity's pack and are credited as its stewards. The local knowledge in their heads is the most valuable asset in this programme, and the rule packs are where it gets written down.
@@ -91,7 +94,7 @@ I've organised this by who gets hurt. Each risk has an early-warning signal, so 
 | One wrong rule in a pack underpays a whole entity | Today's errors are individual; a central rule error is systematic, repeated for every employee, every year. That is a class-action shape in some jurisdictions | Counsel signs off every pack. Every rule is pinned by tests. A parallel run before cutover. Changes are visible before activation via the annual-update and correction views | Differences in the parallel run clustered on one rule |
 | Introducing the system without German co-determination | BetrVG §87(1) Nr. 6 covers technical systems objectively able to monitor behaviour or performance (BAG 1 ABR 20/21); per-person absence data very likely qualifies. The works council can seek an order to stop its use, the programme stalls, and HR loses credibility with employee representatives for years | Inform under §§80 and 90 before any real data is processed. Negotiate a works agreement. If the agreement is group-wide, the Konzernbetriebsrat may be the right counterpart (BAG 1 ABR 45/11) | Council asks for an expert under §80(3); agreement talks slip past Phase 1 |
 | Health data handled badly | Sickness records are GDPR Art. 9 data. A central cross-entity system meets several DPIA triggers (sensitive, large-scale, employees). Transfers to a US parent rely on the Data Privacy Framework, whose appeal (C-703/25 P) is pending | Store only "unfit, from/to, certified yes/no", never a diagnosis or free text. Germany's eAU and Poland's e-ZLA already give employers no diagnosis. DPIA before build. Role-based access. SCCs as a fallback | A DPIA finding not closed before the parallel run |
-| Migration surfaces an unbooked liability | German leave that can't lapse because nobody sent the warning. Finance hears about it late, and the programme is blamed for "creating" a cost that was always there | Quantify it in Phase 0 and present it to Finance as a discovered risk, with the fix (warning letters from 2026 onwards) | Large blocked-lapse totals in the dry run |
+| Migration surfaces an unbooked liability | German and UK leave that can't lapse because nobody sent the warning, and Polish leave that never lapses at all. Finance hears about it late, and the programme is blamed for "creating" a cost that was always there | Quantify it in Phase 0 and present it to Finance as a discovered risk, with the fix (warning letters from 2026 onwards) | Large blocked-lapse totals in the dry run |
 
 ### HR's credibility with the rest of the company
 
@@ -168,7 +171,7 @@ FTE is taken as 1,600 productive hours a year. The new stewardship work (S) is s
 
 **What the model leaves out, and how it cuts each way:**
 
-- **Not counted as savings:** avoided statutory breaches (the force-unify test found 54 on 30 sample people), avoided disputes, and audit time. These are real but I can't price them honestly yet.
+- **Not counted as savings:** avoided statutory breaches (the force-unify test found 58 on 30 sample people), avoided disputes, and audit time. These are real but I can't price them honestly yet.
 - **Not counted as costs:**
   - counsel time to sign off six packs, about 5 days each;
   - the temporary parallel-run load (§3);

@@ -95,6 +95,10 @@ export interface DayLine {
 
 export interface HrTask { date: ISODate; title: string; rule: RuleRef }
 
+/** Distinct weekdays 0–6 and 0 < hours per day ≤ 24. */
+export const isValidPattern = (p: WorkPattern | undefined): boolean =>
+  !!p?.days?.length && new Set(p.days).size === p.days.length && p.days.every((d) => Number.isInteger(d) && d >= 0 && d <= 6) && p.hoursPerDay > 0 && p.hoursPerDay <= 24;
+
 export class EngineError extends Error {
   constructor(public code: string, message: string) {
     super(`${code}: ${message}`);

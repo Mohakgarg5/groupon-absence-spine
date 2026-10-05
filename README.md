@@ -34,7 +34,7 @@ npm run build      # typecheck everything and build the web app
    - Approve it, then report her sick on 29–30 Dec. BUrlG §9 gives the two days back, and the receipt says so with the citation.
    - Untick "medical certificate" and nothing is restored; the ledger says why.
 3. **Ledger.** Every balance is replayed from events, and every line names its rule. Open Sophie Krüger: her 2025 leave cannot lapse on 31 March because the legacy system holds no written warning (CJEU C-684/16). Tick the warning and watch the ledger replay.
-4. **Force-unify test.** One sensible-looking global policy is run against all 30 people. It produces 54 breaches of local law, and it overpays part-timers by 35 days a year.
+4. **Force-unify test.** One sensible-looking global policy is run against all 30 people. It produces 58 breaches of local law and overpays part-timers by 35 days a year. Then design your own policy and try to reach zero.
 5. **Rule packs.** All local law, as data. Use **Try a correction**: change any rule and every affected balance replays live. This is how I expect iteration-2 feedback to be applied.
 6. **Annual update.** Packs roll from 2026 to 2027:
    - holidays move;
