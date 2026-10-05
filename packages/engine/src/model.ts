@@ -42,7 +42,7 @@ export interface Employee {
 }
 
 export type RequestKind = 'annual' | 'on-demand' | 'sick-bank';
-export type RequestStatus = 'pending' | 'approved' | 'rejected';
+export type RequestStatus = 'pending' | 'approved' | 'rejected' | 'withdrawn';
 export interface LeaveRequest {
   id: string;
   employeeId: string;

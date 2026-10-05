@@ -3,7 +3,7 @@
 import {
   EngineError, type DayLine, type Employee, type EventType, type HrTask, type ISODate, type Inputs, type LedgerEvent, type RuleRef, type Unit,
 } from './model';
-import { addDays, daysBetween, dow, endOfMonth, iso, maxDate, minDate, yearOf } from './dates';
+import { addDays, daysBetween, dow, endOfMonth, formatDate, iso, maxDate, minDate, yearOf } from './dates';
 import { getPack } from './packs/registry';
 import type { Bucket, Pack } from './packs/types';
 import { annualEntitlement, daysPerWeek, totalEntitlement, weeklyHours } from './strategies/entitlement';
@@ -150,7 +150,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
       const b = bucketIds[0];
       overdraft[b] = r4((overdraft[b] ?? 0) + need);
       taken[b] = r4((taken[b] ?? 0) + need);
-      issues.push({ code: 'NEGATIVE_BALANCE', date, message: `${fmt(need)} ${bucketMeta[b]?.unit ?? 'days'} short in ${b} on ${date}` });
+      issues.push({ code: 'NEGATIVE_BALANCE', date, message: `${fmt(need)} ${bucketMeta[b]?.unit ?? 'days'} short in ${bucketMeta[b]?.label ?? b} on ${formatDate(date)}` });
     }
     return taken;
   }
@@ -513,7 +513,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         if (!n) {
           group.forEach((l) => { l.expiresOn = null; l.blocked = true; });
           post('EXPIRY_BLOCKED', date, bucket, 0, leaveYear, rule,
-            `${fmt(amt)} ${b.unit} from ${leaveYear} would lapse today, but there is no record that the employee was warned in writing — the leave does not lapse (CJEU C-684/16)`);
+            `${fmt(amt)} ${b.unit} from ${leaveYear} would lapse on ${formatDate(date)}, but there is no record that the employee was given the chance and warned in writing, so the leave does not lapse`);
           continue;
         }
         group.forEach((l) => (l.remaining = 0));

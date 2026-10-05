@@ -1,6 +1,6 @@
 // npm run demo — the whole case in a terminal: one real request end to end, the edge cases, and why "unify everything" breaks.
 import {
-  annualEntitlement, annualUpdateImpact, approveRequest, getPack, buildLedger, employeeById, employees, runStressTest, scenario, submitRequest,
+  annualEntitlement, annualUpdateImpact, approveRequest, getPack, hrQueue, buildLedger, employeeById, employees, runStressTest, scenario, submitRequest,
   type Employee, type Inputs, type LedgerEvent, type PipelineResult,
 } from '../packages/engine/src/index';
 
@@ -58,7 +58,7 @@ console.log('\n' + bold(' GLOBAL SPINE · LOCAL RULE PACKS') + dim('  — absenc
 console.log(dim(` Scenario date ${today}. All people are fictional. Rules are cited; badges show what is verified vs assumed.`));
 
 // 1 ──────────────────────────────────────────────────────────────
-h1(1, 'The pilot: Groupon GmbH (Berlin) — one request, end to end',
+h1(1, 'The worked example: Groupon GmbH (Berlin) — one request, end to end',
   `${lena.name} (${lena.title}) asks for 21 Dec 2026 → 8 Jan 2027. Same nine stages run in every entity; only the rule pack differs.`);
 const res = submitRequest(lena, { employeeId: lena.id, from: '2026-12-21', to: '2027-01-08', kind: 'annual', submittedOn: today }, inputs, today);
 stages(res);
@@ -139,6 +139,19 @@ for (const id of ['DE-BE', 'PL', 'IE', 'UK', 'ES-MD', 'US-CHI']) {
   if (imp.diff.blocked) console.log(`         ${dim(imp.diff.reason!)}`);
   for (const r of imp.affectedRequests.filter((x) => x.status === 'blocked')) console.log(`         ${red('↳')} request ${r.requestId} (${r.from} → ${r.to}) cannot be processed: ${dim(r.reason!.slice(0, 90))}`);
   for (const s of imp.seniorityCrossings) console.log(`         ${green('↳')} ${employeeById(s.employeeId)!.name} reaches 10 years on ${s.date}: ${s.from} → ${s.to} days`);
+  if (id === 'ES-MD') console.log(`         ${green('↳')} ${dim('Madrid published its 2027 decree (Decreto 82/2026) on 1 Oct 2026, mid-build: loading it was one file. New for 2027: ' + imp.diff.added.map((a) => a.name).join(', '))}`);
+}
+
+// 8 ──────────────────────────────────────────────────────────────
+h1(8, 'The HR work queue: what is left for people',
+  'Generated from the same ledgers: legal deadlines, money decisions, and the conversations automation makes room for.');
+const q = hrQueue(employees, inputs, today);
+for (const p of [1, 2, 3] as const) {
+  const label = p === 1 ? 'Legal deadlines' : p === 2 ? 'Money & decisions' : 'Care';
+  const items = q.filter((i) => i.priority === p);
+  console.log(` ${bold(label.padEnd(18))} ${items.length} item(s)`);
+  for (const i of items.slice(0, 4)) console.log(`   ${dim('•')} ${i.title}`);
+  if (items.length > 4) console.log(dim(`   … and ${items.length - 4} more`));
 }
 
 console.log('\n' + rule('━'));

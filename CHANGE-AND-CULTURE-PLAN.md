@@ -195,6 +195,8 @@ Measurement, not modelling, decides what happens with capacity.
 
 ## 6. What the freed capacity is for
 
+The app's **HR queue** shows this list generated live from the ledgers. On the scenario date it holds lapse warnings due before 31 December, two final-pay checks, a Polish replacement-day decision, one person with no rule pack, and wellbeing check-ins for four people, two of them team leads with no leave booked all year.
+
 "More strategic HR" is not a plan. These are specific pieces of work. Each is something the new ledger makes possible, and each has a measure.
 
 1. **Leave-not-taken outreach.** The ledger already knows who hasn't had a real break.

@@ -142,8 +142,11 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
       }
     } else {
       const over = !policy.proRataPartTime && d < 5 ? r1(globalDays - (globalDays * d) / 5) : 0;
+      const dayEq = pack.counting.dayEquivalentHours && e.pattern.hoursPerDay !== pack.counting.dayEquivalentHours;
       push({
-        dimension: 'entitlement', global: `${globalDays} days`, local: `${local} days off on a ${d}-day week`,
+        dimension: 'entitlement',
+        global: over > 0 ? `${globalDays} days, not scaled to a ${d}-day week (pro-rated it would be ${r1((globalDays * d) / 5)})` : `${globalDays} days`,
+        local: dayEq ? `${local} days off on ${e.pattern.hoursPerDay}-hour days (${r1((local * e.pattern.hoursPerDay) / (pack.counting.dayEquivalentHours ?? 8))} full-day equivalents)` : `${local} days off on a ${d}-day week`,
         verdict: over > 0 ? 'overspend' : 'ok', delta: over > 0 ? over : r1(globalDays - local),
         ...(over > 0 ? { rule: entRule } : {}),
       });
@@ -172,9 +175,9 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
     push({
       dimension: 'carry-over', global: globalCarry,
       local: !keepsSome ? 'Lapses at year end (same as global)'
-        : neverLapses ? `Never lapses: the employer must grant it${c.grantByMonthDay ? ` by ${c.grantByMonthDay}` : ''} and the claim survives`
+        : neverLapses ? `Never lapses: the employer must grant it${c.grantByMonthDay ? ` by ${mmdd(c.grantByMonthDay)} of the next year` : ''} and the claim survives`
         : c.conditionalOnNotice ? 'Kept: cannot lapse unless the employee was given the chance and warned in writing'
-        : `Carried${c.max !== null ? ` up to ${c.max} ${carry.unit}` : ''}${c.expiresMonthDay ? ` to ${c.expiresMonthDay}` : ''}`,
+        : `Carried${c.max !== null ? ` up to ${c.max} ${carry.unit}` : ''}${c.expiresMonthDay ? `, to be used by ${mmdd(c.expiresMonthDay)} of the next year` : ''}`,
       verdict: carryVerdict,
       rule: c.rule,
     });

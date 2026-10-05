@@ -66,7 +66,8 @@ describe('annual update', () => {
   test('ES-MD 2026 → 2027: San José is new to Madrid, Asunción moves to Monday 16 Aug', () => {
     const d = diffPacks(getPack('ES-MD', 2026), getPack('ES-MD', 2027));
     expect(d.blocked).toBe(false);
-    expect(d.added.map((a) => a.name)).toEqual(expect.arrayContaining(['San José']));
+    expect(d.added.map((a) => a.name)).toEqual(['San José']); // moved Sunday holidays ("traslado") match their base holiday
+    expect(d.moved.find((m) => m.name === 'Asunción de la Virgen')).toEqual({ name: 'Asunción de la Virgen', from: '2026-08-15', to: '2027-08-16' });
   });
 
   test('PL 2027 impact: Piotr crosses 10 years; Saturday holidays become HR tasks', () => {

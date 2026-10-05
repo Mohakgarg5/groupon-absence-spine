@@ -22,6 +22,10 @@ export const maxDate = (a: ISODate, b: ISODate): ISODate => (a > b ? a : b);
 export const isValidISODate = (d: unknown): d is ISODate =>
   typeof d === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(d) && fromMs(toMs(d)) === d;
 
+const MON = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+/** '2026-10-18' → '18 Oct 2026' (UTC, locale-independent). */
+export const formatDate = (d: ISODate): string => `${Number(d.slice(8))} ${MON[Number(d.slice(5, 7)) - 1]} ${d.slice(0, 4)}`;
+
 export function endOfMonth(d: ISODate): ISODate {
   const y = yearOf(d), m = monthOf(d);
   return fromMs(Date.UTC(y, m, 0));

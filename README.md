@@ -20,33 +20,42 @@ git clone <this repo> && cd <repo>
 npm install
 npm run dev        # web app on http://localhost:5173
 npm run demo       # the whole case in the terminal, about 1 minute to read
-npm test           # 116 engine tests, one or more per legal rule
-npm run test:e2e   # 12 browser tests of the web app (downloads Chromium on first run)
+npm test           # 146 engine tests, one or more per legal rule
+npm run test:e2e   # 15 browser tests of the web app (downloads Chromium on first run)
 npm run build      # typecheck everything and build the web app
 ```
 
 ## A three-minute tour
 
-1. **Overview.** The decision in one sentence and the nine-step spine every request takes. Press **Run the Berlin pilot request**.
+The easiest way in is the **guided tour** button on the Overview. It walks through these steps for you:
+
+1. **Overview.** The decision in one sentence and the nine-step spine every request takes.
 2. **Request desk.** Lena (Groupon GmbH, Berlin) books 21 Dec 2026 to 8 Jan 2027.
    - The request is checked against Berlin's holiday calendar and split across two leave years.
    - Her balance is replayed and checked, the request is routed to her manager, and two payroll lines are exported.
-   - Approve it, then report her sick on 29–30 Dec. BUrlG §9 gives the two days back, and the receipt says so with the citation.
-   - Untick "medical certificate" and nothing is restored; the ledger says why.
-3. **Ledger.** Every balance is replayed from events, and every line names its rule. Open Sophie Krüger: her 2025 leave cannot lapse on 31 March because the legacy system holds no written warning (CJEU C-684/16). Tick the warning and watch the ledger replay.
-4. **Force-unify test.** One sensible-looking global policy is run against all 30 people. It produces 58 breaches of local law and overpays part-timers by 35 days a year. Then design your own policy and try to reach zero.
-5. **Rule packs.** All local law, as data. Use **Try a correction**: change any rule and every affected balance replays live. This is how I expect iteration-2 feedback to be applied.
-6. **Annual update.** Packs roll from 2026 to 2027:
+   - Approve it, then report her sick on 29–30 Dec. BUrlG §9 gives the two days back, with the citation on the line. Untick "medical certificate" and the ledger explains why nothing comes back.
+3. **Ledger.** Sophie Krüger's 2025 leave cannot lapse on 31 March: the legacy system holds no written warning (CJEU C-684/16). Tick the warning and watch the ledger replay.
+4. **HR queue.** What is left for people once the typing is automated:
+   - lapse warnings due before 31 December (Germany and, since 2024, the UK);
+   - final-pay checks for leavers;
+   - Polish replacement days off;
+   - wellbeing check-ins for the people who have barely taken leave.
+5. **Force-unify test.** Design one global leave policy and run it against all 30 people.
+   - The simple version breaks local law 58 times.
+   - A generous one still fails: Polish leave never lapses, and a UK 3-day worker ends up 0.2 days short because UK law counts in weeks.
+   - Zero breaches costs about 13,900 days a year above the legal minimum at Groupon's size.
+6. **Rule packs.** All local law, as data, with 59 of 78 rules checked against primary law. Use **Try a correction**: change any rule and every affected balance replays live. This is how iteration-2 feedback gets applied.
+7. **Annual update.** Packs roll from 2026 to 2027:
    - holidays move;
    - Piotr crosses 10 years of Polish seniority;
-   - Madrid's 2027 holiday decree isn't published yet, so the Spanish pack is blocked rather than guessed.
-7. **Decision & plan.** The written deliverables, rendered in-app from the files below.
+   - Madrid's 2027 decree, published on 1 October 2026 in the middle of this build, was a single-file change.
+8. **Decision & plan.** The written deliverables, rendered in-app from the files below.
 
 ## Where each part of the brief is answered
 
 | Brief asks for | Where |
 |---|---|
-| A runnable build, end to end, for at least one real entity | `packages/engine`, Groupon GmbH (DE-BE) pilot in the desk and in `npm run demo` §1 |
+| A runnable build, end to end, for at least one real entity | `packages/engine`; Groupon GmbH (DE-BE) worked example in the desk, the guided tour and `npm run demo` §1 |
 | An edge case that breaks "unify everything" | Sickness during leave (BUrlG §9), conditional lapse (CJEU C-684/16), Polish education-based seniority, Chicago location rule; summarised by the force-unify test |
 | A written decision, with what's not done, assumptions and what to verify | [DECISION.md](DECISION.md), [ASSUMPTIONS-AND-VERIFICATION.md](ASSUMPTIONS-AND-VERIFICATION.md) |
 | Use of AI in research, with my own judgment shown | DECISION.md, section "How AI was used, and where I overruled it" |
@@ -64,11 +73,12 @@ packages/engine/            pure TypeScript; no runtime dependencies
   src/ledger.ts             the unified record: replays grants, accruals, debits, carry-over, lapses
   src/pipeline.ts           the nine-stage request pipeline with an explanation trace
   src/jurisdiction.ts       which law applies (Chicago ordinance vs Illinois PLAWA)
-  src/stressTest.ts         the force-unify comparison
+  src/stressTest.ts         the force-unify comparison and policy simulator
   src/diff.ts               annual update: holiday moves, rule changes, seniority crossings, HR tasks
+  src/queue.ts              the HR work queue generated from the ledgers
   src/data/                 30 fictional employees plus a scenario (today = 2 Oct 2026)
-  test/                     116 tests
-e2e/                        12 Playwright browser tests (no console errors allowed, 400px layout checked)
+  test/                     146 tests (incl. fixes found by an adversarial fuzzer)
+e2e/                        15 Playwright browser tests (no console errors allowed, 400px layout checked)
 apps/web/                   Vite + React UI, imports the engine directly
 cli/demo.ts                 terminal walkthrough
 docs/research/              raw research notes, including what was and wasn't verified

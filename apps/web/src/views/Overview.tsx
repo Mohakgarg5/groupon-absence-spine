@@ -96,11 +96,11 @@ export function Overview() {
         </div>
         <div className="panel-flat">
           <h3 className="h3">Pilot first</h3>
-          <p className="small" style={{ margin: 0 }}>Groupon GmbH runs in parallel with today's process for one full cycle, including the 31 March carry-over lapse, before anything is switched off.</p>
+          <p className="small" style={{ margin: 0 }}>Warsaw, where Groupon's multi-country payroll team sits, runs the operational pilot in parallel with today's process. Germany, the hardest law, shadows it through the 31 March lapse. Nothing is switched off before a clean year-end.</p>
         </div>
         <div className="panel-flat">
           <h3 className="h3">Still to verify</h3>
-          <p className="small" style={{ margin: 0 }}>I asked for Groupon's internal process map first. Groupon asked for independent research, so every rule carries a badge saying whether it was checked against a source, is public but not yet checked, or is my assumption.</p>
+          <p className="small" style={{ margin: 0 }}>I asked for Groupon's internal process map first. Groupon asked for independent research, so 59 of the 78 rules are now checked against primary law, and every rule carries a badge saying whether it is checked, public but unchecked, or my assumption.</p>
         </div>
       </section>
     </div>

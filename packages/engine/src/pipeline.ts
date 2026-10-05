@@ -2,7 +2,8 @@
 import {
   EngineError, isValidPattern, type DayLine, type Employee, type ISODate, type Inputs, type LeaveRequest, type LedgerEvent, type RuleRef, type Unit,
 } from './model';
-import { isValidISODate, maxDate, minDate, yearOf, addDays } from './dates';
+import { isValidISODate, maxDate, minDate, yearOf, addDays, formatDate } from './dates';
+import { employeeById } from './dataset';
 import { getPack } from './packs/registry';
 import { expandDays, sumCounted } from './calendar';
 import { buildLedger, SUPPORTED_YEARS } from './ledger';
@@ -87,8 +88,8 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   const packs = Object.fromEntries(years.map((y) => [y, getPack(packId, y)]));
   const p0 = packs[years[0]];
   // Only a pending request being re-processed may share an id with this one; an approved booking always clashes.
-  const clash = inputs.requests.find((r) => r.employeeId === e.id && !(r.id === request.id && r.status === 'pending') && r.status !== 'rejected' && r.from <= request.to && r.to >= request.from);
-  if (clash) return fail('validate', 'OVERLAP', `Overlaps ${clash.status} request ${clash.from} → ${clash.to}.`);
+  const clash = inputs.requests.find((r) => r.employeeId === e.id && !(r.id === request.id && r.status === 'pending') && r.status !== 'rejected' && r.status !== 'withdrawn' && r.from <= request.to && r.to >= request.from);
+  if (clash) return fail('validate', 'OVERLAP', `Overlaps the ${clash.status} request ${formatDate(clash.from)} to ${formatDate(clash.to)}.`);
   const kindBuckets = (y: number) => packs[y].buckets.filter((b) => b.requestKinds.includes(request.kind));
   if (!kindBuckets(years[0]).length) return fail('validate', 'KIND_NOT_ALLOWED', `${p0.entity} has no "${request.kind}" leave type.`, [p0.counting.rule]);
   stage('validate', 'ok', `${request.from} → ${request.to}, ${request.kind} leave, no overlaps.`);
@@ -120,7 +121,7 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
     for (const b of kindBuckets(part.leaveYear)) {
       const usable = addDays(e.hireDate, b.usableFromDays);
       if (b.usableFromDays > 0 && part.from < usable)
-        return fail('policy', 'NOT_YET_USABLE', `${b.label} can be used from day ${b.usableFromDays} of employment (${usable}).`, [b.entitlement.rule]);
+        return fail('policy', 'NOT_YET_USABLE', `${b.label} can be used from ${b.usableFromDays} days after starting (${formatDate(usable)}).`, [b.entitlement.rule]);
     }
     const ob = packs[part.leaveYear].buckets.find((b) => b.onDemandMax);
     if (request.kind === 'on-demand' && ob) {
@@ -129,7 +130,7 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
         .reduce((s, r) => s + expandDays(e, maxDate(r.from, `${part.leaveYear}-01-01`), minDate(r.to, `${part.leaveYear}-12-31`)).filter((d) => d.amount > 0).length, 0);
       const days = res.days.filter((d) => d.amount > 0 && d.date >= part.from && d.date <= part.to).length;
       const rule = packs[part.leaveYear].extras.find((x) => x.ruleId === 'pl-on-demand')!;
-      if (used + days > ob.onDemandMax!) return fail('policy', 'ON_DEMAND_LIMIT', `Already ${used} of ${ob.onDemandMax} on-demand days used in ${part.leaveYear}.`, [rule]);
+      if (used + days > ob.onDemandMax!) return fail('policy', 'ON_DEMAND_LIMIT', `You asked for ${days} on-demand ${days === 1 ? 'day' : 'days'}, but only ${Math.max(0, ob.onDemandMax! - used)} of ${ob.onDemandMax} remain in ${part.leaveYear}. Book the rest as ordinary leave.`, [rule]);
       pRules.push(rule);
     }
   }
@@ -157,13 +158,21 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   for (const [b, bal] of Object.entries(cand.balances)) { res.balanceAfter[b] = bal.available; res.bucketLabels[b] = bal.label; }
   res.preview = cand.events.filter((x) => x.requestId === request.id);
   const bRules = [...new Map(res.preview.map((x) => [x.rule.ruleId, x.rule])).values()];
-  if (newShort.length) return fail('balance', 'INSUFFICIENT_BALANCE', `Not enough balance: ${newShort.map((i) => i.message).join('; ')}.`, kindBuckets(years[0]).map((b) => b.entitlement.rule));
+  if (newShort.length) {
+    // Report the real total: what is still missing once every grant up to the end of the last affected year has arrived.
+    const finalShort = Object.values(future.balances).filter((b) => b.available < 0 && !b.unlimited);
+    const msg = finalShort.length
+      ? finalShort.map((b) => `${fmt(-b.available)} ${b.unit} short in ${b.label}`).join('; ') + ` (this request needs ${fmt(total)} ${unit})`
+      : `${newShort[0].message}; later accruals arrive too late to cover it`;
+    return fail('balance', 'INSUFFICIENT_BALANCE', `Not enough leave: ${msg}.`, kindBuckets(years[0]).map((b) => b.entitlement.rule));
+  }
   stage('balance', 'ok', Object.keys(res.balanceAfter).filter((b) => res.balanceBefore[b] !== res.balanceAfter[b])
     .map((b) => `${cand.balances[b].label}: ${fmt(res.balanceBefore[b])} → ${fmt(res.balanceAfter[b])} ${cand.balances[b].unit}`).join(' · ') + ' (at the end of the leave, including scheduled accruals).', bRules);
 
   // 7. Route
   res.approverId = e.managerId ?? 'hr-ops';
-  stage('route', 'ok', `Sent to ${e.managerId ? `line manager (${e.managerId})` : 'HR operations (no manager on file)'} — same approval flow in every entity.`);
+  const approverName = e.managerId ? employeeById(e.managerId)?.name ?? e.managerId : null;
+  stage('route', 'ok', `Sent to ${approverName ? `${approverName}, line manager` : 'HR operations (no manager on file)'}. The same approval flow in every entity.`);
 
   // 8. Post
   stage('post', 'ok', `On approval, ${res.preview.filter((x) => x.type === 'DEBIT').length} ledger event(s) are posted, each stamped with pack version and citation.`);

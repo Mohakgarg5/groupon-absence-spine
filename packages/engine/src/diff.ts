@@ -13,6 +13,8 @@ export interface PackDiff {
   blocked: boolean;
   reason?: string;
   moved: { name: string; from: string; to: string }[];
+  /** Holidays on the same day and month in both years. */
+  unchanged: number;
   added: { name: string; date: string }[];
   removed: { name: string; date: string }[];
   ruleChanges: { path: string; from: unknown; to: unknown }[];
@@ -35,13 +37,17 @@ function flatten(o: any, prefix = '', out: Record<string, unknown> = {}): Record
 }
 
 export function diffPacks(a: Pack, b: Pack): PackDiff {
-  const d: PackDiff = { from: `${a.id}@${a.version}`, to: `${b.id}@${b.version}`, blocked: false, moved: [], added: [], removed: [], ruleChanges: [] };
+  const d: PackDiff = { from: `${a.id}@${a.version}`, to: `${b.id}@${b.version}`, blocked: false, moved: [], unchanged: 0, added: [], removed: [], ruleChanges: [] };
   if (!b.holidays.loaded) { d.blocked = true; d.reason = b.holidays.source.citation; }
   // Match on the base name so "Christmas Day (substitute day)" is a moved Christmas, not a new holiday.
-  const base = (n: string) => n.replace(/\s*\((observed|substitute day)\)\s*$/i, '').trim();
+  const base = (n: string) => n.replace(/\s*\((observed|substitute day)\)\s*$/i, '').replace(/^traslado (de la |del |de )/i, '').replace(/^./, (c) => c.toUpperCase()).trim();
   const an = new Map(a.holidays.dates.map((h) => [base(h.name), h.date]));
   const bn = new Map(b.holidays.dates.map((h) => [base(h.name), h.date]));
-  for (const [name, date] of bn) an.has(name) ? d.moved.push({ name, from: an.get(name)!, to: date }) : d.added.push({ name, date });
+  for (const [name, date] of bn) {
+    if (!an.has(name)) d.added.push({ name, date });
+    else if (an.get(name)!.slice(5) === date.slice(5)) d.unchanged++;
+    else d.moved.push({ name, from: an.get(name)!, to: date });
+  }
   if (b.holidays.loaded) for (const [name, date] of an) if (!bn.has(name)) d.removed.push({ name, date });
   const fa = flatten(a), fb = flatten(b);
   for (const k of new Set([...Object.keys(fa), ...Object.keys(fb)])) {

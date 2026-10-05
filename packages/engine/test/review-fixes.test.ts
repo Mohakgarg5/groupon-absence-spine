@@ -39,7 +39,7 @@ test('PL leave on demand counts the employee\'s own days, not 8h day-equivalents
   const inputs: Inputs = { ...emptyInputs(), requests: [approved('od', 'm', '2026-03-02', '2026-03-05', 'on-demand')] };
   const r = submitRequest(marta, { employeeId: 'm', from: '2026-10-05', to: '2026-10-05', kind: 'on-demand', submittedOn: TODAY }, inputs, TODAY);
   expect(r.error?.code).toBe('ON_DEMAND_LIMIT');
-  expect(r.error?.message).toMatch(/Already 4 of 4/);
+  expect(r.error?.message).toMatch(/only 0 of 4 remain/);
 });
 
 test('Chicago accrual cap has one source of truth: editing it changes balances', () => {
