@@ -5,9 +5,9 @@ import { employees, scenario } from '../src/dataset';
 const run = (p: Partial<GlobalPolicy>) => runStressTest(employees, scenario.inputs, { ...NAIVE_GLOBAL, ...p }).summary;
 const dim = (p: Partial<GlobalPolicy>, d: string) => run(p).byDimension[d as 'entitlement'];
 
-test('the simple policy: 58 breaches (incl. the 2024 UK carry-forward rule), 29 people, 35 days part-timer overspend', () => {
+test('the simple policy: 66 breaches across 35 of 37 people, 35 days part-timer overspend', () => {
   const s = run({});
-  expect([s.breaches, s.employeesAffected, s.overspendDays]).toEqual([58, 29, 35]);
+  expect([s.breaches, s.employeesAffected, s.overspendDays]).toEqual([66, 35, 35]);
 });
 
 test('pro-rating for part-timers removes the overspend', () => expect(run({ proRataPartTime: true }).overspendDays).toBe(0));
@@ -15,10 +15,10 @@ test('pro-rating for part-timers removes the overspend', () => expect(run({ proR
 test('26 days removes the Polish seniority breach', () => expect(dim({ daysPerYear: 26 }, 'seniority').breaches).toBe(0));
 
 test('carry-over: use-it-or-lose-it breaches DE, UK (warning rules), PL (never lapses) and Chicago (16h carry)', () => {
-  expect(dim({}, 'carry-over').breaches).toBe(22); // DE 8 + UK 4 + PL 6 + US-CHI 4
-  expect(dim({ lapseNeedsWarning: true }, 'carry-over').breaches).toBe(10); // a warning satisfies DE and UK
-  expect(dim({ carryOver: 'capped', carryDays: 5, carryUntil: '09-30', lapseNeedsWarning: true }, 'carry-over').breaches).toBe(6); // only PL left
-  expect(dim({ carryOver: 'capped', carryDays: 5, carryUntil: '09-30', lapseNeedsWarning: false }, 'carry-over').breaches).toBe(18);
+  expect(dim({}, 'carry-over').breaches).toBe(27); // DE 8 + UK 4 + PL 6 + US-CHI 4 + CZ 2 + US-IL 1 + IN 2
+  expect(dim({ lapseNeedsWarning: true }, 'carry-over').breaches).toBe(15); // a warning satisfies DE and UK
+  expect(dim({ carryOver: 'capped', carryDays: 5, carryUntil: '09-30', lapseNeedsWarning: true }, 'carry-over').breaches).toBe(8); // PL and CZ never lapse
+  expect(dim({ carryOver: 'capped', carryDays: 5, carryUntil: '09-30', lapseNeedsWarning: false }, 'carry-over').breaches).toBe(20);
 });
 
 test('restoring certified sick days and compensating holidays on days off clears those columns', () => {
@@ -31,7 +31,7 @@ test('zero breaches is reachable only with the most generous answer to every rul
   const s = run(generous);
   expect(s.breaches).toBe(0);
   expect(s.aboveMinimumDays).toBeGreaterThan(run({}).aboveMinimumDays);
-  expect(s.reviews).toBeGreaterThan(0); // Illinois location still needs a pack
+  expect(s.reviews).toBe(0);
 });
 
 test('units trap: 26 pro-rated days still leave a UK 3-day worker 0.2 days short of 5.6 weeks', () => {
@@ -51,7 +51,7 @@ test('describePolicy reads like plain English', () => {
   ]);
 });
 
-test('Poland: any lapse of leave is a breach (the claim survives 3 years), so only unlimited carry-over is lawful there', () => {
-  expect(dim({ carryOver: 'capped', carryDays: 5, carryUntil: '12-31', lapseNeedsWarning: true }, 'carry-over').breaches).toBe(6);
+test('Poland and the Czech Republic: leave never lapses, so only unlimited carry-over is lawful there', () => {
+  expect(dim({ carryOver: 'capped', carryDays: 5, carryUntil: '12-31', lapseNeedsWarning: true }, 'carry-over').breaches).toBe(8);
   expect(dim({ carryOver: 'unlimited' }, 'carry-over').breaches).toBe(0);
 });

@@ -28,7 +28,7 @@ test('leavers in the next 90 days get a final-pay leave calculation', () => {
 
 test('pending requests, missing packs, blocked calendars and Polish Saturday holidays are queued once each', () => {
   expect(of('pending').map((x) => x.employeeId)).toEqual(['es-carmen']);
-  expect(of('no-pack').map((x) => x.employeeId)).toEqual(['us-sam']);
+  expect(of('no-pack')).toEqual([]); // every hub now has a pack
   expect(of('replacement-day').every((x) => x.employeeId === undefined)).toBe(true);
 });
 
@@ -36,9 +36,10 @@ test('an unloaded holiday calendar for next year becomes a single deadline task'
   const p = structuredClone(getPack('IE', 2027));
   p.holidays = { ...p.holidays, loaded: false, dates: [] };
   setPackOverride(p);
-  try { expect(hrQueue(employees, scenario.inputs, scenario.today).filter((x) => x.kind === 'calendar').map((x) => x.packId)).toEqual(['IE']); }
+  try { expect(hrQueue(employees, scenario.inputs, scenario.today).filter((x) => x.kind === 'calendar').map((x) => x.packId)).toEqual(['IE', 'IN-KA']); }
   finally { setPackOverride(null, 'IE', 2027); }
-  expect(hrQueue(employees, scenario.inputs, scenario.today).filter((x) => x.kind === 'calendar')).toEqual([]);
+  // India's 2027 festival calendar is genuinely unpublished
+  expect(hrQueue(employees, scenario.inputs, scenario.today).filter((x) => x.kind === 'calendar').map((x) => x.packId)).toEqual(['IN-KA']);
 });
 
 test('queue is sorted by priority then due date', () => {

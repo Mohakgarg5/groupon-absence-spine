@@ -598,7 +598,7 @@
     "id": "us-sam",
     "name": "Sam Patel",
     "title": "Field Sales (remote)",
-    "packId": "US-CHI",
+    "packId": "US-IL",
     "workLocation": "Springfield, IL",
     "hireDate": "2024-08-05",
     "pattern": {
@@ -611,7 +611,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Works in Springfield, not Chicago: Illinois PLAWA applies and no pack exists yet — the engine stops instead of applying Chicago rules.",
+    "persona": "Works in Springfield, not Chicago, so the Illinois Paid Leave for All Workers Act applies, not the Chicago ordinance: one bank of 1 hour per 40 worked.",
     "managerId": "us-chris"
   },
   {
@@ -633,5 +633,146 @@
     },
     "persona": "Scenario: booked 28–31 December, with a certified sickness for 29–30 December entered in advance. He has asked to reschedule, so the days come back.",
     "managerId": "ie-aoife"
+  },
+  {
+    "id": "us-marcus",
+    "name": "Marcus Lee",
+    "title": "Sales Manager",
+    "packId": "US-TX",
+    "workLocation": "Dallas, TX",
+    "hireDate": "2022-06-13",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "managerId": "us-chris",
+    "persona": "Dallas has no leave law at all (the city ordinance was struck down; Texas bars cities from mandating leave). Flexible PTO is purely company policy, and nothing is owed on leaving unless the policy promises it."
+  },
+  {
+    "id": "us-jordan",
+    "name": "Jordan Rivera",
+    "title": "Partnerships Lead (remote)",
+    "packId": "US-NYC",
+    "workLocation": "New York, NY",
+    "hireDate": "2025-03-03",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "managerId": "us-chris",
+    "persona": "New York City: no statutory vacation, but protected sick time accrues from day one (1 hour per 30 worked, up to 56) and carries over, alongside flexible PTO."
+  },
+  {
+    "id": "cz-tereza",
+    "name": "Tereza Dvořáková",
+    "title": "Product Designer",
+    "packId": "CZ",
+    "workLocation": "Prague",
+    "hireDate": "2022-04-04",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "managerId": "cz-jakub",
+    "persona": "Czech leave is counted in hours: 4 weeks × 40 hours = 160 hours. A public holiday inside her leave costs nothing, and untaken leave never lapses."
+  },
+  {
+    "id": "cz-jakub",
+    "name": "Jakub Novák",
+    "title": "Engineering Manager (30 h/week)",
+    "packId": "CZ",
+    "workLocation": "Prague",
+    "hireDate": "2019-09-02",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 6
+    },
+    "persona": "On 6-hour days his 4 weeks are 120 hours, and a day off costs 6 hours, not \"a day\"."
+  },
+  {
+    "id": "es-katrin",
+    "name": "Katrin Bauer",
+    "title": "Account Manager, DACH (German-speaking)",
+    "packId": "ES-VC",
+    "workLocation": "València",
+    "hireDate": "2023-01-09",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "managerId": "es-lucia",
+    "persona": "Serves German merchants from Valencia: Spanish leave law, but Valencia's holidays, such as San José on 19 March and the Comunitat's day on 9 October, which Madrid doesn't have."
+  },
+  {
+    "id": "in-ananya",
+    "name": "Ananya Iyer",
+    "title": "Software Engineer",
+    "packId": "IN-KA",
+    "workLocation": "Bengaluru",
+    "hireDate": "2023-07-17",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "managerId": "in-rahul",
+    "persona": "Earns 1 day of leave per 20 days worked, with a separate 12-day pool for sickness and other reasons. Leave for 2027 can't be booked until Karnataka publishes the festival dates."
+  },
+  {
+    "id": "in-rahul",
+    "name": "Rahul Menon",
+    "title": "Merchant Support Lead",
+    "packId": "IN-KA",
+    "workLocation": "Bengaluru",
+    "hireDate": "2018-02-05",
+    "pattern": {
+      "days": [
+        1,
+        2,
+        3,
+        4,
+        5
+      ],
+      "hoursPerDay": 8
+    },
+    "openingBalances": {
+      "earned": 38
+    },
+    "persona": "Has banked 38 days of earned leave over the years, close to Karnataka's 45-day carry-forward cap, all of it payable if he leaves."
   }
 ]

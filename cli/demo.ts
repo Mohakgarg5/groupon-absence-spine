@@ -103,9 +103,9 @@ for (const id of ['pl-kasia', 'pl-marta']) {
 console.log(dim(' Marta is half-time on 4-hour days: 13 leave-days × 8h = 104h = 26 of her own days off (art. 154²) — counting in "days" alone would halve it.'));
 
 // 5 ──────────────────────────────────────────────────────────────
-h1(5, 'Edge case: Chicago — where you sit decides the law',
-  'Chicago Ord. 6-130 gives two hour-banks with different rules; Illinois PLAWA covers the rest of the state.');
-for (const id of ['us-maya', 'us-ana', 'us-derek', 'us-sam']) {
+h1(5, 'Edge case: in the US, where you sit decides the law',
+  'Chicago Ord. 6-130 gives two hour-banks; Illinois PLAWA covers the rest of the state; Dallas has no leave law; New York City adds sick time from day one.');
+for (const id of ['us-maya', 'us-ana', 'us-derek', 'us-sam', 'us-marcus', 'us-jordan']) {
   const e = employeeById(id)!;
   const r = submitRequest(e, { employeeId: e.id, from: '2026-10-12', to: '2026-10-12', kind: 'annual', submittedOn: today }, inputs, today);
   const verdict = r.ok ? green('OK  ') : red(r.error!.code);
@@ -115,7 +115,7 @@ const derek = buildLedger(employeeById('us-derek')!, inputs, '2026-12-31', { tod
 for (const ev of derek.events.filter((x) => x.date === '2026-11-30' && x.amount < 0)) console.log(`   ${cyan(ev.type.padEnd(7))} ${ev.bucket.padEnd(11)} ${fmt(ev.amount)} h  ${dim(ev.explanation)}`);
 
 // 6 ──────────────────────────────────────────────────────────────
-h1(6, 'Force-unify: run one global policy against all 30 people',
+h1(6, `Force-unify: run one global policy against all ${employees.length} people in 12 jurisdictions`,
   'Policy: ' + runStressTest(employees, inputs).policy.description!.join(' · '));
 const st = runStressTest(employees, inputs);
 console.log(` ${red(bold(st.summary.breaches + ' statutory breaches'))} affecting ${bold(st.summary.employeesAffected)} of ${employees.length} people · ${amber(st.summary.overspendDays + ' days')} of part-timer overspend · ${blue(st.summary.reviews + ' need legal review')}\n`);
@@ -132,7 +132,7 @@ for (const [id, dimn] of [['pl-kasia', 'seniority'], ['de-sophie', 'carry-over']
 // 7 ──────────────────────────────────────────────────────────────
 h1(7, 'Annual update: rolling every pack from 2026 to 2027',
   'Holidays move, seniority thresholds are crossed, calendars may not be published yet. See the impact before anything goes live.');
-for (const id of ['DE-BE', 'PL', 'IE', 'UK', 'ES-MD', 'US-CHI']) {
+for (const id of ['DE-BE', 'PL', 'IE', 'UK', 'ES-MD', 'ES-VC', 'CZ', 'US-CHI', 'US-IL', 'US-NYC', 'US-TX', 'IN-KA']) {
   const imp = annualUpdateImpact(id, 2026, 2027, employees, inputs);
   const state = imp.diff.blocked ? red('BLOCKED') : amber('PENDING SIGN-OFF');
   console.log(` ${bold(id.padEnd(7))} ${state.padEnd(20)} ${imp.diff.moved.length} holidays moved, ${imp.diff.added.length} added, ${imp.diff.ruleChanges.length} rule changes, ${imp.seniorityCrossings.length} seniority crossings, ${imp.tasks.length} HR tasks`);

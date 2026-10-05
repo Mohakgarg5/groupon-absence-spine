@@ -1,0 +1,188 @@
+{
+  "id": "ES-VC",
+  "version": "2027.1",
+  "year": 2027,
+  "entity": "Groupon Spain (as listed in Exhibit 21.1)",
+  "country": "ES",
+  "region": "Comunitat Valenciana — València city",
+  "summary": "The same Spanish leave law as Madrid (30 calendar days, Estatuto de los Trabajadores art. 38), but different holidays: the Comunitat Valenciana and València city set their own, so a Valencia colleague and a Madrid colleague are off on different days.",
+  "owner": {
+    "role": "Employment counsel (ES) + HR Business Partner Valencia",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "es-location",
+    "citation": "Employees assumed to work in València city (the Comunitat sets 12 holidays, the municipality 2)",
+    "verification": "assumption",
+    "note": "Groupon's 2026 postings place German-speaking sales and other roles in Valencia."
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "calendar-days",
+    "rule": {
+      "ruleId": "es-counting",
+      "citation": "Estatuto de los Trabajadores art. 38.1: at least 30 calendar days; holidays inside a leave block are counted",
+      "verification": "public-verified",
+      "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+      "note": "Audiencia Nacional 147/2026 (16 Sep 2026): natural days include weekends and holidays inside the block. Many convenios convert to 22 working days — check Groupon Spain's convenio."
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "es-holidays",
+      "citation": "Decreto 42/2026, de 20 de marzo, del Consell (DOGV núm. 10329, 25 Mar 2026): 12 regional holidays for 2027; Valencia city locals 22 January and 5 April, approved by the city council",
+      "verification": "public-unverified",
+      "url": "https://dogv.gva.es/datos/2026/03/25/pdf/2026_8641_es.pdf",
+      "note": "The regional dates were checked against the DOGV decree. The two city locals come from the Ajuntament's own announcement; the DOGV resolution is still pending (in 2026 it appeared in November)."
+    },
+    "dates": [
+      {
+        "date": "2027-01-01",
+        "name": "Año Nuevo"
+      },
+      {
+        "date": "2027-01-06",
+        "name": "Epifanía del Señor"
+      },
+      {
+        "date": "2027-01-22",
+        "name": "San Vicente Mártir (local)"
+      },
+      {
+        "date": "2027-03-19",
+        "name": "San José"
+      },
+      {
+        "date": "2027-03-26",
+        "name": "Viernes Santo"
+      },
+      {
+        "date": "2027-03-29",
+        "name": "Lunes de Pascua"
+      },
+      {
+        "date": "2027-04-05",
+        "name": "San Vicente Ferrer (local)"
+      },
+      {
+        "date": "2027-05-01",
+        "name": "Fiesta del Trabajo"
+      },
+      {
+        "date": "2027-10-09",
+        "name": "Día de la Comunitat Valenciana"
+      },
+      {
+        "date": "2027-10-12",
+        "name": "Fiesta Nacional de España"
+      },
+      {
+        "date": "2027-11-01",
+        "name": "Todos los Santos"
+      },
+      {
+        "date": "2027-12-06",
+        "name": "Día de la Constitución Española"
+      },
+      {
+        "date": "2027-12-08",
+        "name": "Inmaculada Concepción"
+      },
+      {
+        "date": "2027-12-25",
+        "name": "Natividad del Señor"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "es-holiday-policy",
+      "citation": "ET art. 37.2: up to 14 holidays a year, 2 of them local; national holidays falling on a Sunday are moved to the Monday; no statutory replacement day for a holiday on a Saturday",
+      "verification": "public-verified",
+      "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+    }
+  },
+  "buckets": [
+    {
+      "id": "annual",
+      "label": "Vacaciones",
+      "unit": "days",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "calendar-days",
+        "params": {
+          "days": 30
+        },
+        "rule": {
+          "ruleId": "es-entitlement",
+          "citation": "ET art. 38.1: minimum 30 calendar days per year",
+          "verification": "public-verified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+        }
+      },
+      "accrual": {
+        "strategy": "front-load-prorata",
+        "params": {},
+        "rule": {
+          "ruleId": "es-accrual",
+          "citation": "Proportional to time worked in the year (~2.5 calendar days/month); front-loaded on 1 January (Groupon policy assumption)",
+          "verification": "assumption",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+        }
+      },
+      "carryOver": {
+        "max": 0,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "es-carry",
+          "citation": "ET art. 38.3: leave is taken within the year; if it coincides with pregnancy- or birth-related incapacity or a birth/adoption suspension it can be taken afterwards even after the year ends; for other incapacity, within 18 months of the end of the year",
+          "verification": "public-verified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+          "note": "The incapacity exceptions are not modelled."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "es-sick",
+          "citation": "ET art. 38.3: if incapacity coincides with the leave period, leave can be taken afterwards",
+          "verification": "public-verified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+          "note": "Incapacity arising during leave: CJEU C-78/11 (ANGED)."
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "es-payout",
+          "citation": "ET art. 38.1: leave \"no sustituible por compensación económica\"; payment only on termination (Tribunal Supremo, 28 May 2013)",
+          "verification": "public-verified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Convenio colectivo",
+      "ruleId": "es-convenio",
+      "citation": "The applicable sector convenio usually defines working-day counting and may add days",
+      "verification": "assumption",
+      "note": "Request Groupon Spain's convenio before go-live."
+    }
+  ]
+}

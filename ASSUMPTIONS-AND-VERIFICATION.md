@@ -10,7 +10,7 @@ Every rule in the engine carries one of three tags. None is yet "verified agains
 | ◐ Public, not yet checked | Well-established public law, cited to the canonical source, but I didn't re-read the section; a lawyer must confirm the section and wording |
 | ○ Our assumption | A company-policy choice I made to make the build run; Groupon's real policy may differ |
 
-The 2026 rule packs contain **78 distinct rules: 59 checked against a primary source, 4 public but not yet checked, and 15 company-policy assumptions**. The **Rule packs** page shows the split per entity.
+The 2026 rule packs contain **152 distinct rules across 12 jurisdictions: 97 checked against a primary source, 9 public but not yet checked, and 46 company-policy assumptions**. Most of the assumptions sit in Texas, New York and India, where the law leaves vacation to the employer. The **Rule packs** page shows the split per entity.
 
 **What "checked" means.** A research agent and I read the actual text:
 - Kodeks pracy (Dz.U. 2026 poz. 1245);
@@ -48,6 +48,9 @@ Ranked by what it would cost to be wrong.
 | 11 | Polish study and work periods are not de-duplicated | Seniority is overstated for people who worked while studying | Payroll PL | Check against the świadectwa pracy held for each employee |
 | 12 | The calendar year is the leave year everywhere | UK and FR entities may run other leave years | HR BP UK and FR | Contract review. The engine rejects non-calendar years rather than mis-computing them |
 | 13 | The 13 active countries in the 10-K map to the entities I chose. FR, NL, BE, CH and AU have entities but no pack yet | The rollout scope is incomplete | HR Ops, with Legal | Get the entity list with headcount from HRIS in Phase 0 (not available for this exercise) |
+| 14 | Groupon's US PTO is flexible with no balance (Dallas posting); New York forfeits it on leaving only if the written policy says so | Payout and carry-over could be owed | People Ops US | Read the US PTO policy |
+| 15 | Bengaluru staff fall under Karnataka's Shops Act, and Groupon's 10 festival holidays include Ugadi, Ayudha Pooja, Vijayadasami, Deepavali and Christmas | Wrong state Act (Chennai is Tamil Nadu) or wrong festival list | HR lead India | Confirm work location and the notified festival list |
+| 16 | Prague staff are employed under Czech law | If an employer of record holds the contracts, its policy applies | People partner Prague | Identify the employing entity |
 
 ## What has to be true before go-live, per entity
 
@@ -64,9 +67,11 @@ Each is a gate. A pack can't be activated with any of these open.
 
 - **HRIS: Workday.** Groupon's Benefits Specialist and IT SOX postings name it. Payroll is outsourced to an external provider, and Warsaw payroll analysts run "payroll across multiple countries".
 - **Live hiring hubs in 2026:** Chicago, Dallas, New York (remote), London, Madrid, Valencia, Warsaw, Prague and Bangalore. There are none in Berlin or Dublin.
-  - **Dallas** staff need a Texas pack: no state leave law, so company policy only.
-  - **Valencia** staff need a Comunitat Valenciana pack, because regional holidays differ from Madrid's.
-  - **Prague** roles exist with no Czech entity in Exhibit 21.1. The employing vehicle (an employer-of-record or a branch) is unknown.
+  - **Dallas:** now a Texas pack. There's no state or city leave law (the Dallas ordinance was struck down, and Texas Labor Code §1.005 preempts cities), so it is company policy only.
+  - **Valencia:** now an ES-VC pack, because its regional and city holidays differ from Madrid's.
+  - **Prague:** now a CZ pack under Czech law. The employing vehicle (an employer of record or a branch) is still unknown.
+  - **New York (remote) and Springfield, Illinois:** now packs, under NYC's Earned Safe and Sick Time Act and Illinois PLAWA.
+  - **Bengaluru:** now an IN-KA pack. Groupon's careers page places Shared Services in Chennai (Tamil Nadu, a different state Act), so the location needs confirming.
 - **US PTO:** Groupon's Dallas posting says "flexible PTO". Third-party profiles say "unlimited or flexible". The engine supports both; Chicago's 40-hour separation floor applies to unlimited PTO.
 - **Works councils:** the 10-K says international operations are subject to "Workers' Councils and trade unions" without naming countries. A 2026 Madrid/Valencia Benefits posting mentions works-council consultation duties.
 - **No Groupon-authored source** states leave days for any European country. Every entitlement here is therefore the statutory floor.

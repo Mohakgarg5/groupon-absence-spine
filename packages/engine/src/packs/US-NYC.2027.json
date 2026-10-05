@@ -1,0 +1,245 @@
+{
+  "id": "US-NYC",
+  "version": "2027.1",
+  "year": 2027,
+  "entity": "Groupon, Inc. — US employing entity (to confirm)",
+  "country": "US",
+  "region": "New York City",
+  "summary": "No statutory vacation in New York, but NYC's Earned Safe and Sick Time Act gives 1 hour per 30 worked, up to 56 hours a year for employers with 100+ staff, usable from day one, carried over, never paid out. Since 22 February 2026 it also adds 32 unpaid hours, and New York gives 20 hours of paid prenatal leave.",
+  "owner": {
+    "role": "Employment counsel (US) + People Ops New York",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "us-jurisdiction",
+    "citation": "NYC Admin Code title 20, ch. 8 (Earned Safe and Sick Time Act) applies to employees working in New York City; New York State Labor Law §196-b runs alongside it",
+    "verification": "public-verified",
+    "url": "https://www.nyc.gov/assets/dca/downloads/pdf/about/PaidSickLeave-FAQs.pdf"
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-hours",
+    "rule": {
+      "ruleId": "us-nyc-counting",
+      "citation": "Leave is taken in hours of the scheduled shift",
+      "verification": "assumption",
+      "note": "Federal and state law set no counting rule for company PTO."
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "us-holidays",
+      "citation": "Groupon US company holiday calendar (no private-sector statutory holidays in Illinois)",
+      "verification": "assumption",
+      "note": "Calendar is a placeholder (no public Groupon US holiday list exists); all dates match OPM federal holiday observance rules."
+    },
+    "dates": [
+      {
+        "date": "2027-01-01",
+        "name": "New Year's Day"
+      },
+      {
+        "date": "2027-01-18",
+        "name": "Martin Luther King Jr. Day"
+      },
+      {
+        "date": "2027-05-31",
+        "name": "Memorial Day"
+      },
+      {
+        "date": "2027-06-18",
+        "name": "Juneteenth (observed)"
+      },
+      {
+        "date": "2027-07-05",
+        "name": "Independence Day (observed)"
+      },
+      {
+        "date": "2027-09-06",
+        "name": "Labor Day"
+      },
+      {
+        "date": "2027-11-25",
+        "name": "Thanksgiving"
+      },
+      {
+        "date": "2027-11-26",
+        "name": "Day after Thanksgiving"
+      },
+      {
+        "date": "2027-12-24",
+        "name": "Christmas Day (observed)"
+      },
+      {
+        "date": "2027-12-31",
+        "name": "New Year's Day 2028 (observed)"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "us-holiday-policy",
+      "citation": "Company holidays are paid days off outside the leave banks (policy assumption)",
+      "verification": "assumption"
+    }
+  },
+  "buckets": [
+    {
+      "id": "pto",
+      "label": "Flexible PTO (company policy)",
+      "unit": "hours",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "per-hours-worked",
+        "params": {
+          "per": 1,
+          "capPerYear": 0
+        },
+        "rule": {
+          "ruleId": "us-nyc-pto",
+          "citation": "No statutory vacation entitlement: paid time off is company policy. Groupon's own Dallas posting describes \"flexible PTO\"",
+          "verification": "assumption",
+          "note": "Modelled as flexible PTO with no statutory floor; the statutory minimum is zero."
+        }
+      },
+      "accrual": {
+        "strategy": "unlimited-with-floor",
+        "params": {
+          "floor": 0
+        },
+        "rule": {
+          "ruleId": "us-nyc-pto-accrual",
+          "citation": "Flexible PTO: no accrual, usage tracked, no balance limit (company policy)",
+          "verification": "assumption"
+        }
+      },
+      "carryOver": {
+        "max": 0,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "us-nyc-pto-carry",
+          "citation": "Flexible PTO has no balance to carry",
+          "verification": "assumption"
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "convert-to-sick-bank",
+        "rule": {
+          "ruleId": "nyc-sick-during-pto",
+          "citation": "Illness during PTO can be charged to protected sick time instead",
+          "verification": "assumption",
+          "note": "Company policy; the employee chooses."
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "none",
+        "rule": {
+          "ruleId": "nyc-pto-payout",
+          "citation": "New York: unused vacation is forfeited on separation only if the written policy says so",
+          "verification": "public-unverified",
+          "note": "Statute text (Labor Law §198-c / §195(5)) and case law not checked; counsel to confirm."
+        }
+      }
+    },
+    {
+      "id": "esst",
+      "label": "NYC paid safe and sick time",
+      "unit": "hours",
+      "requestKinds": [
+        "sick-bank"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "per-hours-worked",
+        "params": {
+          "per": 30,
+          "capPerYear": 56
+        },
+        "rule": {
+          "ruleId": "nyc-esst",
+          "citation": "NYC Admin Code §20-913(b): 1 hour per 30 hours worked; employers with 100 or more employees need not provide more than 56 hours a year; no waiting period",
+          "verification": "public-verified",
+          "url": "https://www.nyc.gov/assets/dca/downloads/pdf/about/PaidSickLeave-FAQs.pdf"
+        }
+      },
+      "accrual": {
+        "strategy": "hours-worked",
+        "params": {},
+        "rule": {
+          "ruleId": "nyc-esst-accrual",
+          "citation": "NYC Admin Code §20-913(b): accrues per hours worked from the first day (front-loading 56 hours is the alternative)",
+          "verification": "public-verified",
+          "url": "https://www.nyc.gov/assets/dca/downloads/pdf/about/PaidSickLeave-FAQs.pdf"
+        }
+      },
+      "carryOver": {
+        "max": 56,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "nyc-esst-carry",
+          "citation": "NYC Admin Code §20-913(h): unused time carries over (up to 56 hours), but use may be limited to 56 hours a year",
+          "verification": "public-verified",
+          "url": "https://www.nyc.gov/assets/dca/downloads/pdf/about/PaidSickLeave-FAQs.pdf"
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "nyc-esst-n/a",
+          "citation": "Not applicable to the sick bank",
+          "verification": "assumption"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "none",
+        "rule": {
+          "ruleId": "nyc-esst-payout",
+          "citation": "NYC Admin Code §20-913(i): unused safe and sick time is not paid out on separation",
+          "verification": "public-verified",
+          "url": "https://www.nyc.gov/assets/dca/downloads/pdf/about/PaidSickLeave-FAQs.pdf"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Unpaid protected time (2026)",
+      "ruleId": "nyc-unpaid",
+      "citation": "NYC Local Law 145 of 2025 (in force 22 February 2026): 32 hours of unpaid protected time off, available immediately and refreshed each calendar year",
+      "verification": "public-verified",
+      "url": "https://www.nyc.gov/assets/dca/downloads/pdf/about/PaidSickLeave-FAQs.pdf",
+      "note": "Not modelled as a bucket. DCWP's final rules took effect 23 July 2026."
+    },
+    {
+      "label": "Paid prenatal leave",
+      "ruleId": "ny-prenatal",
+      "citation": "New York Labor Law §196-b (from 1 Jan 2025): 20 hours of paid prenatal leave per 52 weeks, available from hire, no carry-over, no payout",
+      "verification": "public-verified",
+      "url": "https://dol.ny.gov/system/files/documents/2024/12/p695-paid-prenatal-leave-law-employee-12-10-24.pdf",
+      "note": "A separate bank; not modelled."
+    },
+    {
+      "label": "New York State sick leave",
+      "ruleId": "ny-psl",
+      "citation": "New York Labor Law §196-b: 56 hours of paid sick leave for employers with 100+ employees, carried over, with use limited to 56 hours a year",
+      "verification": "public-unverified",
+      "url": "https://www.ny.gov/sites/default/files/atoms/files/PSL_FAQ_PaidSickLeaveFAQ.pdf",
+      "note": "Runs concurrently with the NYC bank."
+    }
+  ]
+}

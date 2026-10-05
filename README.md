@@ -20,7 +20,7 @@ git clone <this repo> && cd <repo>
 npm install
 npm run dev        # web app on http://localhost:5173
 npm run demo       # the whole case in the terminal, about 1 minute to read
-npm test           # 159 engine tests, one or more per legal rule
+npm test           # 174 engine tests, one or more per legal rule
 npm run test:e2e   # 23 browser tests of the web app (downloads Chromium on first run)
 npm run build      # typecheck everything and build the web app
 ```
@@ -40,11 +40,11 @@ The easiest way in is the **guided tour** button on the Overview: nine steps tha
    - final-pay checks for leavers;
    - Polish replacement days off;
    - wellbeing check-ins for the people who have barely taken leave.
-5. **Force-unify test.** Design one global leave policy and run it against all 30 people.
-   - The simple version breaks local law 58 times.
+5. **Force-unify test.** Design one global leave policy and run it against all 37 people in 12 jurisdictions.
+   - The simple version breaks local law 66 times, affecting 35 of the 37. The only two people it doesn't hurt work in Dallas and New York, where there is no statutory vacation to break.
    - A generous one still fails: Polish leave never lapses, and a UK 3-day worker ends up 0.2 days short because UK law counts in weeks.
-   - Zero breaches costs about 13,900 days a year above the legal minimum at Groupon's size.
-6. **Rule packs.** All local law, as data, with 59 of 78 rules checked against primary law. Use **Try a correction**: change any rule and every affected balance replays live. This is how iteration-2 feedback gets applied.
+   - Zero breaches costs about 17,100 days a year above the legal minimum at Groupon's size.
+6. **Rule packs.** All local law, as data: 12 jurisdictions covering every Groupon hub with public hiring evidence, and 97 of 152 rules checked against primary law. Use **Try a correction**: change any rule and every affected balance replays live. This is how iteration-2 feedback gets applied.
 7. **Annual update.** Packs roll from 2026 to 2027:
    - holidays move;
    - Piotr crosses 10 years of Polish seniority;
@@ -66,7 +66,7 @@ The easiest way in is the **guided tour** button on the Overview: nine steps tha
 
 ```
 packages/engine/            pure TypeScript; no runtime dependencies
-  src/packs/*.json          the local law: 6 entities × 2 years, every rule cited and tagged
+  src/packs/*.json          the local law: 12 jurisdictions × 2 years, every rule cited and tagged
   src/packs/registry.ts     loads and validates packs; in-memory overrides for what-if corrections
   src/calendar.ts           expands a date range onto the person's pattern and holiday calendar
   src/strategies/           entitlement strategies plus the hooks that can't be data (PL seniority)
@@ -77,7 +77,7 @@ packages/engine/            pure TypeScript; no runtime dependencies
   src/diff.ts               annual update: holiday moves, rule changes, seniority crossings, HR tasks
   src/queue.ts              the HR work queue generated from the ledgers
   src/data/                 30 fictional employees plus a scenario (today = 2 Oct 2026)
-  test/                     159 tests (incl. fixes found by an adversarial fuzzer and a UX test)
+  test/                     174 tests (incl. fixes found by an adversarial fuzzer and a UX test)
 e2e/                        23 Playwright browser tests (no console errors allowed, 400px layout checked)
 apps/web/                   Vite + React UI, imports the engine directly
 cli/demo.ts                 terminal walkthrough
@@ -97,7 +97,7 @@ A correction to a rule should be a small, reviewable change to data plus a test,
 
 ## How it was tested
 
-- **159 engine tests:** one or more per legal rule.
+- **174 engine tests:** one or more per legal rule.
 - **23 browser tests:** they fail on any console error and check the 400px phone layout.
 - **An adversarial fuzzer:** about 28,000 random employees and 150,000 requests, checking invariants (balances equal the sum of events, no approved request ever overdraws, no holiday is ever charged, deterministic replay). It found 7 real edge-case bugs, all fixed and pinned by tests.
 - **Two first-time-reviewer UX passes** in a real browser across five screen sizes and dark mode, plus two independent code reviews. Every confirmed finding was fixed and pinned by a test.

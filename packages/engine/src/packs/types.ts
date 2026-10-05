@@ -1,7 +1,7 @@
 import type { RequestKind, RuleRef, Unit } from '../model';
 
-export type EntitlementStrategy = 'werktage' | 'weeks' | 'calendar-days' | 'pl-seniority' | 'per-hours-worked';
-export type AccrualStrategy = 'de-waiting-period' | 'front-load-prorata' | 'monthly' | 'pl-proportional' | 'uk-first-year-monthly' | 'hours-worked' | 'unlimited-with-floor';
+export type EntitlementStrategy = 'werktage' | 'weeks' | 'weeks-hours' | 'calendar-days' | 'pl-seniority' | 'per-hours-worked' | 'per-days-worked' | 'fixed-days';
+export type AccrualStrategy = 'de-waiting-period' | 'front-load-prorata' | 'monthly' | 'pl-proportional' | 'uk-first-year-monthly' | 'hours-worked' | 'days-worked' | 'unlimited-with-floor';
 export type SickMode = 'restore-if-certified' | 'restore-on-request' | 'restore' | 'convert-to-sick-bank';
 export type CountingMode = 'working-days' | 'calendar-days' | 'working-hours';
 

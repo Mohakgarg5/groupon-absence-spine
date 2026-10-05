@@ -87,10 +87,11 @@ Each is small, named and tested, and the pack switches it on. But each one is co
    - Felix was warned, so his leftover leave lapses.
    - Sophie's warning isn't in the legacy system, so hers can't lapse.
    - A "use it or lose it" global rule would wipe out leave that German law says still exists. Equally, any migration that imports balances without the warning letters carries a liability nobody has counted.
-4. **The force-unify test, now a simulator.** One sensible-looking global policy is applied to all 30 sample people: 25 days, a tenure bonus, use it or lose it, sick days stay used.
-   - It produces **58 breaches of local law, affecting 29 of the 30.** It *also* overpays part-timers by 35 days a year, because a flat 25 days ignores working patterns.
-   - On the Force-unify page you can design your own global policy. A generous one still fails: Polish leave never lapses, and a UK 3-day worker ends up 0.2 days short because UK law counts in weeks.
-   - Zero breaches is reachable only by copying the most generous local answer on every rule. That means 27 days pro-rated, carry-over without limit, sick days restored and holiday remedies. Scaled to Groupon's 1,734 people, it grants roughly 13,900 days a year above the legal minimum and still needs local law for anything new. That is the strongest version of the argument: a lawful global policy *is* the rule packs, with a bigger bill.
+4. **The force-unify test, now a simulator.** One sensible-looking global policy is applied to all 37 sample people in 12 jurisdictions: 25 days, a tenure bonus, use it or lose it, sick days stay used.
+   - It produces **66 breaches of local law, affecting 35 of the 37.** It *also* overpays part-timers by 35 days a year, because a flat 25 days ignores working patterns.
+   - The only two people it doesn't hurt work in Dallas and New York, where there is no statutory vacation. A global policy is "lawful" only where there is no law to break.
+   - On the Force-unify page you can design your own global policy. A generous one still fails 9 times: Polish and Czech leave never lapse, and a UK 3-day worker ends up 0.2 days short because UK law counts in weeks.
+   - Zero breaches is reachable only by copying the most generous local answer on every rule. That means 27 days pro-rated, carry-over without limit, sick days restored and holiday remedies. Scaled to Groupon's 1,734 people, it grants roughly 17,100 days a year above the legal minimum and still needs local law for anything new. That is the strongest version of the argument: a lawful global policy *is* the rule packs, with a bigger bill.
 5. **The HR work queue.** The same ledgers generate what is left for people once the typing is automated:
    - lapse warnings due before 31 December (German and UK staff);
    - final-pay leave checks for leavers;
@@ -127,7 +128,17 @@ Since 6 April 2026, UK law requires six years of holiday records, and failing to
 
 **No encoding of collective agreements or contractual surplus days yet.** In Germany, Spain and Italy, collective agreements and contracts usually grant more than statute and can carry different carry-over rules. I haven't seen them, so I modelled the statutory floor and listed this as assumption #1.
 
-**No packs yet for FR, NL, BE, CH, AU, IN or UAE.** Exhibit 21.1 lists entities there, but I don't know which ones employ people. I chose six entities that between them cover every way the rules differ. The architecture adds an entity as a new JSON file plus its tests, not as new code.
+**Packs only where people are.** Exhibit 21.1 lists entities in FR, NL, BE, CH, AU and the UAE, but no public evidence shows staff there. I built packs for every hub with public hiring evidence instead: 12 jurisdictions.
+
+| Jurisdictions | Why each needs its own pack |
+|---|---|
+| Germany (Berlin), Poland, Ireland, UK | One per national law |
+| Madrid and Valencia | Same Spanish law, different regional holidays |
+| Prague | Czech leave is counted in hours and never lapses. Groupon has no Czech entity, so who employs these staff is unknown and flagged |
+| Chicago, rest of Illinois, Dallas, New York City | US law follows the work location |
+| Bengaluru | Karnataka's Shops Act alongside India's new national labour codes |
+
+Adding the six non-European packs needed no rework of the engine, only four small reusable strategies: leave in hours, leave per days worked, flexible PTO without a floor, and US location routing. The rest was data and tests.
 
 **No central store of medical data.** The ledger records "unfit for work, from–to, certified yes/no", never a diagnosis. Health data is GDPR Art. 9 special-category data, and a German employer doesn't receive the diagnosis anyway.
 
@@ -180,7 +191,13 @@ I used AI agents as the primary research tool, as the brief asks. There were two
 
 Another agent searched Groupon's own job postings for evidence of real policy and systems. Separate testing agents fuzzed the engine and walked the app as a first-time reviewer.
 
-**Result:** 59 of the 78 rules are now checked against a primary source, 4 are public but unchecked, and 15 are labelled company-policy assumptions.
+**Wave 3, to cover every hub with public hiring evidence.** Four more agents verified:
+- Czech law (Zákoník práce, as at 2026);
+- the Valencian decrees (DOGV);
+- Texas, New York City, New York State and Illinois law;
+- Karnataka's Shops Act alongside India's labour codes.
+
+**Result:** 97 of the 152 rules are checked against a primary source and 9 are public but unchecked. The other 46 are labelled company-policy assumptions, mostly in Texas, New York and India, where the law leaves vacation to the employer.
 
 The agents were told to tag every claim as verified, from memory, or uncertain. Those tags became the verification badges in the rule packs.
 
@@ -188,13 +205,16 @@ Where my judgment overruled or corrected the AI-assisted research:
 
 | What AI-assisted research suggested | What I found | What I did |
 |---|---|---|
-| A Czech hub (leadership in Prague) as a candidate entity | No Czech legal entity in Exhibit 21.1 | Dropped CZ |
+| A Czech hub (leadership in Prague) as a candidate entity | No Czech legal entity in Exhibit 21.1, yet live Prague roles | First dropped; later added a CZ pack under Czech law, with the employing vehicle flagged as unknown |
+| A common summary: Illinois PLAWA caps carry-over at 80 hours | The final rule (56 Ill. Adm. Code 200.320) lets employers cap it at 40 hours | Used the final rule |
+| NYC sick leave has a 120-day waiting period | Abolished; and since 22 Feb 2026 the law adds 32 unpaid hours (Local Law 145 of 2025) | Sick time usable from day one; the new hours noted |
+| India: one regime for leave | The labour codes have been in force since 21 Nov 2025, but Karnataka's rules are still a draft; the more favourable rule applies | Modelled the Shops Act (45-day carry-forward), with the Code noted |
 | Illinois PLAWA for Chicago HQ staff | PLAWA exempts employers covered by the Chicago ordinance | US pack is Chicago Ord. 6-130, routed by work location; non-Chicago Illinois staff are refused until a PLAWA pack exists |
 | A Madrid holiday list including 24 June (third-party site) | The official decree (BOCM 25 Sep 2025) doesn't list it | Used the decree; marked the pack "checked" |
 | A statutory summary saying Polish part-time leave is "proportional" | True, but the leave is then taken in hours (1 day = 8 h). My first build charged a 4-hour-day worker a full day per day off | Fixed and pinned with a test |
 | Chicago payout bands from a law-firm summary | Wave 2 reached the City Clerk ordinance and the Office of Labor Standards rules | Confirmed and tagged "checked"; the unlimited-PTO payout is 40 h minus hours used in the *rolling* 12 months (6-130-030(g)), now modelled |
 | My own Polish pack: carried leave "expires" on 30 September | Art. 168 sets the employer's deadline to grant it; the claim survives 3 years (art. 291) | Polish leave no longer lapses; HR gets a deadline task instead |
-| My own UK pack: the 4-week leave simply lapses at year end | SI 2023/1426 (from 1 Jan 2024): it carries forward if the employer didn't give the chance to take it or warn the worker (reg. 13(16)–(17)) | Modelled like Germany. The simple global policy now breaks UK law too (58 breaches, not 54) |
+| My own UK pack: the 4-week leave simply lapses at year end | SI 2023/1426 (from 1 Jan 2024): it carries forward if the employer didn't give the chance to take it or warn the worker (reg. 13(16)–(17)) | Modelled like Germany. The simple global policy now breaks UK law too, adding 4 breaches |
 | My own Madrid 2027 pack: "decree not yet published" | Decreto 82/2026 was published on 1 October 2026 | Loaded the 14 dates; the city locals are flagged as union-reported until the official resolution |
 | My own Polish seniority: education + prior work | Art. 302¹ (from 2026) also counts civil-law contracts and self-employment; study and work overlaps count once, whichever is better (art. 155 §2) | Added as a cited rule, with the data note on what `priorServiceYears` must contain |
 | Public profiles: Groupon US PTO is "unlimited" | Groupon's own Dallas posting says "flexible PTO" | Kept accrual as the default; added an unlimited-PTO option with the Chicago 40-hour separation floor, switchable live |

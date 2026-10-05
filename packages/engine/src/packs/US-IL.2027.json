@@ -1,0 +1,170 @@
+{
+  "id": "US-IL",
+  "version": "2027.1",
+  "year": 2027,
+  "entity": "Groupon, Inc. — US employing entity (to confirm)",
+  "country": "US",
+  "region": "Illinois outside Chicago and Cook County",
+  "summary": "The Illinois Paid Leave for All Workers Act: 1 hour per 40 worked, up to 40 hours a year, for any reason, usable after 90 days. Carry-over is required but may be capped at 40 hours, and there is no payout unless the leave sits in a vacation bank.",
+  "owner": {
+    "role": "Employment counsel (US) + People Ops Chicago",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "us-jurisdiction",
+    "citation": "820 ILCS 192/15(p): PLAWA covers Illinois employees whose work isn't covered by a local paid-leave ordinance in effect on 1 January 2024 (Chicago, Cook County)",
+    "verification": "public-verified",
+    "url": "https://www.ilga.gov/ftp/ilcs/Ch%200820/Act%200192/082001920K15.html"
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-hours",
+    "rule": {
+      "ruleId": "us-il-counting",
+      "citation": "Leave is taken in hours of the scheduled shift",
+      "verification": "assumption",
+      "note": "Federal and state law set no counting rule for company PTO."
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "us-holidays",
+      "citation": "Groupon US company holiday calendar (no private-sector statutory holidays in Illinois)",
+      "verification": "assumption",
+      "note": "Calendar is a placeholder (no public Groupon US holiday list exists); all dates match OPM federal holiday observance rules."
+    },
+    "dates": [
+      {
+        "date": "2027-01-01",
+        "name": "New Year's Day"
+      },
+      {
+        "date": "2027-01-18",
+        "name": "Martin Luther King Jr. Day"
+      },
+      {
+        "date": "2027-05-31",
+        "name": "Memorial Day"
+      },
+      {
+        "date": "2027-06-18",
+        "name": "Juneteenth (observed)"
+      },
+      {
+        "date": "2027-07-05",
+        "name": "Independence Day (observed)"
+      },
+      {
+        "date": "2027-09-06",
+        "name": "Labor Day"
+      },
+      {
+        "date": "2027-11-25",
+        "name": "Thanksgiving"
+      },
+      {
+        "date": "2027-11-26",
+        "name": "Day after Thanksgiving"
+      },
+      {
+        "date": "2027-12-24",
+        "name": "Christmas Day (observed)"
+      },
+      {
+        "date": "2027-12-31",
+        "name": "New Year's Day 2028 (observed)"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "us-holiday-policy",
+      "citation": "Company holidays are paid days off outside the leave banks (policy assumption)",
+      "verification": "assumption"
+    }
+  },
+  "buckets": [
+    {
+      "id": "plawa",
+      "label": "Illinois paid leave (any reason)",
+      "unit": "hours",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 90,
+      "entitlement": {
+        "strategy": "per-hours-worked",
+        "params": {
+          "per": 40,
+          "capPerYear": 40
+        },
+        "rule": {
+          "ruleId": "il-entitlement",
+          "citation": "820 ILCS 192/15(b) and 56 Ill. Adm. Code 200.220: at least 1 hour per 40 hours worked, up to 40 hours per 12-month period; exempt employees are deemed to work 40 hours a week; usable after 90 days (§15(g))",
+          "verification": "public-verified",
+          "url": "https://www.ilga.gov/ftp/ilcs/Ch%200820/Act%200192/082001920K15.html"
+        }
+      },
+      "accrual": {
+        "strategy": "hours-worked",
+        "params": {},
+        "rule": {
+          "ruleId": "il-accrual",
+          "citation": "820 ILCS 192/15(b): accrual per hours worked (front-loading 40 hours is the alternative, §15(c))",
+          "verification": "public-verified",
+          "url": "https://www.ilga.gov/ftp/ilcs/Ch%200820/Act%200192/082001920K15.html",
+          "note": "Accrual year assumed to be the calendar year."
+        }
+      },
+      "carryOver": {
+        "max": 40,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "il-carry",
+          "citation": "56 Ill. Adm. Code 200.320(a): unused leave carries over, but the employer may restrict carry-over above 40 hours",
+          "verification": "public-verified",
+          "url": "https://www.ilga.gov/ftp/JCAR/AdminCode/056/056002000C03200R.html"
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "il-sick",
+          "citation": "PLAWA leave is for any reason; it says nothing about illness during leave",
+          "verification": "assumption",
+          "note": "Company policy decides whether days come back."
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "none",
+        "rule": {
+          "ruleId": "il-payout",
+          "citation": "820 ILCS 192/15(j),(l) and 56 Ill. Adm. Code 200.460: no payout, unless the leave is credited to a vacation or PTO bank, which the Illinois Wage Payment and Collection Act then requires to be paid out",
+          "verification": "public-verified",
+          "url": "https://www.ilga.gov/ftp/ilcs/Ch%200820/Act%200192/082001920K15.html"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Notice and increments",
+      "ruleId": "il-notice",
+      "citation": "820 ILCS 192/15(h): up to 7 calendar days' notice for foreseeable leave; §15(b), 56 Ill. Adm. Code 200.300(g): a minimum increment of no more than 2 hours a day",
+      "verification": "public-verified",
+      "url": "https://www.ilga.gov/ftp/ilcs/Ch%200820/Act%200192/082001920K15.html",
+      "note": "Not enforced by the engine."
+    }
+  ]
+}

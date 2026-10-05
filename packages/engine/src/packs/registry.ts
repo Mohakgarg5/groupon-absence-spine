@@ -15,8 +15,20 @@ import es26 from './ES-MD.2026.json';
 import es27 from './ES-MD.2027.json';
 import us26 from './US-CHI.2026.json';
 import us27 from './US-CHI.2027.json';
+import cz26 from './CZ.2026.json';
+import cz27 from './CZ.2027.json';
+import vc26 from './ES-VC.2026.json';
+import vc27 from './ES-VC.2027.json';
+import il26 from './US-IL.2026.json';
+import il27 from './US-IL.2027.json';
+import tx26 from './US-TX.2026.json';
+import tx27 from './US-TX.2027.json';
+import ny26 from './US-NYC.2026.json';
+import ny27 from './US-NYC.2027.json';
+import in26 from './IN-KA.2026.json';
+import in27 from './IN-KA.2027.json';
 
-const RAW: unknown[] = [de26, de27, pl26, pl27, ie26, ie27, uk26, uk27, es26, es27, us26, us27];
+const RAW: unknown[] = [de26, de27, pl26, pl27, ie26, ie27, uk26, uk27, es26, es27, us26, us27, cz26, cz27, vc26, vc27, il26, il27, tx26, tx27, ny26, ny27, in26, in27];
 
 /** Stamp packId + version onto every rule so each ledger event can cite exactly which pack produced it. */
 export function inflate(raw: any): Pack {
@@ -90,8 +102,8 @@ export function walkRules(p: Pack): RuleRef[] {
 }
 
 const STRATS = {
-  entitlement: ['werktage', 'weeks', 'calendar-days', 'pl-seniority', 'per-hours-worked'],
-  accrual: ['de-waiting-period', 'front-load-prorata', 'monthly', 'pl-proportional', 'uk-first-year-monthly', 'hours-worked', 'unlimited-with-floor'],
+  entitlement: ['werktage', 'weeks', 'weeks-hours', 'calendar-days', 'pl-seniority', 'per-hours-worked', 'per-days-worked', 'fixed-days'],
+  accrual: ['de-waiting-period', 'front-load-prorata', 'monthly', 'pl-proportional', 'uk-first-year-monthly', 'hours-worked', 'days-worked', 'unlimited-with-floor'],
   sick: ['restore-if-certified', 'restore-on-request', 'restore', 'convert-to-sick-bank'],
   counting: ['working-days', 'calendar-days', 'working-hours'],
 };
@@ -124,8 +136,8 @@ export function validatePack(p: Pack): string[] {
     if (!STRATS.sick.includes(b.sickDuringLeave?.mode)) e.push(`${b.id}: sickDuringLeave.mode unknown`);
     if (b.carryOver?.expiresMonthDay && !isValidISODate(`2024-${b.carryOver.expiresMonthDay}`)) e.push(`${b.id}: carryOver.expiresMonthDay must be a real MM-DD date`);
     if (!b.requestKinds?.length) e.push(`${b.id}: requestKinds required`);
-    if (b.accrual?.strategy === 'unlimited-with-floor' && (b.unit !== 'hours' || !b.requestKinds.includes('annual')))
-      e.push(`${b.id}: unlimited-with-floor applies only to an hours-based annual (Paid Leave) bucket`);
+    if (b.accrual?.strategy === 'unlimited-with-floor' && !b.requestKinds.includes('annual'))
+      e.push(`${b.id}: unlimited-with-floor applies only to an hours-based annual (Paid Leave) bucket, never to a sick bank`);
   }
   for (const r of walkRules(p)) {
     if (!r.citation) e.push(`rule ${r.ruleId}: citation required`);

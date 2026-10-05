@@ -139,7 +139,7 @@ a { color: var(--spine-ink); text-underline-offset: 3px; }
 .btn-primary:hover { background: var(--spine-ink); border-color: var(--spine-ink); }
 .btn-quiet { border-color: transparent; background: transparent; color: var(--ink-2); }
 .btn-quiet:hover { background: var(--surface-2); }
-.seg { display: inline-flex; border: 1px solid var(--line-2); border-radius: 999px; padding: 2px; background: var(--surface); }
+.seg { display: inline-flex; flex-wrap: wrap; border: 1px solid var(--line-2); border-radius: 18px; padding: 2px; background: var(--surface); }
 .seg button { border: 0; background: none; padding: 0.3rem 0.75rem; border-radius: 999px; cursor: pointer; color: var(--ink-2); }
 .seg button[aria-pressed='true'] { background: var(--ink); color: var(--surface); }
 .field { display: grid; gap: 0.25rem; font-size: var(--step--1); color: var(--ink-2); }

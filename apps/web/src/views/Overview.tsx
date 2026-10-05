@@ -89,7 +89,7 @@ export function Overview() {
 
       <section className="section panel" style={{ display: 'grid', gap: '1rem' }}>
         <p className="statement">
-          Applying one sensible-looking global policy to our 30 sample people breaks local law <em>{stress.summary.breaches} times</em>, affecting {stress.summary.employeesAffected} of them, and overpays part-timers by {stress.summary.overspendDays} days a year.
+          Applying one sensible-looking global policy to our {people.length} sample people in 12 jurisdictions breaks local law <em>{stress.summary.breaches} times</em>, affecting {stress.summary.employeesAffected} of them, and overpays part-timers by {stress.summary.overspendDays} days a year.
         </p>
         <div className="row">
           <button className="btn" onClick={() => dispatch({ type: 'go', view: 'unify' })}>Try to write one global policy</button>
@@ -109,7 +109,7 @@ export function Overview() {
         </div>
         <div className="panel-flat">
           <h3 className="h3">Still to verify</h3>
-          <p className="small" style={{ margin: 0 }}>I asked for Groupon's internal process map first. Groupon asked for independent research, so 59 of the 78 rules are now checked against primary law, and every rule carries a badge saying whether it is checked, public but unchecked, or my assumption.</p>
+          <p className="small" style={{ margin: 0 }}>I asked for Groupon's internal process map first. Groupon asked for independent research, so most rules are now checked against primary law (see each card), and every rule carries a badge saying whether it is checked, public but unchecked, or my assumption.</p>
         </div>
       </section>
     </div>

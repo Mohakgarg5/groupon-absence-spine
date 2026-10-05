@@ -28,7 +28,7 @@ export const TOUR: Step[] = [
   { title: 'Leave that cannot lapse', view: 'ledger', employeeId: 'de-sophie',
     body: 'Sophie\'s 2025 leave should lapse on 31 March, but the legacy system has no written warning, so under CJEU C-684/16 it survives. Tick "Warning sent" and watch the ledger replay. This is the hidden migration liability.' },
   { title: 'Try to unify it anyway', view: 'unify',
-    body: 'Use the presets. The simple global policy breaks local law 58 times. A generous one still breaks it 7 times: Polish leave never lapses, and a UK 3-day worker ends up 0.2 days short because UK law counts in weeks. Zero breaches is possible, and the cost shows why rule packs win.' },
+    body: 'Use the presets. Across 12 jurisdictions the simple global policy breaks local law 66 times; it is only "lawful" in Dallas and for New York vacation, where there is no law. A generous one still breaks it 9 times: Polish and Czech leave never lapse, and a UK 3-day worker ends up 0.2 days short because UK law counts in weeks. Zero breaches is possible, and the cost shows why rule packs win.' },
   { title: 'Fix a rule like a lawyer would', view: 'packs', focus: 'UK',
     body: 'Every rule is data with a citation and an owner. In "Try a correction", set "public holidays count toward leave" to "no" and see exactly who it changes. This is how feedback gets applied.' },
   { title: 'Next year, without guesswork', view: 'update', focus: 'ES-MD',

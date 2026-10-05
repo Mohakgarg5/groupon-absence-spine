@@ -304,6 +304,23 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         }
         case 'unlimited-with-floor':
           break; // nothing accrues; usage is tracked and the separation floor is applied at termination
+        case 'days-worked': {
+          // e.g. India: 1 day of earned leave per N days actually worked, credited monthly, capped per year.
+          let cum = 0;
+          for (let m = 1; m <= 12; m++) {
+            const ms = iso(y, m, 1), me = endOfMonth(ms);
+            const s = maxDate(ms, empStart), en = minDate(me, empEnd);
+            if (s > en) continue;
+            let worked = 0;
+            try { worked = expandDays(e, s, en).filter((l) => l.kind === 'counted').length; } catch { continue; }
+            const raw = r4(worked / p.per);
+            const amt = r4(Math.min(raw, (p.capPerYear ?? Infinity) - cum));
+            cum = r4(cum + amt);
+            if (amt <= 0) continue;
+            at(en, 0, () => credit('ACCRUE', en, b.id, amt, y, rule, `${worked} days worked in ${ms.slice(0, 7)} ÷ ${p.per} = ${fmt(raw)} days${amt < raw ? ' (capped)' : ''}`));
+          }
+          break;
+        }
         case 'hours-worked': {
           let cum = 0;
           for (let m = 1; m <= 12; m++) {
@@ -495,10 +512,12 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
           // Ord. 6-130-030(g): 40 h minus the hours used in the 12 months before separation (rolling, not the benefit year).
           const since = addDays(td, -365);
           const used = r4(-events.filter((x) => x.bucket === b.id && x.date > since && x.date <= td).reduce((s, x) => s + x.amount, 0));
-          const floor = b.entitlement.params.capPerYear ?? 40;
+          const floor = b.accrual.params.floor ?? b.entitlement.params.capPerYear ?? 0;
           const pay = r4(Math.max(0, floor - used));
           const rule = packs[y].extras.find((x) => x.ruleId === 'chi-unlimited-payout') ?? b.payoutOnTermination.rule;
-          post('PAYOUT', td, b.id, 0, y, rule, `Employment ends ${td}: unlimited PTO, so pay out ${fmt(pay)} hours (${floor} h floor − ${fmt(used)} h Paid Leave used in the 12 months before leaving)`);
+          post('PAYOUT', td, b.id, 0, y, rule, floor > 0
+            ? `Employment ends ${td}: unlimited PTO, so pay out ${fmt(pay)} hours (${floor} h floor − ${fmt(used)} h Paid Leave used in the 12 months before leaving)`
+            : `Employment ends ${td}: flexible PTO with no statutory floor, so nothing is owed unless the written policy promises payout`);
           continue;
         }
         const bal = balanceOf(b.id);

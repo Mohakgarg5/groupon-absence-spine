@@ -169,7 +169,9 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
     return fail('balance', 'INSUFFICIENT_BALANCE', `Not enough leave: ${msg}.`, kindBuckets(years[0]).map((b) => b.entitlement.rule));
   }
   stage('balance', 'ok', Object.keys(res.balanceAfter).filter((b) => res.balanceBefore[b] !== res.balanceAfter[b])
-    .map((b) => `${cand.balances[b].label}: ${fmt(res.balanceBefore[b])} → ${fmt(res.balanceAfter[b])} ${cand.balances[b].unit}`).join(' · ') + ' (at the end of the leave, including scheduled accruals).', bRules);
+    .map((b) => cand.balances[b].unlimited
+      ? `${cand.balances[b].label}: unlimited, ${fmt(cand.balances[b].usedByYear?.[yearOf(request.to)] ?? 0)} ${cand.balances[b].unit} used this year`
+      : `${cand.balances[b].label}: ${fmt(res.balanceBefore[b])} → ${fmt(res.balanceAfter[b])} ${cand.balances[b].unit}`).join(' · ') + ' (at the end of the leave, including scheduled accruals).', bRules);
 
   // 7. Route
   res.approverId = e.managerId ?? 'hr-ops';

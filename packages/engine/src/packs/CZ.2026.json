@@ -1,0 +1,193 @@
+{
+  "id": "CZ",
+  "version": "2026.1",
+  "year": 2026,
+  "entity": "Prague staff (employing vehicle unknown: no Czech entity in Exhibit 21.1)",
+  "country": "CZ",
+  "region": "National",
+  "summary": "4 weeks a year, counted in hours since 2021 (weekly hours × 4). Holidays and sickness inside leave don't use it, and leave never lapses: what can't be taken must be granted by the end of the next year.",
+  "owner": {
+    "role": "Employment counsel (CZ) + People partner Prague",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "cz-location",
+    "citation": "Prague staff are assumed to be employed under Czech law (Zákoník práce), via a branch or an employer of record",
+    "verification": "assumption",
+    "note": "Groupon's FY2025 Exhibit 21.1 lists no Czech entity and Prague job postings name no employer. Confirm the employing vehicle: an employer of record would hold the contracts."
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-hours",
+    "rule": {
+      "ruleId": "cz-counting",
+      "citation": "Zákoník práce §213 and §216(5): leave is the weekly working hours × the weeks of leave, taken in hours of the scheduled shifts and rounded up to whole hours; §218(6): exceptionally, with consent, at least half a shift",
+      "verification": "public-verified",
+      "url": "https://www.zakonyprolidi.cz/cs/2006-262"
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "cz-holidays",
+      "citation": "Zákon č. 245/2000 Sb. o státních svátcích (§1–3): 13 public holidays and days off, incl. Good Friday and Easter Monday",
+      "verification": "public-verified",
+      "url": "https://www.zakonyprolidi.cz/cs/2000-245",
+      "note": "Checked against the consolidated text (verze 12, 13 May 2026); Easter dates cross-checked by computus."
+    },
+    "dates": [
+      {
+        "date": "2026-01-01",
+        "name": "Den obnovy samostatného českého státu / Nový rok"
+      },
+      {
+        "date": "2026-04-03",
+        "name": "Velký pátek"
+      },
+      {
+        "date": "2026-04-06",
+        "name": "Velikonoční pondělí"
+      },
+      {
+        "date": "2026-05-01",
+        "name": "Svátek práce"
+      },
+      {
+        "date": "2026-05-08",
+        "name": "Den vítězství"
+      },
+      {
+        "date": "2026-07-05",
+        "name": "Den slovanských věrozvěstů Cyrila a Metoděje"
+      },
+      {
+        "date": "2026-07-06",
+        "name": "Den upálení mistra Jana Husa"
+      },
+      {
+        "date": "2026-09-28",
+        "name": "Den české státnosti"
+      },
+      {
+        "date": "2026-10-28",
+        "name": "Den vzniku samostatného československého státu"
+      },
+      {
+        "date": "2026-11-17",
+        "name": "Den boje za svobodu a demokracii"
+      },
+      {
+        "date": "2026-12-24",
+        "name": "Štědrý den"
+      },
+      {
+        "date": "2026-12-25",
+        "name": "1. svátek vánoční"
+      },
+      {
+        "date": "2026-12-26",
+        "name": "2. svátek vánoční"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "cz-holiday-policy",
+      "citation": "Zákoník práce §219(2): a public holiday on the employee's normal working day during leave is not counted as leave",
+      "verification": "public-verified",
+      "url": "https://www.zakonyprolidi.cz/cs/2006-262"
+    }
+  },
+  "buckets": [
+    {
+      "id": "annual",
+      "label": "Dovolená (annual leave)",
+      "unit": "hours",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "weeks-hours",
+        "params": {
+          "weeks": 4
+        },
+        "rule": {
+          "ruleId": "cz-entitlement",
+          "citation": "Zákoník práce §212(1): at least 4 weeks a calendar year; §213(1)–(2): in hours, as weekly working hours × weeks, so part-timers get proportionally fewer hours",
+          "verification": "public-verified",
+          "url": "https://www.zakonyprolidi.cz/cs/2006-262",
+          "note": "5 weeks applies to the public sector (§212(2)), 8 weeks to teachers (§212(3)); not Groupon."
+        }
+      },
+      "accrual": {
+        "strategy": "front-load-prorata",
+        "params": {},
+        "rule": {
+          "ruleId": "cz-accrual",
+          "citation": "Zákoník práce §213(3)–(4): a partial year earns 1/52 of the entitlement per week worked, once at least 4 weeks have been worked",
+          "verification": "public-verified",
+          "url": "https://www.zakonyprolidi.cz/cs/2006-262",
+          "note": "Modelled as a pro-rata grant on 1 January or the hire date; the 4-week minimum for partial years is not enforced."
+        }
+      },
+      "carryOver": {
+        "max": null,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "grantByMonthDay": "12-31",
+        "rule": {
+          "ruleId": "cz-carry",
+          "citation": "Zákoník práce §218(1)–(4): leave is taken in its year; what could not be taken must be granted by the end of the next calendar year, and if the employer hasn't scheduled it by 30 June the employee may set the dates; the Code has no forfeiture of leave",
+          "verification": "public-verified",
+          "url": "https://www.zakonyprolidi.cz/cs/2006-262",
+          "note": "The engine never lapses Czech leave; HR gets a deadline task."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "cz-sick",
+          "citation": "Zákoník práce §219(1): temporary incapacity for work interrupts leave (dovolená se přerušuje)",
+          "verification": "public-verified",
+          "url": "https://www.zakonyprolidi.cz/cs/2006-262"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "cz-payout",
+          "citation": "Zákoník práce §222(2): compensation for untaken leave only when employment ends",
+          "verification": "public-verified",
+          "url": "https://www.zakonyprolidi.cz/cs/2006-262"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Scheduling",
+      "ruleId": "cz-scheduling",
+      "citation": "Zákoník práce §217(1): the employer sets leave dates and notifies them in writing at least 14 days ahead; when leave is split, one part must be at least 2 weeks unless agreed otherwise",
+      "verification": "public-verified",
+      "url": "https://www.zakonyprolidi.cz/cs/2006-262",
+      "note": "Not enforced by the engine."
+    },
+    {
+      "label": "Moving extra leave",
+      "ruleId": "cz-transfer",
+      "citation": "Zákoník práce §218(2): on the employee's written request, leave above 4 weeks can be moved to the next year",
+      "verification": "public-verified",
+      "url": "https://www.zakonyprolidi.cz/cs/2006-262"
+    }
+  ]
+}

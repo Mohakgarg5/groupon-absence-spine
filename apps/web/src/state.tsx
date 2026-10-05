@@ -49,7 +49,7 @@ function load(): State {
 }
 
 function syncOverrides(list: Override[]) {
-  for (const p of ['DE-BE', 'PL', 'IE', 'UK', 'ES-MD', 'US-CHI']) for (const y of [2026, 2027]) setPackOverride(null, p, y);
+  for (const p of ENTITY_ORDER) for (const y of [2026, 2027]) setPackOverride(null, p, y);
   for (const o of list) setPackOverride(o.pack);
 }
 
@@ -116,4 +116,4 @@ export function useApp() {
 export const TODAY = scenario.today;
 export const people = employees;
 export const personById = (id: string) => employees.find((e) => e.id === id)!;
-export const ENTITY_ORDER = ['DE-BE', 'PL', 'IE', 'UK', 'ES-MD', 'US-CHI'];
+export const ENTITY_ORDER = ['DE-BE', 'PL', 'IE', 'UK', 'ES-MD', 'ES-VC', 'CZ', 'US-CHI', 'US-IL', 'US-NYC', 'US-TX', 'IN-KA'];

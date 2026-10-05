@@ -1,0 +1,193 @@
+{
+  "id": "IN-KA",
+  "version": "2027.1",
+  "year": 2027,
+  "entity": "Groupon Shared Services Private Limited (Exhibit 21.1); Bengaluru engineering and support",
+  "country": "IN",
+  "region": "Karnataka — Bengaluru",
+  "summary": "Earned leave is 1 day per 20 days worked, carried forward up to 45 days and paid out on leaving; a separate 12-day pool covers sickness and other reasonable causes. India's labour codes (in force 21 Nov 2025) apply alongside: where they overlap, the employee gets the more favourable rule.",
+  "owner": {
+    "role": "Employment counsel (IN) + HR lead India",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "in-location",
+    "citation": "Employees assumed to work in Bengaluru, Karnataka (Karnataka Shops and Commercial Establishments Act, 1961)",
+    "verification": "assumption",
+    "note": "Groupon's careers page places Shared Services in Chennai (Tamil Nadu, a different state Act) and engineering and support in Bengaluru. Confirm per employee."
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-days",
+    "rule": {
+      "ruleId": "in-counting",
+      "citation": "Leave is counted in working days; national and festival holidays are not charged",
+      "verification": "assumption"
+    }
+  },
+  "holidays": {
+    "loaded": false,
+    "source": {
+      "ruleId": "in-holidays",
+      "citation": "2027 festival dates follow the lunar calendar and Karnataka has not published its 2027 holiday list as of 5 Oct 2026",
+      "verification": "public-verified",
+      "note": "Requests in 2027 are refused until the list is published, the festival days are chosen and the calendar is signed off."
+    },
+    "dates": []
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "in-holiday-policy",
+      "citation": "No statutory substitute day when a holiday falls on a weekly off day",
+      "verification": "assumption"
+    }
+  },
+  "buckets": [
+    {
+      "id": "earned",
+      "label": "Earned leave",
+      "unit": "days",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "per-days-worked",
+        "params": {
+          "per": 20
+        },
+        "rule": {
+          "ruleId": "in-entitlement",
+          "citation": "Karnataka Shops and Commercial Establishments Act, 1961 §15(1): \"one day for every twenty days work performed\" (adults); OSH Code 2020 §32 gives the same rate after 180 days worked in the year",
+          "verification": "public-verified",
+          "url": "https://prsindia.org/files/bills_acts/acts_states/karnataka/1962/Act%20No.%208%20of%201962%20Karnataka.pdf"
+        }
+      },
+      "accrual": {
+        "strategy": "days-worked",
+        "params": {
+          "per": 20
+        },
+        "rule": {
+          "ruleId": "in-accrual",
+          "citation": "KSCE Act §15(1): earned per days actually worked, credited here monthly",
+          "verification": "public-verified",
+          "url": "https://prsindia.org/files/bills_acts/acts_states/karnataka/1962/Act%20No.%208%20of%201962%20Karnataka.pdf",
+          "note": "The OSH Code's 180-day threshold is not applied: the State Act has none, and the employee gets the more favourable rule."
+        }
+      },
+      "carryOver": {
+        "max": 45,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "in-carry",
+          "citation": "KSCE Act §15(7) as amended by Karnataka Act 8 of 2021: accumulated earned leave carried forward \"shall not exceed forty five days\"; leave refused by the employer carries forward without limit",
+          "verification": "public-verified",
+          "url": "https://prsindia.org/files/bills_acts/acts_states/karnataka/1962/Act%20No.%208%20of%201962%20Karnataka.pdf",
+          "note": "The OSH Code caps carry-forward at 30 days but lets the employee encash at year end; the more favourable State cap is applied."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "in-sick",
+          "citation": "The Act is silent on illness during earned leave; company policy decides",
+          "verification": "assumption"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "remaining",
+        "rule": {
+          "ruleId": "in-payout",
+          "citation": "KSCE Act §15(13): on leaving, the employer pays for earned leave not taken (within two working days if dismissed; on the next pay day if the employee resigns)",
+          "verification": "public-verified",
+          "url": "https://prsindia.org/files/bills_acts/acts_states/karnataka/1962/Act%20No.%208%20of%201962%20Karnataka.pdf"
+        }
+      }
+    },
+    {
+      "id": "sick",
+      "label": "Sick and other leave",
+      "unit": "days",
+      "requestKinds": [
+        "sick-bank"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "fixed-days",
+        "params": {
+          "days": 12
+        },
+        "rule": {
+          "ruleId": "in-sick-entitlement",
+          "citation": "KSCE Act §15(3): \"leave with wages for a period not exceeding twelve days, on the ground of any sickness … or for any other reasonable cause\" per 12 months of service",
+          "verification": "public-verified",
+          "url": "https://prsindia.org/files/bills_acts/acts_states/karnataka/1962/Act%20No.%208%20of%201962%20Karnataka.pdf"
+        }
+      },
+      "accrual": {
+        "strategy": "front-load-prorata",
+        "params": {},
+        "rule": {
+          "ruleId": "in-sick-accrual",
+          "citation": "Granted on 1 January, pro-rated for joiners",
+          "verification": "assumption"
+        }
+      },
+      "carryOver": {
+        "max": 0,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "in-sick-carry",
+          "citation": "Unused sick and other leave is not carried forward",
+          "verification": "assumption",
+          "note": "The Act does not provide for accumulation; verify Groupon policy."
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "in-sick-n/a",
+          "citation": "Not applicable to the sick pool",
+          "verification": "assumption"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "none",
+        "rule": {
+          "ruleId": "in-sick-payout",
+          "citation": "Sick and other leave is not paid out",
+          "verification": "assumption"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "Labour codes",
+      "ruleId": "in-osh",
+      "citation": "Occupational Safety, Health and Working Conditions Code, 2020 §32 (in force 21 Nov 2025): 1 day per 20 worked after 180 days; carry-forward up to 30 days; encashment on demand at year end and on exit",
+      "verification": "public-verified",
+      "url": "https://www.labour.gov.in/static/uploads/2025/07/36fcfa5d8e6b9145e282bf7b950d6c47.pdf",
+      "note": "Karnataka's own OSH rules are still a draft (Jan 2026). The Ministry's FAQ says the employee keeps any more favourable state benefit; Bar & Bench calls the interaction unresolved. Counsel to confirm."
+    },
+    {
+      "label": "Maternity",
+      "ruleId": "in-maternity",
+      "citation": "Maternity Benefit Act, 1961: up to 26 weeks of paid maternity leave",
+      "verification": "public-unverified",
+      "note": "Separate leave type; not modelled."
+    }
+  ]
+}

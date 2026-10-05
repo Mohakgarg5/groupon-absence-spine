@@ -4,9 +4,9 @@ import { getPack } from '../src/packs/registry';
 import { employees, scenario } from '../src/dataset';
 import { withUnloadedCalendar } from './fixtures';
 
-test('dataset: 30 fictional employees across all 6 packs', () => {
-  expect(employees).toHaveLength(30);
-  expect(new Set(employees.map((e) => e.packId)).size).toBe(6);
+test('dataset: 37 fictional employees across all 12 jurisdictions', () => {
+  expect(employees).toHaveLength(37);
+  expect(new Set(employees.map((e) => e.packId)).size).toBe(12);
 });
 
 describe('force-unify stress test', () => {
@@ -42,8 +42,14 @@ describe('force-unify stress test', () => {
     expect(r.local).toMatch(/6/);
   });
 
-  test('Springfield employee is flagged for review, not silently processed', () =>
-    expect(row('us-sam', 'jurisdiction').verdict).toBe('review'));
+  test('Springfield employee is assessed under Illinois PLAWA: use-it-or-lose-it breaks its 40-hour carry-over', () =>
+    expect(row('us-sam', 'carry-over').verdict).toBe('breach'));
+
+  test('a global policy is only "lawful" where there is no statutory leave at all (Dallas, New York vacation)', () => {
+    expect(res.summary.byEntity['US-TX'].breaches).toBe(0);
+    expect(res.summary.byEntity['US-NYC'].breaches).toBe(0);
+    expect(res.summary.employeesAffected).toBe(35);
+  });
 
   test('rows carry a citation whenever they claim a breach', () => {
     for (const r of res.rows.filter((x) => x.verdict === 'breach')) expect(r.rule?.citation, `${r.employeeId} ${r.dimension}`).toBeTruthy();

@@ -1,0 +1,168 @@
+{
+  "id": "US-TX",
+  "version": "2027.1",
+  "year": 2027,
+  "entity": "Groupon, Inc. — US employing entity (to confirm)",
+  "country": "US",
+  "region": "Dallas, Texas",
+  "summary": "No Texas or Dallas leave law: the Dallas sick-leave ordinance was struck down in 2021 and HB 2127 (Labor Code §1.005) bars cities from mandating leave. Paid time off is company policy, paid out on leaving only if the written policy promises it.",
+  "owner": {
+    "role": "Employment counsel (US) + People Ops",
+    "signOff": {
+      "status": "pending",
+      "by": null,
+      "on": null
+    }
+  },
+  "locationAssumption": {
+    "ruleId": "us-jurisdiction",
+    "citation": "Texas Labor Code §1.005 (HB 2127, upheld by the Third Court of Appeals in July 2025): cities cannot regulate employment leave; the Dallas Earned Paid Sick Time ordinance was permanently enjoined in 2021",
+    "verification": "public-verified",
+    "url": "https://capitol.texas.gov/tlodocs/88R/billtext/html/HB02127F.htm"
+  },
+  "leaveYear": {
+    "startMonth": 1,
+    "startDay": 1
+  },
+  "counting": {
+    "mode": "working-hours",
+    "rule": {
+      "ruleId": "us-tx-counting",
+      "citation": "Leave is taken in hours of the scheduled shift",
+      "verification": "assumption",
+      "note": "Federal and state law set no counting rule for company PTO."
+    }
+  },
+  "holidays": {
+    "loaded": true,
+    "source": {
+      "ruleId": "us-holidays",
+      "citation": "Groupon US company holiday calendar (no private-sector statutory holidays in Illinois)",
+      "verification": "assumption",
+      "note": "Calendar is a placeholder (no public Groupon US holiday list exists); all dates match OPM federal holiday observance rules."
+    },
+    "dates": [
+      {
+        "date": "2027-01-01",
+        "name": "New Year's Day"
+      },
+      {
+        "date": "2027-01-18",
+        "name": "Martin Luther King Jr. Day"
+      },
+      {
+        "date": "2027-05-31",
+        "name": "Memorial Day"
+      },
+      {
+        "date": "2027-06-18",
+        "name": "Juneteenth (observed)"
+      },
+      {
+        "date": "2027-07-05",
+        "name": "Independence Day (observed)"
+      },
+      {
+        "date": "2027-09-06",
+        "name": "Labor Day"
+      },
+      {
+        "date": "2027-11-25",
+        "name": "Thanksgiving"
+      },
+      {
+        "date": "2027-11-26",
+        "name": "Day after Thanksgiving"
+      },
+      {
+        "date": "2027-12-24",
+        "name": "Christmas Day (observed)"
+      },
+      {
+        "date": "2027-12-31",
+        "name": "New Year's Day 2028 (observed)"
+      }
+    ]
+  },
+  "holidayPolicy": {
+    "onNonWorkingDay": "nothing",
+    "deductFromEntitlement": false,
+    "rule": {
+      "ruleId": "us-holiday-policy",
+      "citation": "Company holidays are paid days off outside the leave banks (policy assumption)",
+      "verification": "assumption"
+    }
+  },
+  "buckets": [
+    {
+      "id": "pto",
+      "label": "Flexible PTO (company policy)",
+      "unit": "hours",
+      "requestKinds": [
+        "annual"
+      ],
+      "usableFromDays": 0,
+      "entitlement": {
+        "strategy": "per-hours-worked",
+        "params": {
+          "per": 1,
+          "capPerYear": 0
+        },
+        "rule": {
+          "ruleId": "us-tx-pto",
+          "citation": "No statutory vacation entitlement: paid time off is company policy. Groupon's own Dallas posting describes \"flexible PTO\"",
+          "verification": "assumption",
+          "note": "Modelled as flexible PTO with no statutory floor; the statutory minimum is zero."
+        }
+      },
+      "accrual": {
+        "strategy": "unlimited-with-floor",
+        "params": {
+          "floor": 0
+        },
+        "rule": {
+          "ruleId": "us-tx-pto-accrual",
+          "citation": "Flexible PTO: no accrual, usage tracked, no balance limit (company policy)",
+          "verification": "assumption"
+        }
+      },
+      "carryOver": {
+        "max": 0,
+        "expiresMonthDay": null,
+        "conditionalOnNotice": false,
+        "rule": {
+          "ruleId": "us-tx-pto-carry",
+          "citation": "Flexible PTO has no balance to carry",
+          "verification": "assumption"
+        }
+      },
+      "sickDuringLeave": {
+        "mode": "restore",
+        "rule": {
+          "ruleId": "tx-sick",
+          "citation": "No Texas rule on sickness during leave; company policy",
+          "verification": "assumption"
+        }
+      },
+      "payoutOnTermination": {
+        "mode": "none",
+        "rule": {
+          "ruleId": "tx-payout",
+          "citation": "Texas Payday Law (Texas Workforce Commission): accrued leave is payable on separation only if a written policy or agreement promises it; vacation is not required by Texas law",
+          "verification": "public-verified",
+          "url": "https://efte.twc.texas.gov/accrued_leave_payouts.html"
+        }
+      }
+    }
+  ],
+  "extras": [
+    {
+      "label": "FMLA",
+      "ruleId": "us-fmla",
+      "citation": "FMLA 29 U.S.C. 2601 et seq.: up to 12 workweeks of unpaid, job-protected leave (eligibility: 12 months and 1,250 hours)",
+      "verification": "public-unverified",
+      "url": "https://www.dol.gov/agencies/whd/fmla",
+      "note": "Separate absence type; not modelled."
+    }
+  ]
+}

@@ -252,6 +252,78 @@
       "kind": "annual",
       "status": "approved",
       "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-marcus-jul",
+      "employeeId": "us-marcus",
+      "from": "2026-07-06",
+      "to": "2026-07-17",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-jordan-aug",
+      "employeeId": "us-jordan",
+      "from": "2026-08-17",
+      "to": "2026-08-21",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-tereza-jul",
+      "employeeId": "cz-tereza",
+      "from": "2026-07-13",
+      "to": "2026-07-24",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-jakub-aug",
+      "employeeId": "cz-jakub",
+      "from": "2026-08-03",
+      "to": "2026-08-14",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-katrin-aug",
+      "employeeId": "es-katrin",
+      "from": "2026-08-10",
+      "to": "2026-08-23",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-ananya-sep",
+      "employeeId": "in-ananya",
+      "from": "2026-09-14",
+      "to": "2026-09-18",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-rahul-jun",
+      "employeeId": "in-rahul",
+      "from": "2026-06-08",
+      "to": "2026-06-19",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-sam-sep",
+      "employeeId": "us-sam",
+      "from": "2026-09-14",
+      "to": "2026-09-15",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
     }
   ],
   "sickness": [

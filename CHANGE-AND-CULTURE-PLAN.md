@@ -65,7 +65,7 @@ Public evidence: Groupon's own postings, the FY2025 10-K, and the shared-service
 | 3. PL cutover | May 2027 | Poland switches. The old process is read-only for 12 months. Warsaw admins become the champions network for the rollout. The 30 September grant deadline is the first live test | Month-3 review: measured time saving, error count, employee queries |
 | 4. DE, IE | H2 2027 | Germany cuts over once its works agreement is signed. Ireland follows | Same gates per entity |
 | 5. UK, US, ES | Late 2027, ready for the 2028 leave year | The UK needs a contract review (does the bank-holiday assumption hold? is there a relevant agreement for a calendar leave year?). The US needs packs for Dallas and for Illinois staff outside Chicago, and a decision on flexible PTO. Spain needs its convenio reviewed, a Valencia pack alongside Madrid, and the 2028 decrees loaded | Same |
-| 6. Remaining entities | 2028 | FR, NL (consent needed), BE, CH, AU, India, and the vehicle that employs Prague staff (no Czech entity in Exhibit 21.1) | Same |
+| 6. Remaining hubs | 2028 | Prague (once the employing vehicle is confirmed), Bengaluru (with Karnataka's labour-code rules finalised), then any of FR, NL (consent needed), BE, CH, AU if staff exist. All twelve packs already exist in draft | Same |
 
 **What happens to the people doing this work today, during the transition.**
 
@@ -171,7 +171,7 @@ FTE is taken as 1,600 productive hours a year. The new stewardship work (S) is s
 
 **What the model leaves out, and how it cuts each way:**
 
-- **Not counted as savings:** avoided statutory breaches (the force-unify test found 58 on 30 sample people), avoided disputes, and audit time. These are real but I can't price them honestly yet.
+- **Not counted as savings:** avoided statutory breaches (the force-unify test found 66 across 37 sample people in 12 jurisdictions), avoided disputes, and audit time. These are real but I can't price them honestly yet.
 - **Not counted as costs:**
   - counsel time to sign off six packs, about 5 days each;
   - the temporary parallel-run load (§3);

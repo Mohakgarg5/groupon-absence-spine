@@ -5,10 +5,10 @@ test('all packs validate', () => {
   for (const p of allPacks()) expect({ pack: `${p.id}@${p.version}`, errors: validatePack(p) }).toEqual({ pack: `${p.id}@${p.version}`, errors: [] });
 });
 
-test('there are 6 entities × 2 years', () => {
+test('there are 12 jurisdictions × 2 years, covering every Groupon hub with public hiring evidence', () => {
   const ids = new Set(allPacks().map((p) => p.id));
-  expect([...ids].sort()).toEqual(['DE-BE', 'ES-MD', 'IE', 'PL', 'UK', 'US-CHI']);
-  expect(allPacks()).toHaveLength(12);
+  expect([...ids].sort()).toEqual(['CZ', 'DE-BE', 'ES-MD', 'ES-VC', 'IE', 'IN-KA', 'PL', 'UK', 'US-CHI', 'US-IL', 'US-NYC', 'US-TX']);
+  expect(allPacks()).toHaveLength(24);
 });
 
 test('every rule carries a citation and a verification status', () => {

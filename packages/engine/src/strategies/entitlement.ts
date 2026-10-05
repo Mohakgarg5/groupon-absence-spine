@@ -63,6 +63,17 @@ export function annualEntitlement(e: Employee, pack: Pack, bucketId: string, yea
         explanation: `Seniority ${s.breakdown} → ${base} days${fte < 1 ? ` × ${round2(fte)} FTE, rounded up = ${amount}` : ''}`,
       };
     }
+    case 'weeks-hours': {
+      const h = weeklyHours(e);
+      const amount = round2(params.weeks * h);
+      return { amount, rule, explanation: `${params.weeks} weeks × ${round2(h)} hours a week = ${amount} hours` };
+    }
+    case 'fixed-days':
+      return { amount: params.days, rule, explanation: `${params.days} days a year` };
+    case 'per-days-worked': {
+      const est = Math.min(params.capPerYear ?? Infinity, round2((d * 52) / params.per));
+      return { amount: est, rule, explanation: `1 day per ${params.per} days worked${params.capPerYear ? `, up to ${params.capPerYear} a year` : ''} (about ${est} days for a full year on a ${d}-day week)` };
+    }
     case 'per-hours-worked':
       return { amount: params.capPerYear, rule, explanation: `1 hour per ${params.per} hours worked, capped at ${params.capPerYear} hours per year` };
   }

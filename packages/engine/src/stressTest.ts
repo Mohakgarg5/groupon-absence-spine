@@ -173,7 +173,11 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
     if (!keepsSome) carryVerdict = 'ok';
     else if (neverLapses) carryVerdict = policy.carryOver === 'unlimited' ? 'ok' : 'breach';
     else if (c.conditionalOnNotice) carryVerdict = policy.carryOver === 'unlimited' || policy.lapseNeedsWarning ? 'ok' : 'breach';
-    else if (pack.id === 'US-CHI') carryVerdict = policy.carryOver === 'unlimited' || (policy.carryOver === 'capped' && policy.carryDays * e.pattern.hoursPerDay >= Math.min(PROBE * e.pattern.hoursPerDay, c.max ?? Infinity)) ? 'ok' : 'breach';
+    else if (c.max !== null && c.max > 0 && c.rule.verification !== 'assumption' && !/consent|agreement/i.test(c.rule.citation)) {
+      // A statutory right to carry leave over, up to a cap (Chicago, Illinois, India): wiping it out is a breach.
+      const capInDays = carry.unit === 'hours' ? c.max / e.pattern.hoursPerDay : c.max;
+      carryVerdict = policy.carryOver === 'unlimited' || (policy.carryOver === 'capped' && policy.carryDays >= Math.min(PROBE, capInDays)) ? 'ok' : 'breach';
+    }
     else carryVerdict = c.rule.verification === 'assumption' || /consent|agreement/i.test(c.rule.citation) || policy.carryOver !== 'none' ? 'ok' : 'review';
     push({
       dimension: 'carry-over', global: globalCarry,

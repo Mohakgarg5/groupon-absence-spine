@@ -16,7 +16,7 @@ const nav = (page: Page, name: string) => page.getByRole('navigation', { name: '
 
 test('overview states the decision and the force-unify result', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Unify the process and the record. Keep the law local.');
-  await expect(page.getByText(/breaks local law 58 times/)).toBeVisible();
+  await expect(page.getByText(/breaks local law 66 times/)).toBeVisible();
 });
 
 test('Berlin pilot: nine stages, approval, then certified sickness restores 2 days (BUrlG §9)', async ({ page }) => {
@@ -67,10 +67,14 @@ test('withdrawing approved leave keeps it in the audit trail and drops its sickn
   await expect(page.getByText(/BUrlG §9/)).toHaveCount(0);
 });
 
-test('Chicago: work location outside Chicago stops processing instead of applying the wrong law', async ({ page }) => {
+test('US: Springfield is processed under Illinois PLAWA, Dallas under flexible PTO, Prague in hours', async ({ page }) => {
   await nav(page, 'Request desk');
   await page.getByRole('button', { name: /Sam Patel/ }).click();
-  await expect(page.getByText(/Paid Leave for All Workers Act/).first()).toBeVisible();
+  await expect(page.getByText(/Illinois paid leave/).first()).toBeVisible();
+  await page.getByRole('button', { name: /Marcus Lee/ }).click();
+  await expect(page.getByText('Unlimited').first()).toBeVisible();
+  await page.getByRole('button', { name: /Tereza Dvořáková/ }).click();
+  await expect(page.getByText(/160\s*hours|160 hours/).first()).toBeVisible();
 });
 
 test('force-unify matrix explains the Polish seniority breach with its statute', async ({ page }) => {
@@ -173,11 +177,11 @@ test('pages have their own URL: reload and Back keep the reviewer in place', asy
   await expect(page.getByRole('heading', { name: 'Ledger' })).toBeVisible();
 });
 
-test('policy simulator: presets move from 58 breaches to 7 to zero, with the cost shown', async ({ page }) => {
+test('policy simulator: presets move from 66 breaches to 9 to zero, with the cost shown', async ({ page }) => {
   await nav(page, 'Force-unify');
-  await expect(page.getByText(/breaks local law 58 times/)).toBeVisible();
+  await expect(page.getByText(/breaks local law 66 times/)).toBeVisible();
   await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Generous global policy' }).click();
-  await expect(page.getByText(/breaks local law 7 times/)).toBeVisible();
+  await expect(page.getByText(/breaks local law 9 times/)).toBeVisible();
   await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Zero-breach policy' }).click();
   await expect(page.getByText(/Zero breaches, but only because/)).toBeVisible();
   await expect(page.getByText(/days a year above the legal minimum/)).toBeVisible();
