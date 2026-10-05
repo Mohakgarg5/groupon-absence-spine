@@ -11,3 +11,4 @@ export * from './pipeline';
 export * from './stressTest';
 export * from './diff';
 export * from './dataset';
+export * from './queue';

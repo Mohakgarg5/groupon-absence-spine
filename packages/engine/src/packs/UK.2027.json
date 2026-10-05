@@ -28,8 +28,8 @@
     "rule": {
       "ruleId": "uk-counting",
       "citation": "WTR 1998 reg.13/13A: leave measured in weeks of the worker's own pattern",
-      "verification": "public-unverified",
-      "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+      "verification": "public-verified",
+      "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/13"
     }
   },
   "holidays": {
@@ -37,7 +37,7 @@
     "source": {
       "ruleId": "uk-holidays",
       "citation": "Banking and Financial Dealings Act 1971 + royal proclamation; gov.uk/bank-holidays (England & Wales)",
-      "verification": "public-unverified",
+      "verification": "public-verified",
       "url": "https://www.gov.uk/bank-holidays"
     },
     "dates": [
@@ -107,8 +107,8 @@
         "rule": {
           "ruleId": "uk-reg13",
           "citation": "WTR 1998 reg.13: 4 weeks' leave (EU-derived)",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/13"
         }
       },
       "accrual": {
@@ -117,29 +117,31 @@
         "rule": {
           "ruleId": "uk-accrual",
           "citation": "WTR 1998 reg.15A: in the first year leave accrues at 1/12 per month; thereafter granted at the start of the leave year (Groupon policy assumption)",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/15A",
+          "note": "Reg.15A runs for 12 months from the start date with combined rounding to half-days; the engine applies it to the calendar hire year and rounds per bucket — a known simplification."
         }
       },
       "carryOver": {
-        "max": 0,
-        "expiresMonthDay": null,
-        "conditionalOnNotice": false,
+        "max": null,
+        "expiresMonthDay": "01-01",
+        "conditionalOnNotice": true,
         "rule": {
           "ruleId": "uk-carry-13",
-          "citation": "WTR 1998 reg.13(9): may not be carried forward except where sickness/family leave prevented it (reg.13(10)-(11))",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833",
-          "note": "Sickness-based 18-month carry-over not modelled."
+          "citation": "WTR 1998 reg.13(9) as amended by SI 2023/1426 (from 1 Jan 2024): no carry-forward, except (14) statutory family leave, (15) sickness — up to 18 months — and (16)–(17) where the employer did not give a reasonable opportunity, encourage the worker to take the leave, or warn that it would be lost; it then carries until the end of the first full leave year in which that is cured (18)",
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/13",
+          "note": "Modelled like Germany: lapses at the start of the next leave year only if the worker was warned; otherwise kept. The sickness and family-leave routes are not modelled."
         }
       },
       "sickDuringLeave": {
         "mode": "restore-on-request",
         "rule": {
           "ruleId": "uk-sick",
-          "citation": "WTR 1998 reg.13(9)-(11) read with CJEU Pereda (C-277/08): a worker sick during leave may take the leave later",
+          "citation": "No WTR provision: the right to retake leave lost to sickness rests on case law (CJEU Pereda C-277/08, ANGED C-78/11; NHS Leeds v Larner [2012] EWCA Civ 1034) and applies to the 4-week leave",
           "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833",
+          "note": "Counsel to confirm the post-2024 position."
         }
       },
       "payoutOnTermination": {
@@ -147,8 +149,9 @@
         "rule": {
           "ruleId": "uk-payout",
           "citation": "WTR 1998 reg.14: payment in lieu only on termination, pro-rated (A × B) − C",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/14",
+          "note": "Reg.14: (A × B) − C; reg.14(6) also pays carried-over leave."
         }
       }
     },
@@ -170,8 +173,8 @@
         "rule": {
           "ruleId": "uk-reg13a",
           "citation": "WTR 1998 reg.13A: additional 1.6 weeks; total capped at 28 days (reg.13A(3))",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/13A"
         }
       },
       "accrual": {
@@ -180,8 +183,9 @@
         "rule": {
           "ruleId": "uk-accrual",
           "citation": "WTR 1998 reg.15A: in the first year leave accrues at 1/12 per month; thereafter granted at the start of the leave year (Groupon policy assumption)",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/15A",
+          "note": "Reg.15A runs for 12 months from the start date with combined rounding to half-days; the engine applies it to the calendar hire year and rounds per bucket — a known simplification."
         }
       },
       "carryOver": {
@@ -191,18 +195,19 @@
         "rule": {
           "ruleId": "uk-carry-13a",
           "citation": "WTR 1998 reg.13A(7): may be carried into the next leave year by relevant agreement",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833",
-          "note": "Groupon policy of up to 5 days is an assumption."
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/13A",
+          "note": "Groupon policy of up to 5 days is an assumption. Reg.13A(7A) adds carry-forward for family leave."
         }
       },
       "sickDuringLeave": {
         "mode": "restore-on-request",
         "rule": {
           "ruleId": "uk-sick",
-          "citation": "WTR 1998 reg.13(9)-(11) read with CJEU Pereda (C-277/08): a worker sick during leave may take the leave later",
+          "citation": "No WTR provision: the right to retake leave lost to sickness rests on case law (CJEU Pereda C-277/08, ANGED C-78/11; NHS Leeds v Larner [2012] EWCA Civ 1034) and applies to the 4-week leave",
           "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833",
+          "note": "Counsel to confirm the post-2024 position."
         }
       },
       "payoutOnTermination": {
@@ -210,8 +215,9 @@
         "rule": {
           "ruleId": "uk-payout",
           "citation": "WTR 1998 reg.14: payment in lieu only on termination, pro-rated (A × B) − C",
-          "verification": "public-unverified",
-          "url": "https://www.legislation.gov.uk/uksi/1998/1833"
+          "verification": "public-verified",
+          "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/14",
+          "note": "Reg.14: (A × B) − C; reg.14(6) also pays carried-over leave."
         }
       }
     }
@@ -224,6 +230,22 @@
       "verification": "public-unverified",
       "url": "https://www.legislation.gov.uk/uksi/1998/1833",
       "note": "Not modelled — no irregular-hours staff in dataset."
+    },
+    {
+      "label": "Holiday records",
+      "ruleId": "uk-16b",
+      "citation": "WTR 1998 reg.16B (inserted by Employment Rights Act 2025 s.35, in force 6 April 2026): employers must keep adequate records of holiday and holiday pay for 6 years; failing to is an offence",
+      "verification": "public-verified",
+      "url": "https://www.legislation.gov.uk/uksi/1998/1833",
+      "note": "The append-only ledger, with a citation on every line, is that record."
+    },
+    {
+      "label": "Leave year",
+      "ruleId": "uk-leave-year",
+      "citation": "WTR 1998 reg.13(3): without a relevant agreement the leave year starts on each anniversary of the start date",
+      "verification": "public-verified",
+      "url": "https://www.legislation.gov.uk/uksi/1998/1833/regulation/13",
+      "note": "The engine assumes Groupon UK has a relevant agreement setting a calendar leave year — verify."
     }
   ]
 }

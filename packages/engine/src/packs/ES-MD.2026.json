@@ -28,9 +28,9 @@
     "rule": {
       "ruleId": "es-counting",
       "citation": "Estatuto de los Trabajadores art. 38.1: at least 30 calendar days; holidays inside a leave block are counted",
-      "verification": "public-unverified",
+      "verification": "public-verified",
       "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
-      "note": "Many convenios convert to 22 working days — Groupon Spain's applicable convenio must be checked."
+      "note": "Audiencia Nacional 147/2026 (16 Sep 2026): natural days include weekends and holidays inside the block. Many convenios convert to 22 working days — check Groupon Spain's convenio."
     }
   },
   "holidays": {
@@ -106,8 +106,8 @@
     "deductFromEntitlement": false,
     "rule": {
       "ruleId": "es-holiday-policy",
-      "citation": "ET art. 37.2: up to 14 holidays/year (2 local); a holiday on Sunday may be moved by the region",
-      "verification": "public-unverified",
+      "citation": "ET art. 37.2: up to 14 holidays a year, 2 of them local; national holidays falling on a Sunday are moved to the Monday; no statutory replacement day for a holiday on a Saturday",
+      "verification": "public-verified",
       "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
     }
   },
@@ -128,7 +128,7 @@
         "rule": {
           "ruleId": "es-entitlement",
           "citation": "ET art. 38.1: minimum 30 calendar days per year",
-          "verification": "public-unverified",
+          "verification": "public-verified",
           "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
         }
       },
@@ -148,10 +148,10 @@
         "conditionalOnNotice": false,
         "rule": {
           "ruleId": "es-carry",
-          "citation": "ET art. 38.3: leave is taken within the year; exception where incapacity/parental leave overlapped (18 months)",
-          "verification": "public-unverified",
+          "citation": "ET art. 38.3: leave is taken within the year; if it coincides with pregnancy- or birth-related incapacity or a birth/adoption suspension it can be taken afterwards even after the year ends; for other incapacity, within 18 months of the end of the year",
+          "verification": "public-verified",
           "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
-          "note": "The incapacity exception is not modelled."
+          "note": "The incapacity exceptions are not modelled."
         }
       },
       "sickDuringLeave": {
@@ -159,16 +159,17 @@
         "rule": {
           "ruleId": "es-sick",
           "citation": "ET art. 38.3: if incapacity coincides with the leave period, leave can be taken afterwards",
-          "verification": "public-unverified",
-          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+          "verification": "public-verified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+          "note": "Incapacity arising during leave: CJEU C-78/11 (ANGED)."
         }
       },
       "payoutOnTermination": {
         "mode": "remaining",
         "rule": {
           "ruleId": "es-payout",
-          "citation": "ET art. 38.1: leave cannot be replaced by money except on termination (case law)",
-          "verification": "public-unverified",
+          "citation": "ET art. 38.1: leave \"no sustituible por compensación económica\"; payment only on termination (Tribunal Supremo, 28 May 2013)",
+          "verification": "public-verified",
           "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
         }
       }

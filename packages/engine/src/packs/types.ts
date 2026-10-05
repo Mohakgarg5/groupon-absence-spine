@@ -14,7 +14,7 @@ export interface Bucket {
   onDemandMax?: number;
   entitlement: { strategy: EntitlementStrategy; params: Record<string, any>; rule: RuleRef };
   accrual: { strategy: AccrualStrategy; params: Record<string, any>; rule: RuleRef };
-  carryOver: { max: number | null; expiresMonthDay: string | null; conditionalOnNotice: boolean; rule: RuleRef };
+  carryOver: { max: number | null; expiresMonthDay: string | null; conditionalOnNotice: boolean; /** Employer deadline to grant carried leave; the leave itself does not lapse (PL art. 168). */ grantByMonthDay?: string; rule: RuleRef };
   sickDuringLeave: { mode: SickMode; rule: RuleRef };
   payoutOnTermination: { mode: 'remaining' | 'none'; rule: RuleRef };
 }

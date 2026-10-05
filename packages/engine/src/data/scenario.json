@@ -126,6 +126,132 @@
       "kind": "annual",
       "status": "approved",
       "submittedOn": "2026-09-10"
+    },
+    {
+      "id": "r-aoife-jul",
+      "employeeId": "ie-aoife",
+      "from": "2026-07-06",
+      "to": "2026-07-17",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-carmen-aug",
+      "employeeId": "es-carmen",
+      "from": "2026-08-03",
+      "to": "2026-08-16",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-chris-jul",
+      "employeeId": "us-chris",
+      "from": "2026-07-20",
+      "to": "2026-07-22",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-cian-jun",
+      "employeeId": "ie-cian",
+      "from": "2026-06-02",
+      "to": "2026-06-13",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-felix-aug",
+      "employeeId": "de-felix",
+      "from": "2026-07-27",
+      "to": "2026-08-07",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-hannah-aug",
+      "employeeId": "uk-hannah",
+      "from": "2026-08-10",
+      "to": "2026-08-21",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-marta-jul",
+      "employeeId": "pl-marta",
+      "from": "2026-07-13",
+      "to": "2026-07-31",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-niamh-jul",
+      "employeeId": "ie-niamh",
+      "from": "2026-07-01",
+      "to": "2026-07-09",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-oliver-jun",
+      "employeeId": "uk-oliver",
+      "from": "2026-06-01",
+      "to": "2026-06-05",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-piotr-jul",
+      "employeeId": "pl-piotr",
+      "from": "2026-07-06",
+      "to": "2026-07-17",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-priya-jul",
+      "employeeId": "uk-priya",
+      "from": "2026-07-07",
+      "to": "2026-07-16",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-sean-jul",
+      "employeeId": "ie-sean",
+      "from": "2026-07-13",
+      "to": "2026-07-24",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-ana-may",
+      "employeeId": "us-ana",
+      "from": "2026-05-26",
+      "to": "2026-05-27",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
+    },
+    {
+      "id": "r-tobias-apr",
+      "employeeId": "de-tobias",
+      "from": "2026-04-07",
+      "to": "2026-04-10",
+      "kind": "annual",
+      "status": "approved",
+      "submittedOn": "2026-05-15"
     }
   ],
   "sickness": [

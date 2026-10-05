@@ -1,5 +1,5 @@
 import { expandDays, sumCounted } from '../src/calendar';
-import { emp } from './fixtures';
+import { emp, withUnloadedCalendar } from './fixtures';
 
 const de = emp({ packId: 'DE-BE' });
 
@@ -19,8 +19,8 @@ test('part-time Mon/Wed/Thu marks Tue and Fri as non-working', () => {
   expect(lines.map((l) => l.kind)).toEqual(['counted', 'non-working', 'counted', 'counted', 'non-working']);
 });
 
-test('ES 2027 throws CALENDAR_NOT_LOADED', () =>
-  expect(() => expandDays(emp({ packId: 'ES-MD' }), '2027-01-04', '2027-01-05')).toThrow(/CALENDAR_NOT_LOADED/));
+test('a year whose calendar is not loaded throws CALENDAR_NOT_LOADED', () =>
+  withUnloadedCalendar('ES-MD', 2027, () => expect(() => expandDays(emp({ packId: 'ES-MD' }), '2027-01-04', '2027-01-05')).toThrow(/CALENDAR_NOT_LOADED/)));
 
 test('ES counts calendar days including weekends', () =>
   expect(sumCounted(expandDays(emp({ packId: 'ES-MD' }), '2026-07-06', '2026-07-12'))).toBe(7));

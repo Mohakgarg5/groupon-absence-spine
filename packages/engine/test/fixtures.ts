@@ -14,3 +14,12 @@ export function emp(over: Partial<Employee> & Pick<Employee, 'packId'>): Employe
     ...over,
   };
 }
+
+import { getPack, setPackOverride } from '../src/packs/registry';
+/** Run `fn` with a pack's holiday calendar unloaded, to test the "refuse to guess" mechanism. */
+export function withUnloadedCalendar<T>(packId: string, year: number, fn: () => T): T {
+  const p = structuredClone(getPack(packId, year));
+  p.holidays = { ...p.holidays, loaded: false, dates: [] };
+  setPackOverride(p);
+  try { return fn(); } finally { setPackOverride(null, packId, year); }
+}

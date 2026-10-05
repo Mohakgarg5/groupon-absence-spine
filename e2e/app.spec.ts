@@ -16,7 +16,7 @@ const nav = (page: Page, name: string) => page.getByRole('navigation', { name: '
 
 test('overview states the decision and the force-unify result', async ({ page }) => {
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Unify the process and the record. Keep the law local.');
-  await expect(page.getByText(/breaks local law 54 times/)).toBeVisible();
+  await expect(page.getByText(/breaks local law 58 times/)).toBeVisible();
 });
 
 test('Berlin pilot: nine stages, approval, then certified sickness restores 2 days (BUrlG §9)', async ({ page }) => {
@@ -143,7 +143,7 @@ test('tour step 4 lands on Sophie, step 7 on the blocked Spanish pack', async ({
 
 test('policy simulator: presets move from 54 breaches to the UK units trap to zero, with the cost shown', async ({ page }) => {
   await nav(page, 'Force-unify test');
-  await expect(page.getByText(/breaks local law 54 times/)).toBeVisible();
+  await expect(page.getByText(/breaks local law 58 times/)).toBeVisible();
   await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Generous global policy' }).click();
   await expect(page.getByText(/breaks local law 1 time,/)).toBeVisible();
   await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Zero-breach policy' }).click();

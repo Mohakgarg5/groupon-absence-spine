@@ -28,29 +28,86 @@
     "rule": {
       "ruleId": "es-counting",
       "citation": "Estatuto de los Trabajadores art. 38.1: at least 30 calendar days; holidays inside a leave block are counted",
-      "verification": "public-unverified",
+      "verification": "public-verified",
       "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
-      "note": "Many convenios convert to 22 working days — Groupon Spain's applicable convenio must be checked."
+      "note": "Audiencia Nacional 147/2026 (16 Sep 2026): natural days include weekends and holidays inside the block. Many convenios convert to 22 working days — check Groupon Spain's convenio."
     }
   },
   "holidays": {
-    "loaded": false,
+    "loaded": true,
     "source": {
       "ruleId": "es-holidays",
-      "citation": "Comunidad de Madrid 2027 labour calendar decree not yet published in BOCM as of 2026-10-02 (usually late September/October)",
-      "verification": "public-verified",
-      "url": "https://www.bocm.es/",
-      "note": "Pack cannot be activated for 2027 until the decree and the Madrid city locals are loaded and signed off."
+      "citation": "Decreto 82/2026, de 30 de septiembre (BOCM núm. 234, 1 Oct 2026): 12 regional holidays for 2027; Madrid city locals 15 May (San Isidro, a Saturday) and 9 Nov (Almudena)",
+      "verification": "public-unverified",
+      "url": "https://www.bocm.es/boletin/CM_Orden_BOCM/2026/10/01/BOCM-20261001-19.PDF",
+      "note": "Published 1 Oct 2026, three days after this pack was first written as 'not yet published'. The 12 regional dates were checked against the BOCM annex; the two city locals come from union news of the 29 Sep 2026 city plenary, pending the official Dirección General de Trabajo resolution. 2 May (Fiesta de la Comunidad) falls on a Sunday in 2027 and is not moved."
     },
-    "dates": []
+    "dates": [
+      {
+        "date": "2027-01-01",
+        "name": "Año Nuevo"
+      },
+      {
+        "date": "2027-01-06",
+        "name": "Epifanía del Señor"
+      },
+      {
+        "date": "2027-03-19",
+        "name": "San José"
+      },
+      {
+        "date": "2027-03-25",
+        "name": "Jueves Santo"
+      },
+      {
+        "date": "2027-03-26",
+        "name": "Viernes Santo"
+      },
+      {
+        "date": "2027-05-01",
+        "name": "Fiesta del Trabajo"
+      },
+      {
+        "date": "2027-05-15",
+        "name": "San Isidro (local)"
+      },
+      {
+        "date": "2027-08-16",
+        "name": "Traslado de la Asunción de la Virgen"
+      },
+      {
+        "date": "2027-10-12",
+        "name": "Fiesta Nacional de España"
+      },
+      {
+        "date": "2027-11-01",
+        "name": "Todos los Santos"
+      },
+      {
+        "date": "2027-11-09",
+        "name": "Almudena (local)"
+      },
+      {
+        "date": "2027-12-06",
+        "name": "Día de la Constitución Española"
+      },
+      {
+        "date": "2027-12-08",
+        "name": "Inmaculada Concepción"
+      },
+      {
+        "date": "2027-12-25",
+        "name": "Natividad del Señor"
+      }
+    ]
   },
   "holidayPolicy": {
     "onNonWorkingDay": "nothing",
     "deductFromEntitlement": false,
     "rule": {
       "ruleId": "es-holiday-policy",
-      "citation": "ET art. 37.2: up to 14 holidays/year (2 local); a holiday on Sunday may be moved by the region",
-      "verification": "public-unverified",
+      "citation": "ET art. 37.2: up to 14 holidays a year, 2 of them local; national holidays falling on a Sunday are moved to the Monday; no statutory replacement day for a holiday on a Saturday",
+      "verification": "public-verified",
       "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
     }
   },
@@ -71,7 +128,7 @@
         "rule": {
           "ruleId": "es-entitlement",
           "citation": "ET art. 38.1: minimum 30 calendar days per year",
-          "verification": "public-unverified",
+          "verification": "public-verified",
           "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
         }
       },
@@ -91,10 +148,10 @@
         "conditionalOnNotice": false,
         "rule": {
           "ruleId": "es-carry",
-          "citation": "ET art. 38.3: leave is taken within the year; exception where incapacity/parental leave overlapped (18 months)",
-          "verification": "public-unverified",
+          "citation": "ET art. 38.3: leave is taken within the year; if it coincides with pregnancy- or birth-related incapacity or a birth/adoption suspension it can be taken afterwards even after the year ends; for other incapacity, within 18 months of the end of the year",
+          "verification": "public-verified",
           "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
-          "note": "The incapacity exception is not modelled."
+          "note": "The incapacity exceptions are not modelled."
         }
       },
       "sickDuringLeave": {
@@ -102,16 +159,17 @@
         "rule": {
           "ruleId": "es-sick",
           "citation": "ET art. 38.3: if incapacity coincides with the leave period, leave can be taken afterwards",
-          "verification": "public-unverified",
-          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
+          "verification": "public-verified",
+          "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430",
+          "note": "Incapacity arising during leave: CJEU C-78/11 (ANGED)."
         }
       },
       "payoutOnTermination": {
         "mode": "remaining",
         "rule": {
           "ruleId": "es-payout",
-          "citation": "ET art. 38.1: leave cannot be replaced by money except on termination (case law)",
-          "verification": "public-unverified",
+          "citation": "ET art. 38.1: leave \"no sustituible por compensación económica\"; payment only on termination (Tribunal Supremo, 28 May 2013)",
+          "verification": "public-verified",
           "url": "https://www.boe.es/buscar/act.php?id=BOE-A-2015-11430"
         }
       }

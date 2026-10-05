@@ -272,7 +272,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
             const fte = weeklyHours(e) / 40;
             const days = (n: number) => (fte >= 1 ? n : Math.ceil(n * fte));
             const top = days(params.over) - days(params.under);
-            at(crossing, 0, () => credit('GRANT', crossing, b.id, top, y, b.entitlement.rule, `Statutory seniority reaches ${params.thresholdYears} years on ${crossing}: entitlement rises ${days(params.under)} → ${days(params.over)} days (+${top})`));
+            at(crossing, 0, () => credit('GRANT', crossing, b.id, top, y, packs[y].extras.find((x) => x.ruleId === 'pl-158') ?? b.entitlement.rule, `Statutory seniority reaches ${params.thresholdYears} years on ${crossing}: entitlement rises ${days(params.under)} → ${days(params.over)} days (+${top})`));
           }
           break;
         }
@@ -341,6 +341,17 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         }
       }
     }
+  }
+
+  // Employer deadline to grant carried-over leave (the claim survives): an HR task, not an expiry.
+  for (const y of years) for (const b of bucketsOf(y)) {
+    const md = b.carryOver.grantByMonthDay;
+    if (!md) continue;
+    const date = `${y}-${md}`;
+    at(date, 9, () => {
+      const left = r4(lots.filter((l) => l.bucket === b.id && l.leaveYear < y && l.remaining > 0).reduce((s, l) => s + l.remaining, 0));
+      if (left > 0) tasks.push({ date, title: `${fmt(left)} ${b.unit} of earlier leave must still be granted: the deadline was ${date} and the claim does not lapse`, rule: b.carryOver.rule });
+    });
   }
 
   // ---------- requests & sickness ----------
@@ -435,11 +446,13 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
     at(td, 5, () => {
       for (const b of bucketsOf(y)) {
         if (unlimited.has(b.id)) {
-          const used = r4(-events.filter((x) => x.bucket === b.id && x.leaveYear === y).reduce((s, x) => s + x.amount, 0));
+          // Ord. 6-130-030(g): 40 h minus the hours used in the 12 months before separation (rolling, not the benefit year).
+          const since = addDays(td, -365);
+          const used = r4(-events.filter((x) => x.bucket === b.id && x.date > since && x.date <= td).reduce((s, x) => s + x.amount, 0));
           const floor = b.entitlement.params.capPerYear ?? 40;
           const pay = r4(Math.max(0, floor - used));
           const rule = packs[y].extras.find((x) => x.ruleId === 'chi-unlimited-payout') ?? b.payoutOnTermination.rule;
-          post('PAYOUT', td, b.id, 0, y, rule, `Employment ends ${td}: unlimited PTO, so pay out ${fmt(pay)} hours (${floor} h floor − ${fmt(used)} h Paid Leave used in ${y})`);
+          post('PAYOUT', td, b.id, 0, y, rule, `Employment ends ${td}: unlimited PTO, so pay out ${fmt(pay)} hours (${floor} h floor − ${fmt(used)} h Paid Leave used in the 12 months before leaving)`);
           continue;
         }
         const bal = balanceOf(b.id);

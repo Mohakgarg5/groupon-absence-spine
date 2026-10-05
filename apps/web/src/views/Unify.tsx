@@ -17,7 +17,7 @@ const worst = (rows: StressRow[]) => (rows.some((r) => r.verdict === 'breach') ?
 const PRESETS: { id: string; label: string; policy: GlobalPolicy }[] = [
   { id: 'naive', label: 'Simple global policy', policy: NAIVE_GLOBAL },
   { id: 'generous', label: 'Generous global policy', policy: { ...NAIVE_GLOBAL, name: 'Generous global policy', daysPerYear: 26, proRataPartTime: true, carryOver: 'capped', carryDays: 5, carryUntil: '09-30', lapseNeedsWarning: true, sickDuringLeave: 'restored-with-certificate', holidayOnDayOff: 'extra-day' } },
-  { id: 'zero', label: 'Zero-breach policy', policy: { ...NAIVE_GLOBAL, name: 'Zero-breach global policy', daysPerYear: 27, proRataPartTime: true, carryOver: 'capped', carryDays: 5, carryUntil: '09-30', lapseNeedsWarning: true, sickDuringLeave: 'restored-with-certificate', holidayOnDayOff: 'extra-day' } },
+  { id: 'zero', label: 'Zero-breach policy', policy: { ...NAIVE_GLOBAL, name: 'Zero-breach global policy', daysPerYear: 27, proRataPartTime: true, carryOver: 'unlimited', carryDays: 5, carryUntil: '09-30', lapseNeedsWarning: true, sickDuringLeave: 'restored-with-certificate', holidayOnDayOff: 'extra-day' } },
 ];
 const GROUPON_HEADCOUNT = 1734; // FY2025 10-K
 const WORKING_DAYS_PER_FTE = 220; // assumption for scaling only
@@ -55,12 +55,14 @@ function PolicyDesigner({ policy, onChange }: { policy: GlobalPolicy; onChange: 
               <option value="03-31">31 March</option><option value="06-30">30 June</option><option value="09-30">30 September</option><option value="12-31">31 December</option>
             </select>
           </label>
-          <label className="field">Before carried days lapse
-            <select value={String(policy.lapseNeedsWarning)} onChange={(x) => set('lapseNeedsWarning', x.target.value === 'true')}>
-              <option value="false">They just lapse</option><option value="true">Employee gets a written warning first</option>
-            </select>
-          </label>
         </>
+      )}
+      {policy.carryOver !== 'unlimited' && (
+        <label className="field">Before unused days lapse
+          <select value={String(policy.lapseNeedsWarning)} onChange={(x) => set('lapseNeedsWarning', x.target.value === 'true')}>
+            <option value="false">They just lapse</option><option value="true">Employee gets a written warning first</option>
+          </select>
+        </label>
       )}
       <label className="field">Sick during holiday
         <select value={policy.sickDuringLeave} onChange={(x) => set('sickDuringLeave', x.target.value as GlobalPolicy['sickDuringLeave'])}>
@@ -126,7 +128,7 @@ export function Unify() {
         {res.summary.breaches === 0 && (
           <p className="callout small" style={{ margin: 0 }}>
             This is the real argument for rule packs. A global policy can only be lawful everywhere by copying the strictest local rule on every point.
-            That costs days you don't owe, and it still needs local law for anything new: Illinois outside Chicago, the next country, next year's holidays. The rule packs give the same compliance without the bill.
+            That costs days you don't owe, unlimited carry-over (Poland's leave never lapses) builds an ever-growing liability, and it still needs local law for anything new: Illinois outside Chicago, the next country, next year's holidays. The rule packs give the same compliance without the bill.
           </p>
         )}
         <div className="vbar" aria-hidden>

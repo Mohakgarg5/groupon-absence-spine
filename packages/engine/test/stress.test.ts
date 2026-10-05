@@ -2,6 +2,7 @@ import { runStressTest, NAIVE_GLOBAL } from '../src/stressTest';
 import { diffPacks, annualUpdateImpact } from '../src/diff';
 import { getPack } from '../src/packs/registry';
 import { employees, scenario } from '../src/dataset';
+import { withUnloadedCalendar } from './fixtures';
 
 test('dataset: 30 fictional employees across all 6 packs', () => {
   expect(employees).toHaveLength(30);
@@ -57,10 +58,15 @@ describe('annual update', () => {
     expect(d.ruleChanges).toEqual([]);
   });
 
-  test('ES-MD 2027 is blocked until the BOCM decree is loaded', () => {
+  test('a pack whose next-year calendar is missing is blocked', () => withUnloadedCalendar('ES-MD', 2027, () => {
     const d = diffPacks(getPack('ES-MD', 2026), getPack('ES-MD', 2027));
     expect(d.blocked).toBe(true);
-    expect(d.reason).toMatch(/BOCM/);
+  }));
+
+  test('ES-MD 2026 → 2027: San José is new to Madrid, Asunción moves to Monday 16 Aug', () => {
+    const d = diffPacks(getPack('ES-MD', 2026), getPack('ES-MD', 2027));
+    expect(d.blocked).toBe(false);
+    expect(d.added.map((a) => a.name)).toEqual(expect.arrayContaining(['San José']));
   });
 
   test('PL 2027 impact: Piotr crosses 10 years; Saturday holidays become HR tasks', () => {
@@ -70,10 +76,15 @@ describe('annual update', () => {
     expect(imp.tasks.some((t) => /sign-off pending/.test(t.title))).toBe(true);
   });
 
-  test('ES impact flags the pending January request as blocked', () => {
+  test('ES impact: Carmen\'s January request is processable and contains Epifanía', () => {
+    const imp = annualUpdateImpact('ES-MD', 2026, 2027, employees, scenario.inputs);
+    expect(imp.affectedRequests).toEqual([expect.objectContaining({ requestId: 'r-carmen-jan', status: 'ok', charged: 5 })]);
+  });
+
+  test('impact marks a booked request as blocked while the calendar is missing', () => withUnloadedCalendar('ES-MD', 2027, () => {
     const imp = annualUpdateImpact('ES-MD', 2026, 2027, employees, scenario.inputs);
     expect(imp.affectedRequests).toEqual([expect.objectContaining({ requestId: 'r-carmen-jan', status: 'blocked' })]);
-  });
+  }));
 
   test('a rule change shows up in the diff', () => {
     const a = getPack('IE', 2026), b = structuredClone(getPack('IE', 2027));

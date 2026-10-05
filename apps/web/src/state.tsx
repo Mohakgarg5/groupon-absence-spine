@@ -4,7 +4,7 @@ import {
   type Inputs, type LeaveRequest, type SicknessRecord, type Pack,
 } from '@spine/engine';
 
-export type View = 'overview' | 'desk' | 'ledger' | 'unify' | 'packs' | 'update' | 'docs';
+export type View = 'overview' | 'desk' | 'ledger' | 'queue' | 'unify' | 'packs' | 'update' | 'docs';
 interface Override { id: string; year: number; pack: Pack }
 interface State { view: View; employeeId: string; inputs: Inputs; overrides: Override[]; rev: number; deskPreset?: { from: string; to: string; autorun: boolean }; focus?: string; tour: number | null }
 type Action =

@@ -18,7 +18,8 @@
     "ruleId": "us-jurisdiction",
     "citation": "Chicago Ord. 6-130 applies to employees working ≥80h in any 120-day period physically in Chicago; Illinois PLAWA (820 ILCS 192) exempts employers covered by the Chicago ordinance — non-Chicago Illinois staff need a separate PLAWA pack",
     "verification": "public-verified",
-    "url": "https://ilga.gov/legislation/ilcs/ilcs3.asp?ActID=4351"
+    "url": "https://ilga.gov/Documents/legislation/ilcs/documents/082001920K15.htm",
+    "note": "820 ILCS 192/15 and 56 Ill. Adm. Code 200.270 confirm the exemption. OLS says coverage is 80 hours in any 120 days in Chicago; an older Clerk draft says 2 hours in any 2-week period — counsel to confirm the codified text."
   },
   "leaveYear": {
     "startMonth": 1,
@@ -28,9 +29,9 @@
     "mode": "working-hours",
     "rule": {
       "ruleId": "chi-counting",
-      "citation": "Leave taken in hours of the scheduled shift; minimum increments (4h leave / 2h sick) permitted but not enforced here",
+      "citation": "Leave is taken in hours of the scheduled shift; employers may set minimum increments of 4 hours (Paid Leave) and 2 hours (Paid Sick Leave) and require up to 7 days' notice for foreseeable Paid Leave",
       "verification": "public-verified",
-      "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance"
+      "url": "https://www.chicago.gov/content/dam/city/depts/bacp/OSL/bacpols20240701chicagopaidleaveandpaidsickleaverulesv2searchable.pdf"
     }
   },
   "holidays": {
@@ -39,7 +40,7 @@
       "ruleId": "us-holidays",
       "citation": "Groupon US company holiday calendar (no private-sector statutory holidays in Illinois)",
       "verification": "assumption",
-      "note": "Calendar is a placeholder — replace with Groupon's published US holiday schedule."
+      "note": "Calendar is a placeholder (no public Groupon US holiday list exists); all dates match OPM federal holiday observance rules."
     },
     "dates": [
       {
@@ -112,7 +113,7 @@
           "ruleId": "chi-entitlement-leave",
           "citation": "Chicago Ord. 6-130 Paid Leave: 1h per 35h worked, max 40h per year; usable from day 90",
           "verification": "public-verified",
-          "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance"
+          "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5"
         }
       },
       "accrual": {
@@ -122,8 +123,8 @@
           "ruleId": "paid-leave-accrual",
           "citation": "Chicago Ord. 6-130: 1 hour per 35 hours worked, up to 40 hours per 12-month period (accrual method assumed; front-loading is also permitted)",
           "verification": "public-verified",
-          "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance",
-          "note": "Accrual year assumed to be the calendar year."
+          "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5",
+          "note": "Accrual year assumed to be the calendar year. Exempt employees are deemed to work 40 hours a week; only hours worked in Chicago accrue."
         }
       },
       "carryOver": {
@@ -134,7 +135,7 @@
           "ruleId": "paid-leave-carry",
           "citation": "Chicago Ord. 6-130: carry-over of up to 16 hours into the next 12-month period",
           "verification": "public-verified",
-          "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance"
+          "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5"
         }
       },
       "sickDuringLeave": {
@@ -151,10 +152,10 @@
         "mode": "remaining",
         "rule": {
           "ruleId": "chi-payout",
-          "citation": "Chicago Ord. 6-130: employers with >100 covered employees pay out unused accrued Paid Leave at separation",
-          "verification": "public-unverified",
-          "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance",
-          "note": "Size bands from a law-firm summary — verify against the Chicago DOL rules."
+          "citation": "Chicago Ord. 6-130: unused accrued Paid Leave is paid out on separation (or transfer out of Chicago) by employers with more than 100 Chicago covered employees — 51–100 were capped at 16 hours until 1 July 2025, now full; 50 or fewer owe nothing",
+          "verification": "public-verified",
+          "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5",
+          "note": "Checked against the City Clerk ordinance text and Office of Labor Standards rules. Only Chicago-based employees count toward the thresholds."
         }
       }
     },
@@ -176,7 +177,7 @@
           "ruleId": "chi-entitlement-sick",
           "citation": "Chicago Ord. 6-130 Paid Sick Leave: 1h per 35h worked, max 40h per year; usable from day 30",
           "verification": "public-verified",
-          "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance"
+          "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5"
         }
       },
       "accrual": {
@@ -186,7 +187,7 @@
           "ruleId": "paid-sick-accrual",
           "citation": "Chicago Ord. 6-130: 1 hour per 35 hours worked, up to 40 hours per 12-month period (accrual method assumed; front-loading is also permitted)",
           "verification": "public-verified",
-          "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance",
+          "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5",
           "note": "Accrual year assumed to be the calendar year."
         }
       },
@@ -198,7 +199,7 @@
           "ruleId": "paid-sick-carry",
           "citation": "Chicago Ord. 6-130: carry-over of up to 80 hours into the next 12-month period",
           "verification": "public-verified",
-          "url": "https://www.proskauer.com/blog/effective-july-1-2024-chicago-paid-leave-and-paid-sick-and-safe-leave-ordinance"
+          "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5"
         }
       },
       "sickDuringLeave": {
@@ -232,18 +233,26 @@
     {
       "label": "Groupon PTO surplus",
       "ruleId": "us-pto",
-      "citation": "Groupon likely grants PTO above the ordinance minimum; surplus PTO is \"vacation\" under the Illinois Wage Payment and Collection Act and must be paid out",
-      "verification": "assumption",
-      "url": "https://www.ilga.gov/legislation/ilcs/ilcs3.asp?ActID=2402",
+      "citation": "Illinois Wage Payment and Collection Act 820 ILCS 115/5 and 56 Ill. Adm. Code 300.520: earned vacation is final compensation and must be paid on separation; use-it-or-lose-it is allowed only with notice and a reasonable opportunity to take it",
+      "verification": "public-verified",
+      "url": "https://ilga.gov/Documents/legislation/ilcs/documents/082001150K5.htm",
       "note": "Need the actual US PTO policy. Built In (third-party, updated Sept 2026) describes it as \"unlimited or flexible PTO\" — if confirmed, set paid-leave accrual to unlimited-with-floor."
     },
     {
       "label": "Unlimited PTO option",
       "ruleId": "chi-unlimited-payout",
-      "citation": "Chicago Paid Leave rules: an unlimited PTO policy satisfies Paid Leave and needs no carry-over, but on separation (or transfer out of Chicago) the employer must pay the equivalent of 40 hours minus the Paid Leave used in the 12-month benefit period",
+      "citation": "Chicago Ord. 6-130-030(g): an unlimited PTO policy satisfies the ordinance, needs no carry-over, but on separation or transfer out of Chicago the employer pays 40 hours minus the hours used in the 12 months before separation",
       "verification": "public-verified",
-      "url": "https://www.fisherphillips.com/en/insights/insights/chicagos-new-paid-leave-requirements",
-      "note": "Checked 2026-10-02 against a law-firm summary of the Chicago DOL rules (city site blocked automated access). Third-party profiles describe Groupon's US PTO as \"unlimited or flexible\" — unconfirmed; switch the Paid Leave accrual strategy to unlimited-with-floor on the Rule packs page to model it."
+      "url": "https://api.chicityclerkelms.chicago.gov/matter/1776119D-5826-EE11-9965-001DD804E9A5",
+      "note": "Groupon's own postings say \"flexible PTO\" (Dallas); third-party profiles say \"unlimited or flexible\" — unconfirmed. Switch Paid Leave to unlimited-with-floor on the Rule packs page to model it. Sick-leave protections still apply, so the engine keeps the sick bank separate."
+    },
+    {
+      "label": "One combined bank",
+      "ruleId": "chi-combined",
+      "citation": "Chicago OLS Rule PTO 2.08 (rules effective 1 June 2026): an employer may run one paid-time-off policy of up to 80 hours that meets or exceeds every requirement of 6-130-030 instead of two banks",
+      "verification": "public-verified",
+      "url": "https://ktslaw.com/insights/alert/2026/5/chicago-paid-leave-and-sick-leave-rules-update",
+      "note": "The engine models two banks, the default. How carry-over works in a combined bank is not spelled out."
     }
   ]
 }

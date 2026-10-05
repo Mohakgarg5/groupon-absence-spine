@@ -104,11 +104,14 @@ describe('United Kingdom', () => {
     expect(l.balances['statutory-4wk'].available + l.balances['additional-1.6wk'].available).toBeCloseTo(15.8);
   });
 
-  test('4-week bucket cannot carry over; 1.6-week bucket carries up to 5', () => {
+  test('4-week leave lapses at year end only if the worker was warned (reg.13(16)-(17), from 2024); 1.6-week carries up to 5', () => {
     const ft = emp({ id: 'uk2', packId: 'UK', pattern: { days: [2, 3, 4, 5, 6], hoursPerDay: 8 } }); // Tue–Sat: fewer bank holidays hit
-    const l = buildLedger(ft, emptyInputs(), '2027-01-02');
-    expect(of(l.events, 'EXPIRE', 'statutory-4wk')[0]).toMatchObject({ date: '2026-12-31', amount: -20 });
-    expect(l.balances['additional-1.6wk'].byYear[2026]).toBeLessThanOrEqual(5);
+    const warned = buildLedger(ft, { ...emptyInputs(), notices: [{ employeeId: 'uk2', leaveYear: 2026, sentOn: '2026-11-01' }] }, '2027-01-02');
+    expect(of(warned.events, 'EXPIRE', 'statutory-4wk')[0]).toMatchObject({ date: '2027-01-01', amount: -20 });
+    const silent = buildLedger(ft, emptyInputs(), '2027-01-02');
+    expect(of(silent.events, 'EXPIRY_BLOCKED', 'statutory-4wk')).toHaveLength(1);
+    expect(silent.balances['statutory-4wk'].byYear[2026]).toBe(20);
+    expect(silent.balances['additional-1.6wk'].byYear[2026]).toBeLessThanOrEqual(5);
   });
 });
 
@@ -161,10 +164,12 @@ describe('Poland', () => {
     expect(of(l.events, 'ACCRUE').map((x) => x.date)).toEqual(['2026-07-31', '2026-08-31', '2026-09-30', '2026-10-31', '2026-11-30', '2026-12-31']);
   });
 
-  test('carry-over expires 30 September of the next year', () => {
+  test('untaken leave is not lost on 30 September: the employer must grant it (art. 168) and the claim survives (art. 291)', () => {
     const p = emp({ id: 'pl5', packId: 'PL', pl: { priorServiceYears: 0, education: 'none', firstJob: false } });
     const l = buildLedger(p, emptyInputs(), '2027-10-15');
-    expect(of(l.events, 'EXPIRE').find((x) => x.leaveYear === 2026)).toMatchObject({ date: '2027-09-30', amount: -20 });
+    expect(of(l.events, 'EXPIRE')).toHaveLength(0);
+    expect(l.balances.annual.byYear[2026]).toBe(20);
+    expect(l.tasks.some((t) => t.date === '2027-09-30' && /must still be granted/.test(t.title))).toBe(true);
   });
 });
 

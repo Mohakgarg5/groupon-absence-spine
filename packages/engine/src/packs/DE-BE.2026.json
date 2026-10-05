@@ -129,7 +129,7 @@
           "citation": "BUrlG §4 (full entitlement after 6-month waiting period) and §5 (1/12 per full month in partial years; fractions ≥ ½ day round up)",
           "verification": "public-verified",
           "url": "https://www.gesetze-im-internet.de/burlg/__5.html",
-          "note": "§4 (6-month Wartezeit) and §5 (1/12 per full month; fractions ≥ ½ day rounded up) checked 2026-10-02."
+          "note": "§4 and §5 checked 2026-10-02. Pro-rating applies only in §5(1)(a)–(c); a leaver in the second half of the year after the waiting period keeps the full entitlement."
         }
       },
       "carryOver": {
@@ -141,7 +141,7 @@
           "citation": "BUrlG §7(3): carry-over to 31 March; lapse only if the employer informed and invited the employee to take leave (CJEU C-684/16 Max-Planck, BAG 9 AZR 423/16)",
           "verification": "public-verified",
           "url": "https://www.gesetze-im-internet.de/burlg/__7.html",
-          "note": "§7(3) text checked (transfer only for urgent reasons; must be taken in the first three months of the next year). CJEU C-684/16 (6 Nov 2018, ECLI:EU:C:2018:874): leave is not lost unless the employer shows it exercised all due diligence to enable the worker to take it. Automatic carry-over at Groupon GmbH remains an assumption."
+          "note": "§7(3) text checked (transfer only for urgent reasons; must be taken in the first three months of the next year). CJEU C-684/16 (6 Nov 2018, ECLI:EU:C:2018:874): leave is not lost unless the employer shows it exercised all due diligence to enable the worker to take it. Automatic carry-over at Groupon GmbH remains an assumption. BAG 9 AZR 423/16: the warning must be individual, about that year's specific days, in good time and clear about the consequence — generic handbook text is not enough, and the employer bears the burden of proof. BAG 9 AZR 266/20: the 3-year limitation period only starts after proper notice."
         }
       },
       "sickDuringLeave": {

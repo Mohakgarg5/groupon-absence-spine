@@ -51,7 +51,17 @@ test('ES-MD 2026 is the official Decreto 75/2025 + Madrid city locals; 24 June i
   expect(p.holidays.source.verification).toBe('public-verified');
 });
 
-test('ES-MD 2027 calendar is explicitly not loaded', () => expect(getPack('ES-MD', 2027).holidays.loaded).toBe(false));
+test('ES-MD 2027 is loaded from Decreto 82/2026 (BOCM 1 Oct 2026): 12 regional + 2 Madrid city holidays', () => {
+  const p = getPack('ES-MD', 2027);
+  expect(p.holidays.loaded).toBe(true);
+  expect(p.holidays.dates).toHaveLength(14);
+  expect(p.holidays.source.citation).toMatch(/Decreto 82\/2026/);
+  expect(has('ES-MD', 2027, '2027-03-19')).toBe(true); // San José
+  expect(has('ES-MD', 2027, '2027-05-02')).toBe(false); // Comunidad day falls on a Sunday, not moved
+  const e = easterSunday(2027);
+  expect(has('ES-MD', 2027, addDays(e, -3))).toBe(true);
+  expect(has('ES-MD', 2027, addDays(e, -2))).toBe(true);
+});
 
 test('PL has 14 statutory holidays incl. Wigilia since 2025', () => {
   for (const y of [2026, 2027]) {

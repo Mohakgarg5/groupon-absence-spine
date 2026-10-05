@@ -16,7 +16,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Approver for the Berlin team.",
+    "persona": "Team lead and approver for Berlin, with no leave booked all year. The HR queue suggests a workload conversation, not a reminder email.",
     "openingBalances": {
       "annual": 2
     }
@@ -189,7 +189,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Approver for the Warsaw shared-services team.",
+    "persona": "Shared Services lead in Warsaw, the payroll hub, with no leave booked in 2026. A wellbeing check-in in the HR queue.",
     "pl": {
       "priorServiceYears": 4,
       "education": "higher",

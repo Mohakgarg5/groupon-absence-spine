@@ -8,12 +8,14 @@ import { Unify } from './views/Unify';
 import { Packs } from './views/Packs';
 import { Update } from './views/Update';
 import { Docs } from './views/Docs';
+import { Queue } from './views/Queue';
 import { Tour } from './components/Tour';
 
 const NAV: { id: View; label: string }[] = [
   { id: 'overview', label: 'Overview' },
   { id: 'desk', label: 'Request desk' },
   { id: 'ledger', label: 'Ledger' },
+  { id: 'queue', label: 'HR queue' },
   { id: 'unify', label: 'Force-unify test' },
   { id: 'packs', label: 'Rule packs' },
   { id: 'update', label: 'Annual update' },
@@ -59,6 +61,7 @@ export function App() {
         {state.view === 'overview' && <Overview />}
         {state.view === 'desk' && <Desk />}
         {state.view === 'ledger' && <LedgerView />}
+        {state.view === 'queue' && <Queue />}
         {state.view === 'unify' && <Unify />}
         {state.view === 'packs' && <Packs />}
         {state.view === 'update' && <Update />}

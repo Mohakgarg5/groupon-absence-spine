@@ -22,7 +22,7 @@ test('re-processing a pending request by its own id does not clash with itself',
   const es = emp({ id: 'carmen', packId: 'ES-MD' });
   const pending: LeaveRequest = { id: 'r-carmen-jan', employeeId: 'carmen', from: '2027-01-04', to: '2027-01-08', kind: 'annual', status: 'pending', submittedOn: TODAY };
   const r = submitRequest(es, { ...pending, id: 'r-carmen-jan' }, { ...emptyInputs(), requests: [pending] }, TODAY);
-  expect(r.error?.code).toBe('CALENDAR_NOT_LOADED');
+  expect(r.ok).toBe(true);
 });
 
 test('balance check sees debits scheduled later in the leave year (UK bank holidays)', () => {

@@ -28,7 +28,7 @@
     "rule": {
       "ruleId": "ie-counting",
       "citation": "OWTA 1997 s.19: annual leave measured in working weeks; public holidays are a separate entitlement (s.21)",
-      "verification": "public-unverified",
+      "verification": "public-verified",
       "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html"
     }
   },
@@ -37,8 +37,9 @@
     "source": {
       "ruleId": "ie-holidays",
       "citation": "OWTA 1997 Second Schedule as amended (St Brigid's Day from 2023: first Monday in February, or 1 Feb if a Friday)",
-      "verification": "public-unverified",
-      "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html"
+      "verification": "public-verified",
+      "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
+      "note": "St Brigid's Day from S.I. 50/2022. 2027 dates derived from the statutory rules."
     },
     "dates": [
       {
@@ -90,9 +91,9 @@
     "rule": {
       "ruleId": "ie-holiday-remedy",
       "citation": "OWTA 1997 s.21: for a holiday the employee would not otherwise work, the employer chooses a paid day off within a month, an extra day of annual leave, or an extra day's pay. Part-timers qualify after 40 hours in the prior 5 weeks",
-      "verification": "public-verified",
+      "verification": "assumption",
       "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
-      "note": "Choice of \"extra day of annual leave\" for Groupon is an assumption."
+      "note": "The remedy is the employer's choice (paid day off, a day off within a month, an extra day of annual leave, or an extra day's pay); if the employer says nothing the default is an extra day's pay. Part-timers: one-fifth of weekly pay. 'Extra day of annual leave' for Groupon is an assumption."
     }
   },
   "buckets": [
@@ -112,7 +113,7 @@
         "rule": {
           "ruleId": "ie-entitlement",
           "citation": "OWTA 1997 s.19(1)(a): 4 working weeks in a leave year with ≥1,365 hours worked",
-          "verification": "public-unverified",
+          "verification": "public-verified",
           "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
           "note": "Irregular-hours staff would use the 8%-of-hours method — not modelled."
         }
@@ -134,19 +135,18 @@
         "rule": {
           "ruleId": "ie-carry",
           "citation": "OWTA 1997 s.20(1)(c): leave may be taken within 6 months of the next year with the employee's consent",
-          "verification": "public-unverified",
+          "verification": "public-verified",
           "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
-          "note": "Cap of 5 days is a Groupon policy assumption."
+          "note": "Cap of 5 days is a Groupon policy assumption. The statutory leave year is 1 April–31 March (s.2); a calendar leave year by agreement is assumed. Illness extends carry-over to 15 months (not modelled)."
         }
       },
       "sickDuringLeave": {
         "mode": "restore-if-certified",
         "rule": {
           "ruleId": "ie-sick",
-          "citation": "OWTA 1997 s.19 as amended by the Work Life Balance and Miscellaneous Provisions Act 2023: days of illness during annual leave covered by a medical certificate are not counted as annual leave",
-          "verification": "public-unverified",
-          "url": "https://www.irishstatutebook.ie/eli/2023/act/8/enacted/en/html",
-          "note": "Exact section and commencement to verify."
+          "citation": "OWTA 1997 s.19(2): a day of illness during annual leave covered by a medical certificate is not treated as annual leave",
+          "verification": "public-verified",
+          "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html"
         }
       },
       "payoutOnTermination": {
@@ -154,8 +154,9 @@
         "rule": {
           "ruleId": "ie-payout",
           "citation": "OWTA 1997 s.23: compensation for untaken leave on cesser of employment",
-          "verification": "public-unverified",
-          "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html"
+          "verification": "public-verified",
+          "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
+          "note": "s.23(1)(b): includes the previous year's leave when leaving in the first 6 months of the year."
         }
       }
     }
@@ -164,10 +165,18 @@
     {
       "label": "Statutory sick pay",
       "ruleId": "ie-ssp",
-      "citation": "Sick Leave Act 2022: statutory sick days (separate from annual leave) — 5 days in 2026",
-      "verification": "public-unverified",
-      "url": "https://www.irishstatutebook.ie/eli/2022/act/12/enacted/en/html",
+      "citation": "Sick Leave Act 2022 (Act 24 of 2022): 5 statutory sick days in 2026 (S.I. 10/2024); planned increases to 7 and 10 were paused in April 2025",
+      "verification": "public-verified",
+      "url": "https://www.irishstatutebook.ie/eli/2022/act/24/enacted/en/html",
       "note": "Not modelled in this build."
+    },
+    {
+      "label": "Unbroken fortnight",
+      "ruleId": "ie-unbroken",
+      "citation": "OWTA 1997 s.19(3): an employee with 8 months' service is entitled to an unbroken period of 2 weeks' leave",
+      "verification": "public-verified",
+      "url": "https://revisedacts.lawreform.ie/eli/1997/act/20/revised/en/html",
+      "note": "Not enforced by the engine."
     }
   ]
 }

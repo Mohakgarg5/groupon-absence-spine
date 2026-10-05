@@ -1,7 +1,7 @@
 import { submitRequest, approveRequest } from '../src/pipeline';
 import { resolvePackId } from '../src/jurisdiction';
 import type { Inputs, LeaveRequest } from '../src/model';
-import { emp, emptyInputs } from './fixtures';
+import { emp, emptyInputs, withUnloadedCalendar } from './fixtures';
 
 const lena = emp({ id: 'lena', packId: 'DE-BE', hireDate: '2019-04-01', managerId: 'mgr-de', openingBalances: { annual: 3 } });
 const TODAY = '2026-10-02';
@@ -66,11 +66,18 @@ test('Poland: a fifth on-demand day is refused (art. 167²)', () => {
 test('kind not offered by the pack → KIND_NOT_ALLOWED', () =>
   expect(submitRequest(lena, { ...ask('2026-11-09', '2026-11-09', 'on-demand'), employeeId: 'lena' }, emptyInputs(), TODAY).error?.code).toBe('KIND_NOT_ALLOWED'));
 
-test('Madrid 2027 → CALENDAR_NOT_LOADED at the expand stage', () => {
+test('a year with no loaded calendar → CALENDAR_NOT_LOADED at the expand stage', () => withUnloadedCalendar('ES-MD', 2027, () => {
   const es = emp({ id: 'es', packId: 'ES-MD' });
   const r = submitRequest(es, { ...ask('2027-01-11', '2027-01-15'), employeeId: 'es' }, emptyInputs(), TODAY);
   expect(r.error?.code).toBe('CALENDAR_NOT_LOADED');
   expect(r.stages.at(-1)!.id).toBe('expand');
+}));
+
+test('Madrid January 2027 now processes: calendar days, Epifanía inside the block is still counted', () => {
+  const es = emp({ id: 'es', packId: 'ES-MD' });
+  const r = submitRequest(es, { ...ask('2027-01-04', '2027-01-08'), employeeId: 'es' }, emptyInputs(), TODAY);
+  expect(r.ok).toBe(true);
+  expect(r.parts[0].amount).toBe(5);
 });
 
 test('outside employment → NOT_EMPLOYED; beyond 2027 → PACK_NOT_FOUND', () => {

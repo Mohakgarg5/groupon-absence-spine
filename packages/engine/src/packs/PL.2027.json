@@ -28,8 +28,9 @@
     "rule": {
       "ruleId": "pl-counting",
       "citation": "Kodeks pracy art. 154² §1–2: leave is granted in hours of the employee's daily working time, one leave day = 8 hours — a part-timer on 4-hour days uses ½ leave-day per day off; holidays are not counted",
-      "verification": "public-unverified",
-      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+      "verification": "public-verified",
+      "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf",
+      "note": "Art. 154² §4: a part-day may be granted only when the remaining balance is less than a full working day."
     },
     "dayEquivalentHours": 8
   },
@@ -37,9 +38,9 @@
     "loaded": true,
     "source": {
       "ruleId": "pl-holidays",
-      "citation": "Ustawa z 18.01.1951 o dniach wolnych od pracy, as amended 2024 (Wigilia 24 Dec a day off from 2025) — 14 days incl. 2 Sundays",
+      "citation": "Ustawa o dniach wolnych od pracy (tekst jednolity Dz.U. 2025 poz. 296), incl. 24 December from 2025 (Dz.U. 2024 poz. 1965) — 14 days incl. 2 Sundays",
       "verification": "public-verified",
-      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19510040028"
+      "url": "https://api.sejm.gov.pl/eli/acts/DU/2025/296/text.pdf"
     },
     "dates": [
       {
@@ -107,8 +108,8 @@
     "rule": {
       "ruleId": "pl-saturday",
       "citation": "Kodeks pracy art. 130 §2: a holiday falling on a day other than Sunday reduces working time by 8h — employer must designate another day off",
-      "verification": "public-unverified",
-      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+      "verification": "public-verified",
+      "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf"
     }
   },
   "buckets": [
@@ -140,9 +141,9 @@
         "rule": {
           "ruleId": "pl-entitlement",
           "citation": "Kodeks pracy art. 154 §1 (20 days < 10 years, 26 days ≥ 10 years) and art. 155 §1 (education periods count toward seniority; only the highest qualification counts)",
-          "verification": "public-unverified",
-          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141",
-          "note": "Overlap between study and work periods is not de-duplicated (art. 155 §2) — verify with payroll."
+          "verification": "public-verified",
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf",
+          "note": "Checked against Kodeks pracy (Dz.U. 2026 poz. 1245). Art. 155 §2: where study and employment overlap, count whichever is more favourable, not both — priorServiceYears must exclude work that overlapped with study. Since 2026, art. 302¹ also counts civil-law contracts, self-employment and some foreign work once documented (see extra rule)."
         }
       },
       "accrual": {
@@ -152,21 +153,22 @@
         },
         "rule": {
           "ruleId": "pl-accrual",
-          "citation": "Kodeks pracy art. 153 §1 (first job: 1/12 after each month), art. 155¹ (proportional in year of joining/leaving), art. 155² (round up to a full day)",
-          "verification": "public-unverified",
-          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+          "citation": "Kodeks pracy art. 153 §1 (first job: 1/12 on completing each month of work), art. 155¹ §1 (proportional in the year of joining or leaving), art. 155²a §2 (an incomplete month rounds up), art. 155³ §1 (an incomplete day rounds up)",
+          "verification": "public-verified",
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf"
         }
       },
       "carryOver": {
         "max": null,
-        "expiresMonthDay": "09-30",
+        "expiresMonthDay": null,
         "conditionalOnNotice": false,
+        "grantByMonthDay": "09-30",
         "rule": {
           "ruleId": "pl-carry",
-          "citation": "Kodeks pracy art. 168: untaken leave must be granted by 30 September of the following year",
-          "verification": "public-unverified",
-          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141",
-          "note": "Strictly, art. 168 obliges the employer to grant it; the right itself lapses only by 3-year limitation. Modelled as a hard deadline that HR must act on — verify."
+          "citation": "Kodeks pracy art. 168: leave not taken in its year must be granted by 30 September of the following year (except the on-demand part); the claim itself only expires after 3 years (art. 291 §1)",
+          "verification": "public-verified",
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf",
+          "note": "The engine never lapses Polish leave; it raises an HR task after 30 September."
         }
       },
       "sickDuringLeave": {
@@ -174,8 +176,8 @@
         "rule": {
           "ruleId": "pl-sick",
           "citation": "Kodeks pracy art. 165–166: leave is postponed/interrupted by temporary incapacity",
-          "verification": "public-unverified",
-          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+          "verification": "public-verified",
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf"
         }
       },
       "payoutOnTermination": {
@@ -183,8 +185,9 @@
         "rule": {
           "ruleId": "pl-payout",
           "citation": "Kodeks pracy art. 171: ekwiwalent only on termination",
-          "verification": "public-unverified",
-          "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+          "verification": "public-verified",
+          "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf",
+          "note": "Art. 171 §3: no payout if the employee is rehired directly under a new contract with the same employer."
         }
       }
     }
@@ -194,15 +197,31 @@
       "label": "Leave on demand",
       "ruleId": "pl-on-demand",
       "citation": "Kodeks pracy art. 167²: up to 4 days per year on demand, within the annual entitlement",
-      "verification": "public-unverified",
-      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+      "verification": "public-verified",
+      "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf",
+      "note": "Four of the employee's own days, also for part-timers; the cap applies across employers in the year (art. 167³)."
     },
     {
       "label": "Part-time",
       "ruleId": "pl-part-time",
       "citation": "Kodeks pracy art. 154 §2: part-time entitlement is proportional to FTE, rounded up to a full day",
-      "verification": "public-unverified",
-      "url": "https://isap.sejm.gov.pl/isap.nsf/DocDetails.xsp?id=WDU19740240141"
+      "verification": "public-verified",
+      "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf"
+    },
+    {
+      "label": "Top-up on reaching 10 years",
+      "ruleId": "pl-158",
+      "citation": "Kodeks pracy art. 158: an employee who reaches the higher entitlement during the year gets the difference (urlop uzupełniający) in that year",
+      "verification": "public-verified",
+      "url": "https://api.sejm.gov.pl/eli/acts/DU/2026/1245/text.pdf"
+    },
+    {
+      "label": "What counts as seniority from 2026",
+      "ruleId": "pl-302-1",
+      "citation": "Kodeks pracy art. 302¹ (Dz.U. 2025 poz. 1423): periods under civil-law contracts, self-employment and some work abroad count toward seniority (private employers from 1 May 2026), once the employee documents them within 24 months; overlapping periods count once",
+      "verification": "public-verified",
+      "url": "https://api.sejm.gov.pl/eli/acts/DU/2025/1423/text.pdf",
+      "note": "Include these periods in priorServiceYears. The biggest 2026 change to Polish leave."
     }
   ]
 }

@@ -48,7 +48,7 @@ export function describePolicy(p: GlobalPolicy): string[] {
   return [
     `${p.daysPerYear} working days ${p.proRataPartTime ? 'a year, pro-rated to each person\'s working week' : 'for everyone'}, front-loaded on 1 January`,
     p.tenureBonusPerYears > 0 ? `+1 day for every ${p.tenureBonusPerYears} years at Groupon` : 'No tenure bonus',
-    p.carryOver === 'none' ? 'Use it or lose it on 31 December'
+    p.carryOver === 'none' ? `Use it or lose it on 31 December${p.lapseNeedsWarning ? ', after a written warning' : ''}`
       : p.carryOver === 'unlimited' ? 'Unused days carry over without limit'
       : `Up to ${p.carryDays} unused days carry over, to be used by ${mmdd(p.carryUntil)}${p.lapseNeedsWarning ? ', and they lapse only after a written warning' : ''}`,
     p.sickDuringLeave === 'consumed' ? 'Falling sick on holiday does not give days back' : 'Certified sick days during holiday are given back',
@@ -159,15 +159,17 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
     const PROBE = 5;
     const globalCarry = policy.carryOver === 'none' ? 'Unused leave lost on 31 Dec' : describePolicy(policy)[2];
     let carryVerdict: Verdict;
+    const neverLapses = c.max === null && !c.expiresMonthDay && !c.conditionalOnNotice;
     if (!keepsSome) carryVerdict = 'ok';
-    else if (c.conditionalOnNotice) carryVerdict = policy.carryOver === 'unlimited' || (policy.carryOver === 'capped' && policy.lapseNeedsWarning) ? 'ok' : 'breach';
-    else if (pack.id === 'PL') carryVerdict = policy.carryOver === 'unlimited' || (policy.carryOver === 'capped' && policy.carryDays >= PROBE && policy.carryUntil >= (c.expiresMonthDay ?? '12-31')) ? 'ok' : 'breach';
+    else if (neverLapses) carryVerdict = policy.carryOver === 'unlimited' ? 'ok' : 'breach';
+    else if (c.conditionalOnNotice) carryVerdict = policy.carryOver === 'unlimited' || policy.lapseNeedsWarning ? 'ok' : 'breach';
     else if (pack.id === 'US-CHI') carryVerdict = policy.carryOver === 'unlimited' || (policy.carryOver === 'capped' && policy.carryDays * e.pattern.hoursPerDay >= Math.min(PROBE * e.pattern.hoursPerDay, c.max ?? Infinity)) ? 'ok' : 'breach';
     else carryVerdict = c.rule.verification === 'assumption' || /consent|agreement/i.test(c.rule.citation) || policy.carryOver !== 'none' ? 'ok' : 'review';
     push({
       dimension: 'carry-over', global: globalCarry,
       local: !keepsSome ? 'Lapses at year end (same as global)'
-        : c.conditionalOnNotice ? `Kept: cannot lapse unless the employee was warned; otherwise until ${c.expiresMonthDay ?? 'n/a'}`
+        : neverLapses ? `Never lapses: the employer must grant it${c.grantByMonthDay ? ` by ${c.grantByMonthDay}` : ''} and the claim survives`
+        : c.conditionalOnNotice ? 'Kept: cannot lapse unless the employee was given the chance and warned in writing'
         : `Carried${c.max !== null ? ` up to ${c.max} ${carry.unit}` : ''}${c.expiresMonthDay ? ` to ${c.expiresMonthDay}` : ''}`,
       verdict: carryVerdict,
       rule: c.rule,
