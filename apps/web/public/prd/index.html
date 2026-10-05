@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PRD: Spine - One Absence Process, Local Law</title>
+<style>
+  /* === RESET & BASE === */
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --primary: #2563eb;
+    --primary-dark: #1e40af;
+    --primary-light: #dbeafe;
+    --primary-lighter: #eff6ff;
+    --accent: #1e3a5f;
+    --text: #1e293b;
+    --text-light: #64748b;
+    --text-lighter: #94a3b8;
+    --bg: #ffffff;
+    --bg-alt: #f8fafc;
+    --border: #e2e8f0;
+    --border-light: #f1f5f9;
+    --shadow: 0 1px 3px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.04);
+    --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.08), 0 2px 4px -2px rgba(0,0,0,0.04);
+    --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.04);
+    --radius: 12px;
+    --radius-sm: 8px;
+    --radius-xs: 6px;
+  }
+
+  html { font-size: 15px; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    color: var(--text);
+    background: var(--bg);
+    line-height: 1.7;
+    max-width: 850px;
+    margin: 0 auto;
+    padding: 0 24px;
+  }
+
+  /* === TYPOGRAPHY === */
+  h1, h2, h3, h4, h5, h6 { line-height: 1.3; font-weight: 700; }
+  h1 { font-size: 2.4rem; color: var(--primary-dark); }
+  h2 { font-size: 1.8rem; color: var(--primary); margin-bottom: 0.5em; }
+  h3 { font-size: 1.3rem; color: var(--text); margin-bottom: 0.4em; }
+  h4 { font-size: 1.1rem; color: var(--text); margin-bottom: 0.3em; }
+
+  p { margin-bottom: 1em; }
+  strong { font-weight: 600; }
+  em { font-style: italic; }
+
+  a { color: var(--primary); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* === SECTION HEADERS === */
+  .section-number {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 36px;
+    font-size: 1rem;
+    font-weight: 700;
+    margin-right: 12px;
+    vertical-align: middle;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2em;
+    padding-bottom: 0.6em;
+    border-bottom: 3px solid var(--primary);
+  }
+
+  .section-header h2 {
+    margin-bottom: 0;
+    font-size: 1.9rem;
+  }
+
+  /* === COVER PAGE === */
+  .cover-page {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    page-break-after: always;
+  }
+
+  .cover-logo {
+    width: 120px;
+    height: 120px;
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    border-radius: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 40px;
+    box-shadow: 0 20px 40px rgba(37,99,235,0.25);
+    position: relative;
+  }
+
+  .cover-logo svg {
+    width: 64px;
+    height: 64px;
+  }
+
+  .cover-title {
+    font-size: 3.2rem;
+    color: var(--primary-dark);
+    margin-bottom: 8px;
+    letter-spacing: -0.02em;
+  }
+
+  .cover-subtitle {
+    font-size: 1.5rem;
+    color: var(--text-light);
+    margin-bottom: 48px;
+    font-weight: 400;
+  }
+
+  .cover-meta {
+    display: flex;
+    gap: 48px;
+    margin-bottom: 60px;
+  }
+
+  .cover-meta-item {
+    text-align: center;
+  }
+
+  .cover-meta-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-lighter);
+    margin-bottom: 4px;
+  }
+
+  .cover-meta-value {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--text);
+  }
+
+  .cover-divider {
+    width: 80px;
+    height: 3px;
+    background: var(--primary);
+    margin: 0 auto 48px;
+    border-radius: 2px;
+  }
+
+  /* === TABLE OF CONTENTS === */
+  .toc {
+    page-break-after: always;
+    padding: 60px 0;
+  }
+
+  .toc h2 {
+    font-size: 2rem;
+    margin-bottom: 1.5em;
+    text-align: center;
+  }
+
+  .toc-list {
+    list-style: none;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .toc-list li {
+    border-bottom: 1px solid var(--border);
+    padding: 0;
+  }
+
+  .toc-list li a {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 14px 8px;
+    color: var(--text);
+    font-size: 1.05rem;
+    transition: all 0.15s;
+  }
+
+  .toc-list li a:hover {
+    color: var(--primary);
+    background: var(--primary-lighter);
+    text-decoration: none;
+    padding-left: 16px;
+  }
+
+  .toc-section-num {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 28px;
+    font-size: 0.8rem;
+    font-weight: 700;
+    margin-right: 14px;
+    flex-shrink: 0;
+  }
+
+  .toc-dots {
+    flex: 1;
+    border-bottom: 2px dotted var(--border);
+    margin: 0 12px;
+    height: 1px;
+    align-self: flex-end;
+    margin-bottom: 6px;
+  }
+
+  .toc-page {
+    color: var(--text-light);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  /* === CARDS === */
+  .card {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+  }
+
+  .card-blue {
+    border-left: 4px solid var(--primary);
+  }
+
+  .card-highlight {
+    background: var(--primary-lighter);
+    border: 1px solid var(--primary-light);
+  }
+
+  /* === TABLES === */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 24px;
+    font-size: 0.93rem;
+  }
+
+  table thead th {
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 16px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.88rem;
+  }
+
+  table thead th:first-child { border-radius: var(--radius-xs) 0 0 0; }
+  table thead th:last-child { border-radius: 0 var(--radius-xs) 0 0; }
+
+  table tbody td {
+    padding: 11px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  table tbody tr:nth-child(even) { background: var(--bg-alt); }
+  table tbody tr:hover { background: var(--primary-lighter); }
+
+  /* === PERSONA CARDS === */
+  .persona-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 32px;
+    box-shadow: var(--shadow-md);
+    page-break-inside: avoid;
+  }
+
+  .persona-header {
+    display: flex;
+    align-items: center;
+    padding: 24px 28px;
+    gap: 20px;
+  }
+
+  .persona-avatar {
+    width: 72px;
+    height: 72px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #fff;
+    font-size: 1.5rem;
+    font-weight: 700;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  }
+
+  .persona-header-text h3 {
+    font-size: 1.4rem;
+    color: var(--primary);
+    margin-bottom: 2px;
+  }
+
+  .persona-header-text .persona-role {
+    color: var(--text-light);
+    font-size: 0.95rem;
+  }
+
+  .persona-body {
+    padding: 0 28px 28px;
+  }
+
+  .persona-section {
+    margin-bottom: 20px;
+  }
+
+  .persona-section h4 {
+    font-size: 0.85rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+    margin-bottom: 10px;
+    padding-bottom: 6px;
+    border-bottom: 2px solid var(--border);
+  }
+
+  .persona-quote {
+    font-style: italic;
+    color: var(--text-light);
+    padding: 16px 20px;
+    background: var(--bg-alt);
+    border-left: 4px solid;
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+    margin: 12px 0;
+    font-size: 1.02rem;
+    line-height: 1.6;
+  }
+
+  .persona-list {
+    list-style: none;
+    padding: 0;
+  }
+
+  .persona-list li {
+    padding: 5px 0 5px 18px;
+    position: relative;
+    font-size: 0.95rem;
+  }
+
+  .persona-list li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 12px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--primary);
+  }
+
+  .persona-insight {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 6px;
+    font-size: 0.95rem;
+  }
+
+  .persona-insight strong {
+    color: var(--primary);
+    white-space: nowrap;
+  }
+
+  /* === SCREENSHOTS === */
+  .screenshot-container {
+    margin: 24px 0;
+    text-align: center;
+  }
+
+  .screenshot-container img {
+    max-width: 100%;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow-lg);
+    border: 1px solid var(--border);
+  }
+
+  .screenshot-caption {
+    font-style: italic;
+    color: var(--text-light);
+    font-size: 0.88rem;
+    margin-top: 10px;
+    text-align: center;
+  }
+
+  /* === SCENARIO CARDS === */
+  .scenario-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 36px;
+    box-shadow: var(--shadow-md);
+  }
+
+  .scenario-header {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: #fff;
+    padding: 20px 28px;
+  }
+
+  .scenario-header h3 {
+    color: #fff;
+    font-size: 1.3rem;
+    margin-bottom: 4px;
+  }
+
+  .scenario-meta {
+    display: flex;
+    gap: 24px;
+    font-size: 0.88rem;
+    opacity: 0.9;
+    margin-top: 8px;
+  }
+
+  .scenario-meta span { display: flex; align-items: center; gap: 6px; }
+
+  .scenario-body { padding: 28px; }
+
+  .scenario-step {
+    display: flex;
+    gap: 16px;
+    margin-bottom: 24px;
+    align-items: flex-start;
+  }
+
+  .step-number {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.95rem;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+
+  .step-content { flex: 1; }
+
+  .step-content h4 {
+    font-size: 1.05rem;
+    margin-bottom: 4px;
+  }
+
+  .step-content p {
+    font-size: 0.93rem;
+    color: var(--text-light);
+    margin-bottom: 0;
+  }
+
+  .action-response-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 0.9rem;
+  }
+
+  .action-response-table th {
+    padding: 10px 14px;
+    font-weight: 600;
+    font-size: 0.82rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .action-response-table .action-col {
+    background: #dbeafe;
+    color: #1e40af;
+    width: 50%;
+    border-radius: var(--radius-xs) 0 0 var(--radius-xs);
+  }
+
+  .action-response-table .response-col {
+    background: #dcfce7;
+    color: #166534;
+    width: 50%;
+    border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+  }
+
+  .action-response-table td {
+    padding: 10px 14px;
+    border-bottom: 1px solid var(--border-light);
+    vertical-align: top;
+  }
+
+  .action-response-table td:first-child { background: #eff6ff; }
+  .action-response-table td:last-child { background: #f0fdf4; }
+
+  /* === FEATURE CARDS === */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    margin-bottom: 24px;
+  }
+
+  .feature-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    page-break-inside: avoid;
+  }
+
+  .feature-card img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  .feature-card-body {
+    padding: 16px;
+  }
+
+  .feature-card-body h4 {
+    color: var(--primary);
+    margin-bottom: 6px;
+    font-size: 1rem;
+  }
+
+  .feature-card-body p {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    margin-bottom: 0;
+  }
+
+  .priority-badge {
+    display: inline-block;
+    padding: 2px 10px;
+    border-radius: 12px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 8px;
+  }
+
+  .priority-p0 { background: #fee2e2; color: #dc2626; }
+  .priority-p1 { background: #fef3c7; color: #d97706; }
+  .priority-p2 { background: #dbeafe; color: #2563eb; }
+
+  /* === POSITIONING MAP === */
+  .positioning-map {
+    position: relative;
+    width: 600px;
+    height: 500px;
+    margin: 32px auto;
+    border: 2px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--bg-alt);
+  }
+
+  .map-axis-x, .map-axis-y {
+    position: absolute;
+    color: var(--text-light);
+    font-size: 0.78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+
+  .map-dot {
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 2;
+  }
+
+  .map-label {
+    position: absolute;
+    font-size: 0.82rem;
+    font-weight: 600;
+    transform: translate(-50%, -50%);
+    white-space: nowrap;
+    z-index: 2;
+  }
+
+  /* === PRICING CARDS === */
+  .pricing-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+    margin: 24px 0;
+  }
+
+  .pricing-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 28px 24px;
+    text-align: center;
+    box-shadow: var(--shadow);
+    position: relative;
+  }
+
+  .pricing-card.featured {
+    border: 2px solid var(--primary);
+    box-shadow: var(--shadow-lg);
+    transform: scale(1.03);
+  }
+
+  .pricing-card.featured::before {
+    content: 'MOST POPULAR';
+    position: absolute;
+    top: -12px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: var(--primary);
+    color: #fff;
+    padding: 3px 16px;
+    border-radius: 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+  }
+
+  .pricing-card h4 {
+    font-size: 1.2rem;
+    margin-bottom: 4px;
+  }
+
+  .pricing-price {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--primary);
+    margin: 12px 0;
+  }
+
+  .pricing-price span {
+    font-size: 0.9rem;
+    font-weight: 400;
+    color: var(--text-light);
+  }
+
+  .pricing-features {
+    list-style: none;
+    text-align: left;
+    margin-top: 16px;
+  }
+
+  .pricing-features li {
+    padding: 6px 0;
+    font-size: 0.88rem;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .pricing-features li::before {
+    content: '\2713';
+    color: var(--primary);
+    font-weight: 700;
+    margin-right: 8px;
+  }
+
+  /* === ROADMAP TIMELINE === */
+  .timeline {
+    position: relative;
+    padding-left: 40px;
+    margin: 24px 0;
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 16px;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: linear-gradient(to bottom, var(--primary), var(--primary-light));
+    border-radius: 2px;
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: 32px;
+    page-break-inside: avoid;
+  }
+
+  .timeline-dot {
+    position: absolute;
+    left: -32px;
+    top: 4px;
+    width: 20px;
+    height: 20px;
+    background: var(--primary);
+    border-radius: 50%;
+    border: 3px solid #fff;
+    box-shadow: 0 0 0 3px var(--primary);
+  }
+
+  .timeline-dot.completed {
+    background: #059669;
+    box-shadow: 0 0 0 3px #059669;
+  }
+
+  .timeline-dot.current {
+    background: #f59e0b;
+    box-shadow: 0 0 0 3px #f59e0b;
+  }
+
+  .timeline-date {
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--primary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 6px;
+  }
+
+  .timeline-content {
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    padding: 20px;
+    box-shadow: var(--shadow);
+  }
+
+  .timeline-content h4 { margin-bottom: 8px; }
+
+  .timeline-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+    margin-top: 10px;
+  }
+
+  .timeline-tag {
+    display: inline-block;
+    padding: 3px 10px;
+    background: var(--primary-lighter);
+    color: var(--primary);
+    border-radius: 12px;
+    font-size: 0.78rem;
+    font-weight: 500;
+  }
+
+  /* === RISK TABLE === */
+  .risk-high { color: #dc2626; font-weight: 600; }
+  .risk-medium { color: #d97706; font-weight: 600; }
+  .risk-low { color: #059669; font-weight: 600; }
+
+  /* === STAT CALLOUT === */
+  .stat-callout {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    color: #fff;
+    padding: 32px;
+    border-radius: var(--radius);
+    text-align: center;
+    margin: 32px 0;
+    box-shadow: var(--shadow-lg);
+  }
+
+  .stat-callout .stat-number {
+    font-size: 3.2rem;
+    font-weight: 800;
+    display: block;
+    line-height: 1.1;
+  }
+
+  .stat-callout .stat-label {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    margin-top: 8px;
+    display: block;
+  }
+
+  /* === NEED CARD === */
+  .need-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 24px;
+    box-shadow: var(--shadow);
+    page-break-inside: avoid;
+  }
+
+  .need-card-header {
+    background: var(--primary-lighter);
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--primary-light);
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+
+  .need-number {
+    width: 32px;
+    height: 32px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 0.9rem;
+    flex-shrink: 0;
+  }
+
+  .need-card-header h3 {
+    color: var(--primary-dark);
+    margin-bottom: 0;
+  }
+
+  .need-card-body { padding: 24px; }
+
+  .need-subsection {
+    margin-bottom: 16px;
+  }
+
+  .need-subsection:last-child { margin-bottom: 0; }
+
+  .need-subsection h4 {
+    font-size: 0.88rem;
+    color: var(--primary);
+    margin-bottom: 6px;
+  }
+
+  /* === COMPETITOR CARD === */
+  .competitor-card {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    margin-bottom: 20px;
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    page-break-inside: avoid;
+  }
+
+  .competitor-header {
+    padding: 16px 24px;
+    background: var(--bg-alt);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .competitor-header h4 { margin-bottom: 0; color: var(--text); }
+
+  .competitor-body {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0;
+  }
+
+  .competitor-section {
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--border-light);
+  }
+
+  .competitor-section:nth-child(odd) { border-right: 1px solid var(--border-light); }
+
+  .competitor-section h5 {
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-lighter);
+    margin-bottom: 6px;
+  }
+
+  .competitor-section p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
+
+  /* === DESIGN PRINCIPLE === */
+  .principle-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .principle-card {
+    padding: 20px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+  }
+
+  .principle-card .principle-num {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    text-align: center;
+    line-height: 26px;
+    font-size: 0.78rem;
+    font-weight: 700;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+
+  .principle-card h4 {
+    display: inline;
+    font-size: 0.95rem;
+  }
+
+  .principle-card p {
+    font-size: 0.88rem;
+    color: var(--text-light);
+    margin-top: 8px;
+    margin-bottom: 0;
+  }
+
+  /* === SITEMAP === */
+  .sitemap {
+    margin: 24px 0;
+    padding: 32px;
+    background: var(--bg-alt);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+  }
+
+  .sitemap-hub {
+    text-align: center;
+    margin-bottom: 28px;
+  }
+
+  .sitemap-hub-label {
+    display: inline-block;
+    background: var(--primary);
+    color: #fff;
+    padding: 12px 32px;
+    border-radius: var(--radius-sm);
+    font-weight: 700;
+    font-size: 1.1rem;
+    box-shadow: var(--shadow-md);
+  }
+
+  .sitemap-connector {
+    width: 3px;
+    height: 24px;
+    background: var(--primary);
+    margin: 0 auto;
+    border-radius: 2px;
+  }
+
+  .sitemap-branches {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 16px;
+    margin-top: 12px;
+  }
+
+  .sitemap-branch {
+    text-align: center;
+  }
+
+  .sitemap-branch-label {
+    display: block;
+    background: var(--primary-light);
+    color: var(--primary-dark);
+    padding: 10px 8px;
+    border-radius: var(--radius-xs);
+    font-weight: 700;
+    font-size: 0.85rem;
+    margin-bottom: 8px;
+  }
+
+  .sitemap-leaf {
+    display: block;
+    background: #fff;
+    border: 1px solid var(--border);
+    padding: 7px 8px;
+    border-radius: var(--radius-xs);
+    font-size: 0.78rem;
+    color: var(--text-light);
+    margin-bottom: 4px;
+  }
+
+  /* === METRIC CARDS === */
+  .metric-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .metric-card {
+    text-align: center;
+    padding: 24px 16px;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+  }
+
+  .metric-card .metric-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--primary);
+    display: block;
+  }
+
+  .metric-card .metric-label {
+    font-size: 0.82rem;
+    color: var(--text-light);
+    margin-top: 4px;
+    display: block;
+  }
+
+  /* === GTM PHASES === */
+  .gtm-phase {
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin-bottom: 20px;
+    box-shadow: var(--shadow);
+    page-break-inside: avoid;
+  }
+
+  .gtm-phase-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 12px;
+  }
+
+  .gtm-phase-num {
+    width: 36px;
+    height: 36px;
+    background: var(--primary);
+    color: #fff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+
+  /* === MARKET SIZE === */
+  .market-size-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 16px;
+    margin: 24px 0;
+  }
+
+  .market-card {
+    text-align: center;
+    padding: 24px;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+  }
+
+  .market-card.tam { background: linear-gradient(135deg, #dbeafe, #eff6ff); border: 1px solid #93c5fd; }
+  .market-card.sam { background: linear-gradient(135deg, #e0e7ff, #eef2ff); border: 1px solid #a5b4fc; }
+  .market-card.som { background: linear-gradient(135deg, #fef3c7, #fffbeb); border: 1px solid #fcd34d; }
+
+  .market-card .market-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-light);
+  }
+
+  .market-card .market-value {
+    font-size: 2.2rem;
+    font-weight: 800;
+    color: var(--text);
+    margin: 8px 0 4px;
+  }
+
+  .market-card .market-desc {
+    font-size: 0.82rem;
+    color: var(--text-light);
+  }
+
+  /* === PRINT STYLES === */
+  @media print {
+    body { padding: 0; max-width: none; }
+    .card, .persona-card, .scenario-card, .need-card, .competitor-card, .feature-card, .pricing-card, .timeline-content, .gtm-phase {
+      box-shadow: none !important;
+      border: 1px solid #ccc !important;
+    }
+    .cover-logo { box-shadow: none; }
+    .stat-callout { box-shadow: none; }
+    .screenshot-container img { box-shadow: none; border: 1px solid #ccc; }
+  }
+
+  .page-break {
+    page-break-before: always;
+  }
+
+  /* === UTILITIES === */
+  .mb-0 { margin-bottom: 0; }
+  .mb-1 { margin-bottom: 8px; }
+  .mb-2 { margin-bottom: 16px; }
+  .mb-3 { margin-bottom: 24px; }
+  .mb-4 { margin-bottom: 32px; }
+  .mt-2 { margin-top: 16px; }
+  .mt-3 { margin-top: 24px; }
+  .text-center { text-align: center; }
+  .text-muted { color: var(--text-light); }
+  .text-small { font-size: 0.88rem; }
+
+  .two-col {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+  }
+
+  .callout-box {
+    background: var(--primary-lighter);
+    border: 1px solid var(--primary-light);
+    border-radius: var(--radius-sm);
+    padding: 20px 24px;
+    margin: 20px 0;
+  }
+
+  .callout-box p:last-child { margin-bottom: 0; }
+
+  .inline-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    padding: 0;
+  }
+
+  .inline-list li {
+    padding: 4px 14px;
+    background: var(--primary-lighter);
+    color: var(--primary);
+    border-radius: 16px;
+    font-size: 0.85rem;
+    font-weight: 500;
+  }
+
+  .divider {
+    border: none;
+    border-top: 2px solid var(--border);
+    margin: 40px 0;
+  }
+  .feature-card img { width:100%; height:auto; display:block; border-bottom:1px solid var(--border); }
+  .positioning-map { margin-bottom: 48px; max-width: 100%; }
+  table { display: block; overflow-x: auto; }
+  @media (max-width: 640px) {
+    .market-size-grid, .pricing-grid, .two-col, .metric-grid { grid-template-columns: 1fr; }
+    .positioning-map { height: 420px; }
+    .map-label { font-size: 0.7rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============================================================ -->
+<!-- COVER PAGE -->
+<!-- ============================================================ -->
+<div class="cover-page">
+  <div class="cover-logo">
+    <svg viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M32 8v48" stroke="white" stroke-width="5" stroke-linecap="round"/>
+      <circle cx="32" cy="20" r="6" fill="white"/>
+      <circle cx="32" cy="44" r="6" fill="white"/>
+      <path d="M38 20h12M38 44h12M14 32h12" stroke="rgba(255,255,255,0.6)" stroke-width="3" stroke-linecap="round"/>
+      <circle cx="32" cy="32" r="3" fill="rgba(255,255,255,0.8)"/>
+    </svg>
+  </div>
+
+  <div class="cover-title">PRD: Spine</div>
+  <div class="cover-subtitle">One absence process for every Groupon entity, with the law kept local</div>
+
+  <div class="cover-divider"></div>
+
+  <div class="cover-meta">
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Author</div>
+      <div class="cover-meta-value">Mohak Garg</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Date</div>
+      <div class="cover-meta-value">October 5, 2026</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Version</div>
+      <div class="cover-meta-value">1.0 (iteration 1)</div>
+    </div>
+    <div class="cover-meta-item">
+      <div class="cover-meta-label">Status</div>
+      <div class="cover-meta-value">Working prototype</div>
+    </div>
+  </div>
+  <p class="text-small text-muted">HR Transformation case study &middot; <a href="https://groupon-absence-spine.vercel.app">Live demo</a> &middot; <a href="https://github.com/Mohakgarg5/groupon-absence-spine">Repository</a></p>
+</div>
+
+<!-- ============================================================ -->
+<!-- TABLE OF CONTENTS -->
+<!-- ============================================================ -->
+<div class="toc">
+  <h2>Table of Contents</h2>
+  <ol class="toc-list">
+    <li><a href="#vision"><span class="toc-section-num">1</span> Vision <span class="toc-dots"></span></a></li>
+    <li><a href="#motivation"><span class="toc-section-num">2</span> Motivation <span class="toc-dots"></span></a></li>
+    <li><a href="#personas"><span class="toc-section-num">3</span> Personas <span class="toc-dots"></span></a></li>
+    <li><a href="#unmet-needs"><span class="toc-section-num">4</span> Unmet Needs <span class="toc-dots"></span></a></li>
+    <li><a href="#existing-solutions"><span class="toc-section-num">5</span> Existing Solutions <span class="toc-dots"></span></a></li>
+    <li><a href="#key-path-scenarios"><span class="toc-section-num">6</span> Key Path Scenarios <span class="toc-dots"></span></a></li>
+    <li><a href="#detailed-design"><span class="toc-section-num">7</span> Detailed Design &amp; Features <span class="toc-dots"></span></a></li>
+    <li><a href="#roadmap"><span class="toc-section-num">8</span> Roadmap <span class="toc-dots"></span></a></li>
+    <li><a href="#success-metrics"><span class="toc-section-num">9</span> Success Metrics &amp; North Star <span class="toc-dots"></span></a></li>
+    <li><a href="#business-case"><span class="toc-section-num">10</span> Business Case &amp; Capacity Economics <span class="toc-dots"></span></a></li>
+    <li><a href="#rollout"><span class="toc-section-num">11</span> Rollout &amp; Change Strategy <span class="toc-dots"></span></a></li>
+    <li><a href="#risk-register"><span class="toc-section-num">12</span> Risk Register <span class="toc-dots"></span></a></li>
+    <li><a href="#international"><span class="toc-section-num">13</span> International Considerations <span class="toc-dots"></span></a></li>
+    <li><a href="#appendix"><span class="toc-section-num">14</span> Appendix &mdash; Research &amp; Testing Methodology <span class="toc-dots"></span></a></li>
+    <li><a href="#team"><span class="toc-section-num">15</span> Author <span class="toc-dots"></span></a></li>
+  </ol>
+</div>
+
+<!-- ============================================================ -->
+<!-- 1. VISION -->
+<!-- ============================================================ -->
+<section id="vision" class="page-break">
+  <div class="section-header">
+    <span class="section-number">1</span>
+    <h2>Vision</h2>
+  </div>
+
+  <div class="card card-highlight" style="font-size: 1.1rem; line-height: 1.8;">
+    <p class="mb-0">Spine gives Groupon <strong>one absence process, one ledger and one payroll export across every legal entity, while each country's law lives in its own cited, versioned rule pack</strong>. A balance is never typed in: it is replayed from events, and every number can show the statute behind it. That takes typing out of HR's day, and the time it frees goes to the conversations that make people want to stay.</p>
+  </div>
+
+  <div class="two-col mt-3">
+    <div class="card card-blue">
+      <h4>What We Believe</h4>
+      <p class="text-muted text-small mb-0">"Unify everything" is the wrong instinct for absence. The <em>process</em> should be one thing everywhere: how a request is approved, recorded, explained and paid. The <em>law</em> cannot be. It differs by country, by region and even by city. Unifying the law breaks it, and leaving the process fragmented wastes people.</p>
+    </div>
+    <div class="card card-blue">
+      <h4>What We Build</h4>
+      <p class="text-muted text-small mb-0">A deterministic rules engine and a desk on top of it. Requests run through the same nine steps in every entity. Local law plugs in at four of them, as data with a citation, a verification status and a named legal owner. A correction to the law is a one-file change with a test, not a system rewrite.</p>
+    </div>
+  </div>
+
+  <div class="callout-box mt-3">
+    <p><strong>The decision in one line:</strong> unify the process and the record; keep the law local. Warsaw runs the operational pilot, where Groupon's multi-country payroll team sits, and Germany, the hardest law we model, shadows it through a full year-end.</p>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 2. MOTIVATION -->
+<!-- ============================================================ -->
+<section id="motivation" class="page-break">
+  <div class="section-header">
+    <span class="section-number">2</span>
+    <h2>Motivation</h2>
+  </div>
+
+  <p>Groupon's absence management is fragmented across its legal entities. Every country runs its own rules for accrual, entitlements and annual updates such as public holidays and seniority, and there is no agreed target design. The brief flags this as <strong>compliance-heavy, with real migration risk</strong> if it is forced into one system without legal review entity by entity.</p>
+
+  <p>The obvious answer, one global leave policy in one system, fails in a measurable way. I built a simulator that runs a sensible-looking global policy through the same engine and the same rule packs that process real requests. The policy is 25 days, a tenure bonus, use-it-or-lose-it, and sick days on holiday stay used.</p>
+
+  <div class="stat-callout">
+    <span class="stat-number">66</span>
+    <span class="stat-label">breaches of local law when one "sensible" global policy is applied to <strong>37 sample people in 12 jurisdictions</strong>.<br>Only the 2 people in Dallas and New York are unaffected, because there is no statutory vacation there to break.</span>
+  </div>
+
+  <div class="card card-blue">
+    <h4>The Core Problem</h4>
+    <p>Leave law differs in kinds that a single setting can't express, not just in amounts:</p>
+    <ul class="persona-list">
+      <li><strong>The unit.</strong> Czech leave is counted in hours, Spanish in calendar days, German in <em>Werktage</em>, UK leave in weeks of your own pattern, and Chicago's in hours accrued per hours worked.</li>
+      <li><strong>Whether it can lapse.</strong> German, and since 2024 UK, leave lapses only after a written warning; Polish and Czech leave never lapses; Chicago caps carry-over.</li>
+      <li><strong>Who the law follows.</strong> In the US it follows the work location, not the employing entity: Chicago and Springfield, Illinois are under different laws.</li>
+    </ul>
+    <p>A global policy generous enough to be lawful everywhere has to copy the strictest local answer on every point. At Groupon's size that costs about <strong>17,100 days a year</strong> above the legal minimum.</p>
+
+    <h4 class="mt-2">Why Now?</h4>
+    <ul class="persona-list">
+      <li><strong>Restructuring.</strong> Groupon's May 2026 8-K approved a restructuring of up to 400 roles tied to an "AI-native" strategy, and "Project Foundry" evaluates further automation through 2027. HR capacity is shrinking while the rules aren't.</li>
+      <li><strong>New UK record-keeping duty.</strong> Since 6 April 2026, UK law requires six years of holiday records, and failing to keep them is an offence (WTR reg. 16B). An explainable ledger is now a compliance requirement.</li>
+      <li><strong>The law keeps moving.</strong> UK carry-forward rules changed in 2024, Polish seniority rules in 2026, New York City's sick-leave law in February 2026, and India's national labour codes took effect in November 2025.</li>
+      <li><strong>Calendars change every year, mid-project.</strong> Madrid published its 2027 holiday decree on 1 October 2026, in the middle of this build.</li>
+    </ul>
+  </div>
+
+  <div class="market-size-grid mt-3">
+    <div class="market-card tam">
+      <div class="market-label">People</div>
+      <div class="market-value">1,734</div>
+      <div class="market-desc">Groupon employees at end of 2025, 76% outside North America (FY2025 10-K)</div>
+    </div>
+    <div class="market-card sam">
+      <div class="market-label">Jurisdictions</div>
+      <div class="market-value">12</div>
+      <div class="market-desc">Distinct leave laws across Groupon's hiring hubs, each modelled as a rule pack</div>
+    </div>
+    <div class="market-card som">
+      <div class="market-label">Rules</div>
+      <div class="market-value">152</div>
+      <div class="market-desc">Cited rules; 97 checked against primary law, 46 labelled company assumptions</div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 3. PERSONAS -->
+<!-- ============================================================ -->
+<section id="personas" class="page-break">
+  <div class="section-header">
+    <span class="section-number">3</span>
+    <h2>Personas</h2>
+  </div>
+
+  <div class="callout-box mb-4">
+    <p><strong>How these were built.</strong> Groupon asked for independent research rather than sharing internal material, so no user interviews were possible for iteration 1. These five personas are <em>hypotheses</em>, built from the case brief, Groupon's own 2026 job postings (People, payroll, benefits and engineering roles), the FY2025 10-K, and the legal research. They are written to be falsified: validating them is the first task of Phase 0, through interviews and a time-tracking baseline with the people in these roles.</p>
+  </div>
+
+  <!-- Persona 1 -->
+  <div class="persona-card">
+    <div class="persona-header" style="background: linear-gradient(135deg, #eff6ff, #dbeafe);">
+      <div class="persona-avatar" style="background: linear-gradient(135deg, #3B82F6, #1d4ed8);">AW</div>
+      <div class="persona-header-text">
+        <h3>Agnieszka Wójcik</h3>
+        <div class="persona-role">Payroll &amp; Absence Analyst &mdash; Groupon Shared Services Poland</div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-section">
+        <h4>Profile Overview</h4>
+        <p><strong>Location:</strong> Warsaw &nbsp;|&nbsp; <strong>Experience:</strong> 6 years payroll &nbsp;|&nbsp; <strong>Scope:</strong> leave and payroll inputs for several European entities, via an external payroll provider and Workday</p>
+      </div>
+      <div class="persona-quote" style="border-color: #3B82F6;">
+        "Every country has a spreadsheet, and every spreadsheet has a person who understands it. When that person is on leave, I'm guessing."
+      </div>
+      <div class="persona-section">
+        <h4>Behavioral Information</h4>
+        <ul class="persona-list">
+          <li>Re-keys approved leave from email or Workday into payroll inputs at month end</li>
+          <li>Answers "how many days do I have left?" by hand, several times a week</li>
+          <li>Rebuilds each country's holiday list and seniority steps every autumn</li>
+          <li>Fixes year-end carry-over by hand, and sometimes finds balances nobody can explain</li>
+          <li>Watched colleagues leave in the 2026 restructuring and is anxious about what "automation" means for her</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Goals, Needs &amp; Worries</h4>
+        <ul class="persona-list">
+          <li><strong>Goal:</strong> Payroll inputs that are right the first time, in every entity</li>
+          <li><strong>Need:</strong> One process and one export format, with the local rule visible behind every number</li>
+          <li><strong>Worry:</strong> That the programme is a headcount cut wearing a transformation label</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Implications for Our Product</h4>
+        <ul class="persona-list">
+          <li>One payroll export format for every entity, stamped with the rule-pack version</li>
+          <li>A balance "receipt" an employee can read, which removes her repeat questions</li>
+          <li>Her local knowledge becomes the rule pack: she is its co-author and steward, not its victim</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Key Insights</h4>
+        <div class="persona-insight"><strong>Knowledge in heads:</strong> The real system of record is a few people, which is a single point of failure</div>
+        <div class="persona-insight"><strong>Trust gap:</strong> She needs to see why a number is what it is before she will stop checking it</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persona 2 -->
+  <div class="persona-card page-break">
+    <div class="persona-header" style="background: linear-gradient(135deg, #f5f3ff, #ede9fe);">
+      <div class="persona-avatar" style="background: linear-gradient(135deg, #8B5CF6, #6d28d9);">KB</div>
+      <div class="persona-header-text">
+        <h3>Dr. Katharina Brandt</h3>
+        <div class="persona-role">Employment Counsel &mdash; Germany (rule-pack owner)</div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-section">
+        <h4>Profile Overview</h4>
+        <p><strong>Location:</strong> Berlin &nbsp;|&nbsp; <strong>Experience:</strong> 10 years employment law &nbsp;|&nbsp; <strong>Scope:</strong> German entities; works-council relations</p>
+      </div>
+      <div class="persona-quote" style="border-color: #8B5CF6;">
+        "I don't need another tool. I need to see the rule you've written down, sign it, and know nobody changes it without me."
+      </div>
+      <div class="persona-section">
+        <h4>Behavioral Information</h4>
+        <ul class="persona-list">
+          <li>Gets pulled in when something has already gone wrong: a dispute, a lapse challenge, an audit query</li>
+          <li>Knows the 2018 CJEU <em>Max-Planck</em> ruling means leave can't lapse without a warning, and suspects Groupon has never sent one</li>
+          <li>Must involve the works council before any system that can monitor behaviour goes live (BetrVG §87(1) Nr. 6)</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Goals, Needs &amp; Worries</h4>
+        <ul class="persona-list">
+          <li><strong>Goal:</strong> No systematic underpayment of leave across a whole entity</li>
+          <li><strong>Need:</strong> A readable, versioned pack with a citation on every rule and a sign-off gate</li>
+          <li><strong>Worry:</strong> A single wrong rule, automated, becomes a class-action-shaped problem</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Implications for Our Product</h4>
+        <ul class="persona-list">
+          <li>Rule packs are data she can read, with verified, unverified and assumption badges</li>
+          <li>Nothing activates without her sign-off, and the annual update shows the impact before go-live</li>
+          <li>"Try a correction" shows the blast radius of any change before it's made</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persona 3 -->
+  <div class="persona-card page-break">
+    <div class="persona-header" style="background: linear-gradient(135deg, #ecfdf5, #d1fae5);">
+      <div class="persona-avatar" style="background: linear-gradient(135deg, #10B981, #047857);">MV</div>
+      <div class="persona-header-text">
+        <h3>Max Vogel</h3>
+        <div class="persona-role">Team Lead, Sales DACH &mdash; line manager and approver</div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-section">
+        <h4>Profile Overview</h4>
+        <p><strong>Location:</strong> Berlin &nbsp;|&nbsp; <strong>Team:</strong> 7 people across Berlin and Valencia &nbsp;|&nbsp; <strong>Leave booked in 2026:</strong> none</p>
+      </div>
+      <div class="persona-quote" style="border-color: #10B981;">
+        "I approve leave in three different places depending on who's asking, and I couldn't tell you whether my own days carry over."
+      </div>
+      <div class="persona-section">
+        <h4>Goals, Needs &amp; Worries</h4>
+        <ul class="persona-list">
+          <li><strong>Goal:</strong> Approve fairly and keep cover, without needing to know each country's law</li>
+          <li><strong>Need:</strong> One approval flow, with the balance and the reason shown at the moment he decides</li>
+          <li><strong>Worry:</strong> His team, which absorbed restructuring workload, isn't taking real breaks, and neither is he</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Implications for Our Product</h4>
+        <ul class="persona-list">
+          <li>The same nine steps for every request, wherever the team member sits</li>
+          <li>The HR work queue flags people with little leave booked by autumn, for a workload conversation rather than a reminder email</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persona 4 -->
+  <div class="persona-card page-break">
+    <div class="persona-header" style="background: linear-gradient(135deg, #fff7ed, #ffedd5);">
+      <div class="persona-avatar" style="background: linear-gradient(135deg, #F97316, #c2410c);">LH</div>
+      <div class="persona-header-text">
+        <h3>Lena Hoffmann</h3>
+        <div class="persona-role">Senior Account Manager &mdash; the employee</div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-section">
+        <h4>Profile Overview</h4>
+        <p><strong>Location:</strong> Berlin &nbsp;|&nbsp; <strong>Situation:</strong> books 21 December to 8 January, then falls sick on 29–30 December</p>
+      </div>
+      <div class="persona-quote" style="border-color: #F97316;">
+        "I was sick for two days over Christmas. Do I get them back? Nobody could tell me, so I assumed not."
+      </div>
+      <div class="persona-section">
+        <h4>Goals, Needs &amp; Worries</h4>
+        <ul class="persona-list">
+          <li><strong>Goal:</strong> Know her balance and trust it</li>
+          <li><strong>Need:</strong> A plain explanation of every day granted, taken, given back or lapsed</li>
+          <li><strong>Worry:</strong> Losing leave she was entitled to, because the rules are invisible</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Implications for Our Product</h4>
+        <ul class="persona-list">
+          <li>Under German law (BUrlG §9), certified sick days during leave are given back. The receipt says so, with the citation</li>
+          <li>The request is split across two leave years automatically, so the right year's allowance is charged</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- Persona 5 -->
+  <div class="persona-card page-break">
+    <div class="persona-header" style="background: linear-gradient(135deg, #fdf2f8, #fce7f3);">
+      <div class="persona-avatar" style="background: linear-gradient(135deg, #EC4899, #be185d);">CW</div>
+      <div class="persona-header-text">
+        <h3>Chris Walker</h3>
+        <div class="persona-role">Director, People Operations &mdash; programme sponsor</div>
+      </div>
+    </div>
+    <div class="persona-body">
+      <div class="persona-section">
+        <h4>Profile Overview</h4>
+        <p><strong>Location:</strong> Chicago HQ &nbsp;|&nbsp; <strong>Scope:</strong> People Ops across the US and Europe &nbsp;|&nbsp; <strong>Pressure:</strong> deliver an "AI-native" HR function after the 2026 restructuring</p>
+      </div>
+      <div class="persona-quote" style="border-color: #EC4899;">
+        "Leadership will ask me how many heads this saves. I need an honest number, and a reason to spend the rest on something people will notice."
+      </div>
+      <div class="persona-section">
+        <h4>Goals, Needs &amp; Worries</h4>
+        <ul class="persona-list">
+          <li><strong>Goal:</strong> A defensible capacity case and no compliance surprises</li>
+          <li><strong>Need:</strong> A measured saving, not a modelled one, plus visibility of hidden liabilities such as untaken leave that can't lapse</li>
+          <li><strong>Worry:</strong> HR's credibility if a wrong payslip follows go-live</li>
+        </ul>
+      </div>
+      <div class="persona-section">
+        <h4>Implications for Our Product</h4>
+        <ul class="persona-list">
+          <li>A capacity model with every input exposed, verified by a time-tracking baseline</li>
+          <li>The migration finding is surfaced early: German and UK balances that can't lapse without warning letters</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <h3 class="mb-3">Persona Summary Grid</h3>
+  <table>
+    <thead><tr><th>Persona</th><th>Role in the process</th><th>Primary need</th><th>Key feature</th></tr></thead>
+    <tbody>
+      <tr><td>Agnieszka</td><td>Runs absence and payroll inputs</td><td>Right first time, explainable</td><td>Ledger, payroll export, HR queue</td></tr>
+      <tr><td>Katharina</td><td>Owns the local law</td><td>Readable, signed, versioned rules</td><td>Rule packs, correction preview, annual update</td></tr>
+      <tr><td>Max</td><td>Approves</td><td>One flow, the context at decision time</td><td>Request desk, nine-step spine</td></tr>
+      <tr><td>Lena</td><td>Takes leave</td><td>A balance she can trust</td><td>Balance receipt with citations</td></tr>
+      <tr><td>Chris</td><td>Sponsors the change</td><td>An honest case, no surprises</td><td>Force-unify simulator, capacity model</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- 4. UNMET NEEDS -->
+<!-- ============================================================ -->
+<section id="unmet-needs" class="page-break">
+  <div class="section-header">
+    <span class="section-number">4</span>
+    <h2>Unmet Needs</h2>
+  </div>
+
+  <div class="need-card">
+    <div class="need-card-header"><div class="need-number">1</div><h3>The Fragmentation Problem</h3></div>
+    <div class="need-card-body">
+      <div class="need-subsection"><h4>What happens today</h4><p>Each entity runs its own process and tools, so the same request is approved, recorded and paid differently in Warsaw, Berlin and Chicago.</p></div>
+      <div class="need-subsection"><h4>Why it matters</h4><p>Every variant needs its own people, training and checks. Shared Services can't scale a process that differs everywhere.</p></div>
+      <div class="need-subsection"><h4>What Spine does</h4><p>The same nine steps everywhere: jurisdiction, validate, expand onto the calendar, split by leave year, local policy, balance, route, post, export. Only four of them read the local pack.</p></div>
+    </div>
+  </div>
+
+  <div class="need-card">
+    <div class="need-card-header"><div class="need-number">2</div><h3>The Explainability Problem</h3></div>
+    <div class="need-card-body">
+      <div class="need-subsection"><h4>What happens today</h4><p>Balances are typed into systems or spreadsheets. When someone asks "why is it 13?", the answer depends on who is asked.</p></div>
+      <div class="need-subsection"><h4>Why it matters</h4><p>It drives disputes, repeat questions and distrust. Since April 2026, UK law also requires six years of holiday records.</p></div>
+      <div class="need-subsection"><h4>What Spine does</h4><p>An append-only ledger: every balance is replayed from events, and every line names the rule, the pack version and whether that rule has been verified.</p></div>
+    </div>
+  </div>
+
+  <div class="need-card">
+    <div class="need-card-header"><div class="need-number">3</div><h3>The Annual Update Problem</h3></div>
+    <div class="need-card-body">
+      <div class="need-subsection"><h4>What happens today</h4><p>Each autumn, holidays and seniority steps are re-keyed by hand in every country, often from secondary sources.</p></div>
+      <div class="need-subsection"><h4>Why it matters</h4><p>A blog listed 24 June as a Madrid holiday; the official decree doesn't. Madrid's 2027 decree arrived on 1 October 2026, and India's 2027 festival dates aren't published yet.</p></div>
+      <div class="need-subsection"><h4>What Spine does</h4><p>Packs roll forward as new versions, taken from official decrees. The diff shows holidays that move, seniority steps reached and HR tasks before activation. If a calendar isn't published, the engine refuses to guess.</p></div>
+    </div>
+  </div>
+
+  <div class="need-card">
+    <div class="need-card-header"><div class="need-number">4</div><h3>The Hidden Liability Problem</h3></div>
+    <div class="need-card-body">
+      <div class="need-subsection"><h4>What happens today</h4><p>Leftover leave is assumed to lapse at year end or on 31 March.</p></div>
+      <div class="need-subsection"><h4>Why it matters</h4><p>In Germany (CJEU C-684/16) and, since 2024, the UK (WTR reg. 13(16)–(17)), leave lapses only if the employer gave the chance to take it and warned in writing. Polish and Czech leave never lapses. Without warning letters on record, carried balances survive, a liability nobody has counted.</p></div>
+      <div class="need-subsection"><h4>What Spine does</h4><p>Models conditional lapse per pack, shows "lapse blocked" in the ledger, and queues the warnings HR must send before 31 December.</p></div>
+    </div>
+  </div>
+
+  <div class="need-card">
+    <div class="need-card-header"><div class="need-number">5</div><h3>The Capacity &amp; Morale Problem</h3></div>
+    <div class="need-card-body">
+      <div class="need-subsection"><h4>What happens today</h4><p>HR spends its time typing and checking. After a restructuring, the people doing this work fear that automation means they are next.</p></div>
+      <div class="need-subsection"><h4>Why it matters</h4><p>Lose them and you lose the only real copy of the local rules. Survivors of a restructuring are also the classic burnout group.</p></div>
+      <div class="need-subsection"><h4>What Spine does</h4><p>The HR work queue turns freed time into named work: lapse warnings, final-pay checks, and wellbeing check-ins for people who haven't taken a break. Local admins become rule-pack stewards.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 5. EXISTING SOLUTIONS -->
+<!-- ============================================================ -->
+<section id="existing-solutions" class="page-break">
+  <div class="section-header">
+    <span class="section-number">5</span>
+    <h2>Existing Solutions</h2>
+  </div>
+
+  <p>Spine is <strong>not proposed as a new HR system</strong>. Groupon's own job postings name Workday as its HRIS, and payroll runs through an external provider from Warsaw. The question is what each option does to the two halves of the problem: one process, and local law.</p>
+
+  <div class="competitor-card">
+    <div class="competitor-header"><h4>Configure Workday Absence directly</h4></div>
+    <div class="competitor-body">
+      <div class="competitor-section"><h5>Strength</h5><p>Already Groupon's HRIS; one process and one record are achievable.</p></div>
+      <div class="competitor-section"><h5>Gap</h5><p>Configuration encodes the law with no shared, testable specification; correctness depends on whoever configured it.</p></div>
+      <div class="competitor-section"><h5>Risk</h5><p>A wrong configuration underpays an entire entity, silently.</p></div>
+      <div class="competitor-section"><h5>Spine's role</h5><p>The rule packs and 174 engine tests become the <strong>acceptance test</strong> for the Workday configuration.</p></div>
+    </div>
+  </div>
+
+  <div class="competitor-card">
+    <div class="competitor-header"><h4>One global leave policy</h4></div>
+    <div class="competitor-body">
+      <div class="competitor-section"><h5>Strength</h5><p>Simple to explain, and one rule set.</p></div>
+      <div class="competitor-section"><h5>Gap</h5><p>66 breaches across 35 of 37 sample people; lawful only where no law exists.</p></div>
+      <div class="competitor-section"><h5>Risk</h5><p>Statutory breaches, or about 17,100 days a year of overspend to avoid them.</p></div>
+      <div class="competitor-section"><h5>Spine's role</h5><p>The simulator makes this visible before anyone commits to it.</p></div>
+    </div>
+  </div>
+
+  <div class="competitor-card">
+    <div class="competitor-header"><h4>Leave it local: spreadsheets and payroll bureaus</h4></div>
+    <div class="competitor-body">
+      <div class="competitor-section"><h5>Strength</h5><p>No migration risk; local experts own it.</p></div>
+      <div class="competitor-section"><h5>Gap</h5><p>No shared process, no explanation, and annual re-keying by hand.</p></div>
+      <div class="competitor-section"><h5>Risk</h5><p>Key-person dependency; no 6-year UK records; liability goes uncounted.</p></div>
+      <div class="competitor-section"><h5>Spine's role</h5><p>Keeps the local expertise and writes it down as packs.</p></div>
+    </div>
+  </div>
+
+  <div class="competitor-card">
+    <div class="competitor-header"><h4>Employer-of-record or global payroll platform</h4></div>
+    <div class="competitor-body">
+      <div class="competitor-section"><h5>Strength</h5><p>Local compliance handled by the provider, where they employ the staff.</p></div>
+      <div class="competitor-section"><h5>Gap</h5><p>Only covers people they employ; Groupon's core entities employ directly.</p></div>
+      <div class="competitor-section"><h5>Risk</h5><p>A second process alongside the main one.</p></div>
+      <div class="competitor-section"><h5>Spine's role</h5><p>Relevant for Prague, where the employing vehicle is unknown.</p></div>
+    </div>
+  </div>
+
+  <h3 class="mt-3 mb-3">Positioning Map</h3>
+  <div class="positioning-map">
+    <div class="map-axis-x" style="bottom: -28px; left: 50%; transform: translateX(-50%);">One process across entities &rarr;</div>
+    <div class="map-axis-y" style="left: -12px; top: 50%; transform: rotate(-90deg) translateX(-50%); transform-origin: left top;">Local-law correctness &rarr;</div>
+    <div style="position:absolute; left:50%; top:0; bottom:0; border-left:1px dashed var(--border);"></div>
+    <div style="position:absolute; top:50%; left:0; right:0; border-top:1px dashed var(--border);"></div>
+    <div class="map-dot" style="left:84%; top:16%; background:#2563eb; width:20px; height:20px;"></div>
+    <div class="map-label" style="left:84%; top:9%; color:#1e40af;">Spine (+ Workday)</div>
+    <div class="map-dot" style="left:20%; top:30%; background:#64748b;"></div>
+    <div class="map-label" style="left:20%; top:24%;">Spreadsheets / local bureaus</div>
+    <div class="map-dot" style="left:80%; top:80%; background:#dc2626;"></div>
+    <div class="map-label" style="left:80%; top:87%;">One global policy</div>
+    <div class="map-dot" style="left:66%; top:55%; background:#d97706;"></div>
+    <div class="map-label" style="left:66%; top:62%;">Workday, configured unaided</div>
+    <div class="map-dot" style="left:30%; top:42%; background:#8b5cf6;"></div>
+    <div class="map-label" style="left:30%; top:49%;">Employer of record</div>
+  </div>
+  <p class="text-small text-muted text-center">Positions are qualitative judgments, not measurements.</p>
+
+  <h3 class="mb-2">Differentiation Summary</h3>
+  <ul class="persona-list">
+    <li><strong>The law as data, with provenance.</strong> 152 rules, each with a citation, a verification badge and a legal owner.</li>
+    <li><strong>Explanations, not just balances.</strong> Every number is replayed from events and can show its statute.</li>
+    <li><strong>Built to be corrected.</strong> A legal correction is a one-file change plus a test, and its blast radius is previewed live.</li>
+    <li><strong>An honest boundary.</strong> The force-unify simulator shows exactly where "unify everything" breaks and what it costs.</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<!-- 6. KEY PATH SCENARIOS -->
+<!-- ============================================================ -->
+<section id="key-path-scenarios" class="page-break">
+  <div class="section-header">
+    <span class="section-number">6</span>
+    <h2>Key Path Scenarios</h2>
+  </div>
+
+  <p>Every scenario below runs end to end in the live demo. The guided tour walks through them in about three minutes.</p>
+
+  <div class="scenario-card">
+    <div class="scenario-header">
+      <h3>Scenario 1: One Request, End to End (Berlin)</h3>
+      <div class="scenario-meta"><span>Persona: Lena, Max</span><span>Entity: Groupon GmbH</span><span>Time: under a minute</span></div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-step"><div class="step-number">1</div><div class="step-content"><h4>Lena picks 21 December to 8 January</h4><p>She selects the dates on a calendar already painted with Berlin's holidays and her working pattern.</p></div></div>
+      <div class="scenario-step"><div class="step-number">2</div><div class="step-content"><h4>The spine runs nine stages</h4><p>Berlin holidays aren't charged, the request splits into 8 days of 2026 leave and 5 of 2027, and the 24/31 December assumption is flagged.</p></div></div>
+      <div class="scenario-step"><div class="step-number">3</div><div class="step-content"><h4>Max approves</h4><p>Two ledger events are posted and two payroll lines are exported, each stamped with its pack version.</p></div></div>
+      <table class="action-response-table">
+        <thead><tr><th class="action-col">User action</th><th class="response-col">System response</th></tr></thead>
+        <tbody>
+          <tr><td>Check request</td><td>9 stages animate; local-pack stages are labelled; the receipt shows 33 &rarr; 20 days by 8 January</td></tr>
+          <tr><td>Approve as line manager</td><td>Ledger updated, payroll lines created, sickness reporting offered</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="scenario-card page-break">
+    <div class="scenario-header">
+      <h3>Scenario 2: Sick During Holiday</h3>
+      <div class="scenario-meta"><span>Persona: Lena</span><span>Law: BUrlG §9</span></div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-step"><div class="step-number">1</div><div class="step-content"><h4>Sickness reported for 29–30 December, with a certificate</h4><p>German law gives the 2 days back; the ledger posts "Restored +2 d" citing §9, and her balance rises from 20 to 22.</p></div></div>
+      <div class="scenario-step"><div class="step-number">2</div><div class="step-content"><h4>The certificate is withdrawn</h4><p>The report is replaced; nothing comes back, and the ledger explains why: no medical certificate.</p></div></div>
+      <div class="scenario-step"><div class="step-number">3</div><div class="step-content"><h4>The same event elsewhere</h4><p>UK: days come back only if the employee asks. Poland: leave is postponed. Chicago: hours move to the sick bank. Each is pack data, not code.</p></div></div>
+    </div>
+  </div>
+
+  <div class="scenario-card page-break">
+    <div class="scenario-header">
+      <h3>Scenario 3: The Lapse That Isn't (Migration)</h3>
+      <div class="scenario-meta"><span>Persona: Katharina, Chris</span><span>Law: CJEU C-684/16; UK reg. 13(16)–(18)</span></div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-step"><div class="step-number">1</div><div class="step-content"><h4>Sophie's 2025 leave reaches 31 March</h4><p>The legacy record holds no written warning, so it cannot lapse: the ledger shows "Lapse blocked".</p></div></div>
+      <div class="scenario-step"><div class="step-number">2</div><div class="step-content"><h4>A warning is recorded</h4><p>The ledger replays: the leave can now lapse at the end of the leave year in which the warning was given.</p></div></div>
+      <div class="scenario-step"><div class="step-number">3</div><div class="step-content"><h4>The HR queue lists who needs a warning before 31 December</h4><p>Five German and three UK employees, all with leftover 2026 leave.</p></div></div>
+    </div>
+  </div>
+
+  <div class="scenario-card page-break">
+    <div class="scenario-header">
+      <h3>Scenario 4: Leadership Tries "One Global Policy"</h3>
+      <div class="scenario-meta"><span>Persona: Chris</span><span>View: Force-unify simulator</span></div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-step"><div class="step-number">1</div><div class="step-content"><h4>Simple policy</h4><p>66 breaches, affecting 35 of 37 people. Only the people in Dallas and New York are unaffected.</p></div></div>
+      <div class="scenario-step"><div class="step-number">2</div><div class="step-content"><h4>Generous policy</h4><p>Still 9 breaches: Polish and Czech leave never lapses, and a UK 3-day worker is 0.2 days short because UK law counts in weeks.</p></div></div>
+      <div class="scenario-step"><div class="step-number">3</div><div class="step-content"><h4>Zero-breach policy</h4><p>Lawful everywhere, by copying the strictest answer on every rule, at about 17,100 days a year above the legal minimum. That is the argument for rule packs.</p></div></div>
+    </div>
+  </div>
+
+  <div class="scenario-card page-break">
+    <div class="scenario-header">
+      <h3>Scenario 5: The Annual Update</h3>
+      <div class="scenario-meta"><span>Persona: Agnieszka, Katharina</span><span>View: Annual update</span></div>
+    </div>
+    <div class="scenario-body">
+      <div class="scenario-step"><div class="step-number">1</div><div class="step-content"><h4>Madrid publishes its 2027 decree (1 October 2026)</h4><p>Loading it is one file; the diff shows San José as new and the Assumption moved to Monday 16 August.</p></div></div>
+      <div class="scenario-step"><div class="step-number">2</div><div class="step-content"><h4>Poland: Piotr reaches 10 years of seniority on 10 May 2027</h4><p>His entitlement steps from 20 to 26 days, topped up that day (art. 158).</p></div></div>
+      <div class="scenario-step"><div class="step-number">3</div><div class="step-content"><h4>India: 2027 festival dates not yet published</h4><p>Bookings for 2027 are refused, not guessed, and the HR queue holds a deadline task.</p></div></div>
+    </div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 7. DETAILED DESIGN -->
+<!-- ============================================================ -->
+<section id="detailed-design" class="page-break">
+  <div class="section-header">
+    <span class="section-number">7</span>
+    <h2>Detailed Design &amp; Features</h2>
+  </div>
+
+  <h3 class="mb-2">Design Principles</h3>
+  <div class="principle-grid">
+    <div class="principle-card"><span class="principle-num">1</span><h4>Unify the process, keep the law local</h4><p>The test for every rule: would two entities ever legitimately need different answers? If yes, it goes in a pack.</p></div>
+    <div class="principle-card"><span class="principle-num">2</span><h4>Never type a balance</h4><p>Balances are replayed from an append-only ledger; nothing is edited in place.</p></div>
+    <div class="principle-card"><span class="principle-num">3</span><h4>Every number cites its law</h4><p>Each event carries a rule id, citation, pack version and verification badge.</p></div>
+    <div class="principle-card"><span class="principle-num">4</span><h4>Refuse rather than guess</h4><p>No calendar, no pack, no valid pattern: the request is refused with the reason.</p></div>
+    <div class="principle-card"><span class="principle-num">5</span><h4>Built to be corrected</h4><p>A legal correction is one JSON field plus a test, previewed before it's applied.</p></div>
+    <div class="principle-card"><span class="principle-num">6</span><h4>Honest about uncertainty</h4><p>Checked, unchecked and assumed rules are labelled differently, everywhere.</p></div>
+    <div class="principle-card"><span class="principle-num">7</span><h4>No AI in the decision path</h4><p>The engine is deterministic; AI was used for research and for building, never to decide leave.</p></div>
+    <div class="principle-card"><span class="principle-num">8</span><h4>Data minimisation</h4><p>Sickness is stored as "unfit, from–to, certified yes/no", never a diagnosis (GDPR Art. 9).</p></div>
+  </div>
+
+  <h3 class="mt-3 mb-2">Information Architecture</h3>
+  <div class="sitemap">
+    <div class="sitemap-hub"><span class="sitemap-hub-label">Spine</span></div>
+    <div class="sitemap-connector"></div>
+    <div class="sitemap-branches">
+      <div class="sitemap-branch"><span class="sitemap-branch-label">Run</span><span class="sitemap-leaf">Request desk</span><span class="sitemap-leaf">Guided tour</span></div>
+      <div class="sitemap-branch"><span class="sitemap-branch-label">Record</span><span class="sitemap-leaf">Ledger</span><span class="sitemap-leaf">HR work queue</span></div>
+      <div class="sitemap-branch"><span class="sitemap-branch-label">Law</span><span class="sitemap-leaf">Rule packs</span><span class="sitemap-leaf">Annual update</span></div>
+      <div class="sitemap-branch"><span class="sitemap-branch-label">Decide</span><span class="sitemap-leaf">Force-unify simulator</span><span class="sitemap-leaf">Decision &amp; plan</span></div>
+    </div>
+  </div>
+
+  <h3 class="mt-3 mb-2">P0 &mdash; Core Features</h3>
+  <div class="feature-grid">
+    <div class="feature-card"><img src="screens/desk.png" alt="Request desk with the nine-stage spine"><div class="feature-card-body"><span class="priority-badge priority-p0">P0</span><h4>Request desk &amp; nine-stage spine</h4><p>One pipeline for every entity. The calendar shows local holidays and the working pattern, and the spine shows each stage with its rule.</p></div></div>
+    <div class="feature-card"><img src="screens/ledger.png" alt="Ledger with citations"><div class="feature-card-body"><span class="priority-badge priority-p0">P0</span><h4>Explainable ledger</h4><p>Balances replayed from events: grants, accruals, debits, restores, carry-over, lapses, payouts. Click any line for its statute.</p></div></div>
+    <div class="feature-card"><img src="screens/sickness.png" alt="Sickness during leave"><div class="feature-card-body"><span class="priority-badge priority-p0">P0</span><h4>Edge cases as data</h4><p>Sickness during leave, conditional lapse, part-time units, regional holidays and the US location rule, all driven by the pack.</p></div></div>
+    <div class="feature-card"><img src="screens/packs.png" alt="Rule packs"><div class="feature-card-body"><span class="priority-badge priority-p0">P0</span><h4>Rule packs with owners</h4><p>12 jurisdictions, each with citations, verification badges, a named legal owner and a sign-off gate.</p></div></div>
+  </div>
+
+  <h3 class="mt-3 mb-2 page-break">P1 &mdash; Differentiation Features</h3>
+  <div class="feature-grid">
+    <div class="feature-card"><img src="screens/unify-zero.png" alt="Force-unify simulator"><div class="feature-card-body"><span class="priority-badge priority-p1">P1</span><h4>Force-unify simulator</h4><p>Design a global policy and watch it breach local law, or cost about 17,100 days a year to avoid breaching it.</p></div></div>
+    <div class="feature-card"><img src="screens/queue.png" alt="HR work queue"><div class="feature-card-body"><span class="priority-badge priority-p1">P1</span><h4>HR work queue</h4><p>What is left for people: legal deadlines, final-pay checks, entity decisions and wellbeing check-ins, generated from the ledgers.</p></div></div>
+    <div class="feature-card"><img src="screens/update.png" alt="Annual update"><div class="feature-card-body"><span class="priority-badge priority-p1">P1</span><h4>Annual update</h4><p>The next year's packs with holiday moves, seniority steps, HR tasks and affected bookings, before activation.</p></div></div>
+    <div class="feature-card"><img src="screens/overview.png" alt="Overview"><div class="feature-card-body"><span class="priority-badge priority-p1">P1</span><h4>Try a correction</h4><p>Edit any rule and see every affected balance replay, the mechanism for applying legal feedback safely.</p></div></div>
+  </div>
+
+  <h3 class="mt-3 mb-2 page-break">P2 &mdash; Growth Features</h3>
+  <div class="feature-grid">
+    <div class="feature-card"><img src="screens/tour.png" alt="Guided tour"><div class="feature-card-body"><span class="priority-badge priority-p2">P2</span><h4>Guided tour &amp; in-app decision docs</h4><p>A 9-step walkthrough for stakeholders, with the decision, the change plan and the assumptions rendered in the app.</p></div></div>
+    <div class="feature-card"><div class="feature-card-body"><span class="priority-badge priority-p2">P2 &middot; Next</span><h4>Workday acceptance harness</h4><p>Replays the scenario suite against an exported Workday absence configuration and reports differences.</p></div></div>
+    <div class="feature-card"><div class="feature-card-body"><span class="priority-badge priority-p2">P2 &middot; Next</span><h4>Employee self-service receipt</h4><p>The balance receipt in the employee's language, with a named person to ask.</p></div></div>
+    <div class="feature-card"><div class="feature-card-body"><span class="priority-badge priority-p2">P2 &middot; Next</span><h4>Return-to-work triggers (DE BEM)</h4><p>German law (SGB IX §167) requires a return-to-work offer after 6 weeks' sickness in 12 months. Subject to the works agreement and the DPIA.</p></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 8. ROADMAP -->
+<!-- ============================================================ -->
+<section id="roadmap" class="page-break">
+  <div class="section-header">
+    <span class="section-number">8</span>
+    <h2>Roadmap</h2>
+  </div>
+
+  <div class="timeline">
+    <div class="timeline-item"><div class="timeline-dot completed"></div><div class="timeline-date">Sep–Oct 2026 &middot; Done</div><div class="timeline-content"><h4>Iteration 1: decision, prototype, research</h4><p class="text-small mb-0">A working engine and desk, 12 jurisdictions, 152 cited rules, 174 engine and 23 browser tests, an adversarial fuzzer, two UX passes and two code reviews.</p><div class="timeline-tags"><span class="timeline-tag">Live demo</span><span class="timeline-tag">Rule packs</span><span class="timeline-tag">Change plan</span></div></div></div>
+    <div class="timeline-item"><div class="timeline-dot current"></div><div class="timeline-date">Oct–Nov 2026 &middot; Phase 0</div><div class="timeline-content"><h4>Discovery</h4><p class="text-small mb-0">Map the as-is process, take a time baseline, collect contracts and works agreements, start the DPIA, inform the works council and employee representatives, and validate the personas.</p><div class="timeline-tags"><span class="timeline-tag">Baseline</span><span class="timeline-tag">DPIA</span><span class="timeline-tag">Works council</span></div></div></div>
+    <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-date">Nov 2026–Feb 2027 &middot; Phase 1</div><div class="timeline-content"><h4>Readiness: Poland, plus Germany as shadow</h4><p class="text-small mb-0">Counsel signs off the packs, Workday is configured until it passes the tests, and a migration dry run is done.</p><div class="timeline-tags"><span class="timeline-tag">Sign-off</span><span class="timeline-tag">Workday</span></div></div></div>
+    <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-date">Jan–Apr 2027 &middot; Phase 2</div><div class="timeline-content"><h4>Parallel run across a year-end</h4><p class="text-small mb-0">Warsaw pilot with Berlin shadowing it, through the 31 March German lapse. Exit: two clean months.</p><div class="timeline-tags"><span class="timeline-tag">Parallel run</span><span class="timeline-tag">Lapse warnings</span></div></div></div>
+    <div class="timeline-item"><div class="timeline-dot"></div><div class="timeline-date">May 2027 onward &middot; Phases 3–6</div><div class="timeline-content"><h4>Cutover entity by entity</h4><p class="text-small mb-0">Poland, then Germany and Ireland, then the UK, the US and Spain for the 2028 leave year, then Prague and Bengaluru.</p><div class="timeline-tags"><span class="timeline-tag">PL</span><span class="timeline-tag">DE</span><span class="timeline-tag">IE</span><span class="timeline-tag">UK</span><span class="timeline-tag">US</span><span class="timeline-tag">ES</span><span class="timeline-tag">CZ</span><span class="timeline-tag">IN</span></div></div></div>
+  </div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 9. SUCCESS METRICS -->
+<!-- ============================================================ -->
+<section id="success-metrics" class="page-break">
+  <div class="section-header">
+    <span class="section-number">9</span>
+    <h2>Success Metrics &amp; North Star</h2>
+  </div>
+
+  <div class="card card-highlight">
+    <h4>North Star: the explained-and-untouched rate</h4>
+    <p class="mb-0">The share of leave transactions that go from request to payroll with <strong>no manual touch and no unexplained difference</strong> against payroll. It moves only when the process is unified <em>and</em> the law is right.</p>
+  </div>
+
+  <div class="metric-grid">
+    <div class="metric-card"><span class="metric-value">&ge; 85%</span><span class="metric-label">Transactions with no HR touch (design target)</span></div>
+    <div class="metric-card"><span class="metric-value">0</span><span class="metric-label">Unexplained differences, 2 months running (cutover gate)</span></div>
+    <div class="metric-card"><span class="metric-value">0</span><span class="metric-label">Statutory breaches found in the parallel run</span></div>
+  </div>
+
+  <h3 class="mt-3 mb-2">Key Influencers of the North Star</h3>
+  <table>
+    <thead><tr><th>Influencer</th><th>Metric</th><th>Target</th><th>Why it matters</th></tr></thead>
+    <tbody>
+      <tr><td>Rule verification</td><td>% of rules checked against primary law and signed off</td><td>100% before go-live</td><td>An unchecked rule is the main source of systematic error</td></tr>
+      <tr><td>Opening balance reconciliation</td><td>Differences over 0.5 days explained</td><td>100%</td><td>Migration is the riskiest single event</td></tr>
+      <tr><td>Lapse warnings on record</td><td>DE and UK staff with leftover leave who were warned</td><td>100% by 31 Dec</td><td>Without them, leave can't lapse</td></tr>
+      <tr><td>Calendar readiness</td><td>Next-year calendars loaded by 30 November</td><td>100%</td><td>Otherwise bookings are refused</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="mt-3 mb-2">Health Signals &amp; Attention Gainers</h3>
+  <table>
+    <thead><tr><th>Signal</th><th>What it tells us</th><th>Action</th></tr></thead>
+    <tbody>
+      <tr><td>Repeat balance questions</td><td>The receipt isn't explaining well enough</td><td>Rewrite copy; add the local-language receipt</td></tr>
+      <tr><td>Approvals outside the tool</td><td>A shadow process is forming</td><td>Make the discretionary leave type explicit</td></tr>
+      <tr><td>HR ops attrition or pulse dip</td><td>The automation is read as layoffs</td><td>Revisit communications; restate redeployment commitments</td></tr>
+      <tr><td>People under 40% of leave by September</td><td>Workload and burnout risk</td><td>Manager conversation, from the HR queue</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- 10. BUSINESS CASE -->
+<!-- ============================================================ -->
+<section id="business-case" class="page-break">
+  <div class="section-header">
+    <span class="section-number">10</span>
+    <h2>Business Case &amp; Capacity Economics</h2>
+  </div>
+
+  <p>This is an internal capability, so there is no pricing; the economics are capacity, risk and quality. The capacity estimate is a bottom-up model with every input exposed. No independent benchmark exists for HR minutes per leave request, so these are planning assumptions, replaced by Groupon's own baseline in Phase 0.</p>
+
+  <h3 class="mb-3">Capacity Scenarios</h3>
+  <div class="pricing-grid">
+    <div class="pricing-card"><h4>Low</h4><div class="pricing-price">0.4 <span>FTE</span></div><ul class="pricing-features"><li>6 requests per person a year</li><li>5 minutes of manual handling each</li><li>About 600 hours a year saved</li></ul></div>
+    <div class="pricing-card featured"><h4>Central</h4><div class="pricing-price">1.4 <span>FTE</span></div><ul class="pricing-features"><li>8 requests per person a year</li><li>10 minutes of manual handling each</li><li>About 2,200 hours a year saved</li></ul></div>
+    <div class="pricing-card"><h4>High</h4><div class="pricing-price">2.7 <span>FTE</span></div><ul class="pricing-features"><li>10 requests per person a year</li><li>15 minutes of manual handling each</li><li>About 4,300 hours a year saved</li></ul></div>
+  </div>
+
+  <h3 class="mt-3 mb-2">Unit Economics, Honestly</h3>
+  <table>
+    <thead><tr><th>Item</th><th>Value</th><th>Note</th></tr></thead>
+    <tbody>
+      <tr><td>Population</td><td>1,734</td><td>FY2025 10-K, before the 2026 restructuring</td></tr>
+      <tr><td>New work counted as a cost</td><td>640 h/yr</td><td>Rule-pack stewardship plus a 0.25 FTE platform owner</td></tr>
+      <tr><td>Central saving as a share of HR</td><td>~5%</td><td>Illustrative, against CIPD's 1:60 HR-to-employee ratio</td></tr>
+      <tr><td>Not counted as savings</td><td>&mdash;</td><td>Avoided breaches, disputes and audit time</td></tr>
+      <tr><td>Not counted as costs</td><td>&mdash;</td><td>Counsel sign-off, the parallel-run load, the works-council process</td></tr>
+    </tbody>
+  </table>
+  <div class="callout-box"><p><strong>Recommendation:</strong> take the capacity as redeployment, not headcount. Decide at month 6, on measured numbers, and if leadership wants headcount, take it through attrition. The freed time goes to the HR queue's named work.</p></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 11. ROLLOUT -->
+<!-- ============================================================ -->
+<section id="rollout" class="page-break">
+  <div class="section-header">
+    <span class="section-number">11</span>
+    <h2>Rollout &amp; Change Strategy</h2>
+  </div>
+
+  <div class="gtm-phase"><div class="gtm-phase-header"><div class="gtm-phase-num">1</div><h4>People first, in person &mdash; Week 0</h4></div><p class="text-small">The HR and payroll admins whose work changes hear it first, from their own HR lead, with the honest answer about their jobs, before anything is written down.</p><ul class="persona-list"><li>No role reduction attributed to this programme before measurement at month 6</li><li>They co-author and steward their entity's rule pack</li></ul></div>
+  <div class="gtm-phase"><div class="gtm-phase-header"><div class="gtm-phase-num">2</div><h4>Counsel and employee representatives &mdash; Weeks 1–2</h4></div><p class="text-small">Counsel reviews the packs. The works council is informed and consulted before any real data enters the system (BetrVG §§80, 90; §87(1) Nr. 6), and representatives in other entities as their law requires.</p></div>
+  <div class="gtm-phase"><div class="gtm-phase-header"><div class="gtm-phase-num">3</div><h4>Parallel run, then cutover &mdash; Phases 2–3</h4></div><p class="text-small">The old process stays the system of record. Differences are triaged weekly by the local admins, with temporary backfill for the extra load. Cutover requires two clean months.</p></div>
+  <div class="gtm-phase"><div class="gtm-phase-header"><div class="gtm-phase-num">4</div><h4>Managers, then employees, then the company</h4></div><p class="text-small">Managers are trained four weeks before the run; employees get a note at the run and the full receipt at cutover; the wider company hears only after the first gate passes, with no headline about "automation" or "AI".</p></div>
+</section>
+
+<!-- ============================================================ -->
+<!-- 12. RISK REGISTER -->
+<!-- ============================================================ -->
+<section id="risk-register" class="page-break">
+  <div class="section-header">
+    <span class="section-number">12</span>
+    <h2>Risk Register</h2>
+  </div>
+  <table>
+    <thead><tr><th>Risk</th><th>Severity</th><th>Mitigation</th><th>Early warning</th></tr></thead>
+    <tbody>
+      <tr><td>A wrong rule underpays a whole entity</td><td class="risk-high">High</td><td>Counsel sign-off, tests per rule, parallel run, correction preview</td><td>Differences clustered on one rule</td></tr>
+      <tr><td>Introduced without German co-determination</td><td class="risk-high">High</td><td>Inform and consult before any real data; a works agreement</td><td>The works council asks for an expert; talks slip</td></tr>
+      <tr><td>HR admins read it as the next layoff wave</td><td class="risk-high">High</td><td>Heard first, in person; no headcount claim before measurement; co-authorship</td><td>Pulse dip; attrition; slow triage</td></tr>
+      <tr><td>Uncounted lapse liability surprises Finance</td><td class="risk-medium">Medium</td><td>Quantify in Phase 0; send warnings from 2026</td><td>Large "lapse blocked" totals in the dry run</td></tr>
+      <tr><td>Health data mishandled</td><td class="risk-medium">Medium</td><td>No diagnosis stored; DPIA; role-based access; SCCs as fallback</td><td>Open DPIA findings</td></tr>
+      <tr><td>Calendar not loaded in time</td><td class="risk-medium">Medium</td><td>HR queue deadline task; two owners per pack</td><td>Annual update not started by 1 October</td></tr>
+      <tr><td>Savings claimed but not delivered</td><td class="risk-medium">Medium</td><td>Publish the measured range and method; say where capacity went</td><td>An FTE number asked for before month 6</td></tr>
+    </tbody>
+  </table>
+</section>
+
+<!-- ============================================================ -->
+<!-- 13. INTERNATIONAL -->
+<!-- ============================================================ -->
+<section id="international" class="page-break">
+  <div class="section-header">
+    <span class="section-number">13</span>
+    <h2>International Considerations</h2>
+  </div>
+  <p>Packs exist for every Groupon hub with public hiring evidence. Each line below is what makes that jurisdiction impossible to fold into a global rule.</p>
+  <table>
+    <thead><tr><th>Jurisdiction</th><th>What makes it different</th><th>Verified rules</th></tr></thead>
+    <tbody>
+      <tr><td>Germany (Berlin)</td><td>Werktage; 6-month waiting period; §9 sickness; lapse only after a warning</td><td>8 / 12</td></tr>
+      <tr><td>Poland</td><td>Seniority counts education; 4 on-demand days; leave never lapses</td><td>12 / 13</td></tr>
+      <tr><td>Ireland</td><td>Holiday on a day off: the employer chooses the remedy</td><td>9 / 11</td></tr>
+      <tr><td>UK</td><td>4 + 1.6 weeks; carry-forward without a warning (2024); 6-year records (2026)</td><td>10 / 14</td></tr>
+      <tr><td>Spain (Madrid, Valencia)</td><td>30 calendar days; holidays differ by region and city</td><td>7 / 10 each</td></tr>
+      <tr><td>Czech Republic</td><td>Counted in hours; never lapses; employing vehicle unknown</td><td>10 / 11</td></tr>
+      <tr><td>US (Chicago, Illinois, Dallas, New York City)</td><td>The law follows the work location; from two banks in Chicago to no law at all in Dallas</td><td>28 / 55</td></tr>
+      <tr><td>India (Bengaluru)</td><td>1 day per 20 worked; 45-day carry; state Act alongside the national labour codes</td><td>6 / 16</td></tr>
+    </tbody>
+  </table>
+
+  <h3 class="mb-2">Launch Priority</h3>
+  <ul class="persona-list">
+    <li><strong>First:</strong> Poland (operational pilot), with Germany shadowing as the legal test</li>
+    <li><strong>Second:</strong> Germany and Ireland</li>
+    <li><strong>Third:</strong> UK, US and Spain, for the 2028 leave year</li>
+    <li><strong>Fourth:</strong> Prague (once the employer is confirmed) and Bengaluru (once Karnataka's labour-code rules are final)</li>
+  </ul>
+</section>
+
+<!-- ============================================================ -->
+<!-- 14. APPENDIX -->
+<!-- ============================================================ -->
+<section id="appendix" class="page-break">
+  <div class="section-header">
+    <span class="section-number">14</span>
+    <h2>Appendix &mdash; Research &amp; Testing Methodology</h2>
+  </div>
+
+  <h3 class="mb-2">Key Research Findings</h3>
+  <ul class="persona-list">
+    <li>No Czech legal entity in Exhibit 21.1, yet live Prague roles</li>
+    <li>Chicago staff fall under the city ordinance, not Illinois PLAWA</li>
+    <li>UK statutory leave carries forward without a warning (SI 2023/1426)</li>
+    <li>Polish leave never lapses (art. 168 and 291), and 2026 seniority rules count civil-law contracts (art. 302¹)</li>
+    <li>Madrid's 2027 decree was published on 1 October 2026; a blog's "24 June" Madrid holiday was false</li>
+    <li>Groupon runs Workday, with payroll outsourced from Warsaw</li>
+    <li>The Dallas sick-leave ordinance was struck down, and Texas preempts cities</li>
+    <li>New York City's law changed on 22 February 2026</li>
+  </ul>
+
+  <h3 class="mt-3 mb-2">Research &amp; Testing Methods</h3>
+  <table>
+    <thead><tr><th>Method</th><th>Scope</th><th>Output</th></tr></thead>
+    <tbody>
+      <tr><td>Source request to Groupon</td><td>Process map plus six factual questions</td><td>Reply: independent research expected</td></tr>
+      <tr><td>AI research agents, wave 1</td><td>10-K and 8-K, 10 countries' leave law, works councils, GDPR, benchmarks</td><td>Entity scope, change-plan inputs</td></tr>
+      <tr><td>AI research agents, waves 2–3</td><td>Primary texts in 12 jurisdictions, plus Groupon job postings</td><td>97 of 152 rules checked; corrections logged</td></tr>
+      <tr><td>Engine tests</td><td>One or more per legal rule</td><td>174 passing</td></tr>
+      <tr><td>Adversarial fuzzer</td><td>~28,000 random employees, ~150,000 requests</td><td>7 bugs found and fixed</td></tr>
+      <tr><td>First-time-reviewer UX passes (2)</td><td>Every view, 5 screen sizes, dark mode</td><td>All confirmed findings fixed</td></tr>
+      <tr><td>Independent code reviews (2)</td><td>The full branch</td><td>All confirmed findings fixed</td></tr>
+      <tr><td>Browser tests</td><td>Key journeys, no console errors, 400px layout</td><td>23 passing</td></tr>
+    </tbody>
+  </table>
+  <p class="text-small text-muted">AI agents did the research legwork and most of the coding, test-first. The boundary decision, the choice of edge cases, the pilot change and the call on headcount are mine, and each correction where my judgment overruled the research is logged in DECISION.md.</p>
+</section>
+
+<!-- ============================================================ -->
+<!-- 15. AUTHOR -->
+<!-- ============================================================ -->
+<section id="team" class="page-break">
+  <div class="section-header">
+    <span class="section-number">15</span>
+    <h2>Author</h2>
+  </div>
+  <div class="card card-blue text-center">
+    <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 4px;">Mohak Garg</h3>
+    <p class="text-muted mb-0">HR Transformation case study &middot; Groupon</p>
+    <p class="text-small mt-2 mb-0"><a href="https://groupon-absence-spine.vercel.app">Live demo</a> &middot; <a href="https://github.com/Mohakgarg5/groupon-absence-spine">Repository</a></p>
+  </div>
+</section>
+
+</body>
+</html>

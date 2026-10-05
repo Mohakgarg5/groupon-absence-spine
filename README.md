@@ -9,6 +9,9 @@ My answer to the HR Transformation case study, iteration 1. It has three parts:
 All employees in the build are fictional. Every rule is cited and tagged with how far it has been verified. Groupon legal has not signed off any of it.
 
 **Live demo:** https://groupon-absence-spine.vercel.app (no install; state stays in your browser, and **Reset demo** clears it)
+
+**Product requirements (PRD):** https://groupon-absence-spine.vercel.app/prd/ (vision, hypothesis personas, scenarios, roadmap, metrics, risks; source in `apps/web/public/prd/`)
+
 **Repository:** https://github.com/Mohakgarg5/groupon-absence-spine
 
 ## Run it
