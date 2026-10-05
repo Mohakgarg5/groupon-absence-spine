@@ -8,7 +8,7 @@ So whatever we call this programme, HR staff will hear "we're automating absence
 
 ## 1. What changes, for whom
 
-| Who | Today (assumed until the process map arrives) | After |
+| Who | Today (a hypothesis from public research; to be confirmed in Phase 0) | After |
 |---|---|---|
 | HR and payroll admins in each entity | Re-key requests, check balances in spreadsheets or HRIS, fix year-end carry-over by hand, re-key holidays and seniority each autumn, answer "how many days do I have?" | Handle exceptions, own reconciliation, act as their entity's rule-pack steward, and give employees the human answer when the receipt isn't enough |
 | Employment counsel per entity | Advises ad hoc when something goes wrong | Named owner of a rule pack; signs off each annual version |
@@ -56,7 +56,7 @@ A big-bang go-live would have to clear every one of those at once.
 
 | Phase | Dates | What happens | Gate to proceed |
 |---|---|---|---|
-| 0. Discovery | Oct–Nov 2026 | Get the process map. Take a time baseline (see §5). Collect contracts and works agreements. Start the DPIA. Formally inform DE works councils. Check whether Groupon is self-certified under the EU-US Data Privacy Framework (otherwise SCCs) | Process map reviewed; baseline captured; DE works-council talks open |
+| 0. Discovery | Oct–Nov 2026 | Map the as-is process per entity, starting from Groupon's internal process map. Take a time baseline (see §5). Collect contracts and works agreements. Start the DPIA. Formally inform DE works councils. Check whether Groupon is self-certified under the EU-US Data Privacy Framework (otherwise SCCs) | Process map reviewed; baseline captured; DE works-council talks open |
 | 1. DE readiness | Nov 2026–Feb 2027 | Counsel signs off the DE-BE pack. Negotiate a works agreement, or at least a pilot agreement covering the shadow run (I'm assuming 3–9 months for the full agreement). Do a migration dry run: import, replay, reconcile | Pack signed; a pilot agreement in place; every dry-run difference over 0.5 days explained |
 | 2. DE parallel run | Jan–Apr 2027 | The old process stays the system of record. The engine shadows every request. Differences are logged daily and triaged weekly by the German admins. **Spans year-end 2026 and the 31 March 2027 lapse** | Two consecutive months with no unexplained differences; lapse-warning letters sent and recorded |
 | 3. DE cutover | May 2027 | Germany switches. Old process read-only for 12 months | Month-3 review: measured time saving, error count, employee queries |

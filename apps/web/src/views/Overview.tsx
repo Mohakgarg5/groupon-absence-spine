@@ -98,7 +98,7 @@ export function Overview() {
         </div>
         <div className="panel-flat">
           <h3 className="h3">Still to verify</h3>
-          <p className="small" style={{ margin: 0 }}>Groupon's internal process map has been requested. Until it arrives, every rule carries a badge saying whether it was checked, merely public, or assumed.</p>
+          <p className="small" style={{ margin: 0 }}>I asked for Groupon's internal process map first. Groupon asked for independent research, so every rule carries a badge saying whether it was checked against a source, is public but not yet checked, or is my assumption.</p>
         </div>
       </section>
     </div>

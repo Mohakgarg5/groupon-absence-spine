@@ -1,5 +1,7 @@
 # Assumptions and what must be verified before this ships
 
+Groupon confirmed (5 Oct 2026) that this exercise should rest on independent research, not internal documents, so everything below comes from public sources.
+
 Every rule in the engine carries one of three tags. None is yet "verified against Groupon policy", because I haven't seen Groupon's policies.
 
 | Tag | Meaning |
@@ -21,7 +23,7 @@ Ranked by what it would cost to be wrong.
 | # | Assumption | If wrong | Who verifies | How |
 |---|---|---|---|---|
 | 1 | Statutory minimums are the binding floor. Contracts and works agreements may grant more, and I haven't modelled them | Balances are systematically understated; contractual surplus days may follow different carry-over rules (DE) | HR BP per entity, with employment counsel | Collect contract templates and works agreements; add a "contractual surplus" bucket per pack |
-| 2 | The process map Groupon holds matches the shape I designed (one approval step, HRIS or spreadsheet as the record, a monthly hand-off to payroll) | Pipeline stages 7–9 are wrong for some entities | HR Ops lead | Read the process map (requested in `00-source-material-request.md`) |
+| 2 | The process map Groupon holds matches the shape I designed (one approval step, HRIS or spreadsheet as the record, a monthly hand-off to payroll) | Pipeline stages 7–9 are wrong for some entities | HR Ops lead | Map the as-is process per entity in Phase 0. I requested Groupon's internal map; Groupon asked for independent research instead (`00-source-material-request.md`) |
 | 3 | Groupon GmbH staff work in Berlin | Wrong public holidays (Bavaria and NRW differ) | HR BP DE | Pull the work location per employee from the HRIS |
 | 4 | DE carry-over happens automatically to 31 March (the statute only allows it for urgent reasons) | More leave lapses than modelled, or less | Employment counsel DE | Check contract and works-agreement wording |
 | 5 | Groupon issues no written lapse warnings today | Probably true. If so, every German carry-over balance survives indefinitely, a real liability on the balance sheet | HR Ops DE, with Finance | Search for the annual reminder email; quantify untaken leave |
@@ -32,7 +34,7 @@ Ranked by what it would cost to be wrong.
 | 10 | Spain counts 30 calendar days | Many convenios use 22 working days instead | Employment counsel ES | Identify Groupon Spain's applicable convenio |
 | 11 | Polish study and work periods are not de-duplicated | Seniority is overstated for people who worked while studying | Payroll PL | Check against the świadectwa pracy held for each employee |
 | 12 | The calendar year is the leave year everywhere | UK and FR entities may run other leave years | HR BP UK and FR | Contract review. The engine rejects non-calendar years rather than mis-computing them |
-| 13 | The 13 active countries in the 10-K map to the entities I chose. FR, NL, BE, CH and AU have entities but no pack yet | The rollout scope is incomplete | HR Ops, with Legal | Get the entity list with headcount (requested) |
+| 13 | The 13 active countries in the 10-K map to the entities I chose. FR, NL, BE, CH and AU have entities but no pack yet | The rollout scope is incomplete | HR Ops, with Legal | Get the entity list with headcount from HRIS in Phase 0 (not available for this exercise) |
 
 ## What has to be true before go-live, per entity
 

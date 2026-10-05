@@ -51,7 +51,7 @@ npm run build      # typecheck everything and build the web app
 | A written decision, with what's not done, assumptions and what to verify | [DECISION.md](DECISION.md), [ASSUMPTIONS-AND-VERIFICATION.md](ASSUMPTIONS-AND-VERIFICATION.md) |
 | Use of AI in research, with my own judgment shown | DECISION.md, section "How AI was used, and where I overruled it" |
 | A Change & Culture Plan | [CHANGE-AND-CULTURE-PLAN.md](CHANGE-AND-CULTURE-PLAN.md) |
-| Asking what source material exists | [00-source-material-request.md](00-source-material-request.md), drafted before any design work |
+| Asking what source material exists | [00-source-material-request.md](00-source-material-request.md): asked before any design work. Groupon replied (5 Oct 2026) that it wanted independent research, so every input comes from a public source, and every internal fact is a labelled assumption |
 
 ## How the code is laid out
 

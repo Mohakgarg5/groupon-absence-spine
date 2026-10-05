@@ -49,5 +49,8 @@ Mohak
 
 | Date | Item | Status |
 |---|---|---|
-| 2026-10-02 | Request drafted | Sent? ☐ — response pending |
-| 2026-10-02 | Follow-up questions drafted after research | Sent? ☐ — response pending |
+| 2026-10-02 | Request drafted before any design work | Sent |
+| 2026-10-02 | Follow-up questions drafted after research | Sent |
+| 2026-10-05 | Reply from Groupon: *"Honestly, we want you to make a research and try to create it in your own way :)"* | Closed. No internal material is available for this exercise, so the design rests on public sources, and every internal fact stays a labelled assumption |
+
+**What the reply changes.** I asked before assuming, and the answer is that independent research is the expected path. Nothing in the build relied on receiving internal documents: every rule is cited to a public source and tagged verified, unverified or assumed. The open questions above are no longer requests to Groupon. They are now the first tasks of Phase 0 for a real programme team with internal access (see the Change & Culture Plan), and they stay in the assumptions register until someone inside can answer them.

@@ -111,7 +111,7 @@ Each is small, named and tested, and the pack switches it on. But each one is co
 The full register, with owners and verification methods, is in [ASSUMPTIONS-AND-VERIFICATION.md](ASSUMPTIONS-AND-VERIFICATION.md). The five that would hurt most if wrong:
 
 1. **The statutory floor is the right baseline.** Contracts probably grant more, so modelled balances are a floor, not the truth.
-2. **Groupon's process map has the shape I assumed:** one approval step, and a hand-off to payroll each month. I've requested the map.
+2. **The as-is process has the shape I assumed:** one approval step, and a hand-off to payroll each month. I asked for Groupon's internal process map before designing. Groupon replied that the exercise should rest on independent research, so this stays an assumption, and mapping the as-is process is the first task of Phase 0.
 3. **Berlin is the German work location.**
 4. **German carry-over is automatic to 31 March,** and no written lapse warnings are sent today.
 5. **UK bank holidays count toward 5.6 weeks.** If contracts give them on top, it's a one-field correction worth 8 days a year for each full-time UK employee, and fewer for part-timers whose working days miss some bank holidays.
@@ -128,6 +128,12 @@ All per entity, all as hard gates:
 6. next year's holiday calendar is loaded from the official source.
 
 The Madrid 2027 calendar shows gate 6 in action. It isn't published yet, so the engine refuses January 2027 requests for Spain rather than guessing.
+
+## Source material
+
+Before designing anything, I asked Groupon for the internal process map and six factual questions (`00-source-material-request.md`). Groupon replied that it wanted independent research.
+
+Everything here therefore rests on public sources: the FY2025 10-K and May 2026 8-K, legislation, court rulings and official holiday decrees. Every internal fact I couldn't know is written down as a labelled assumption with an owner, not quietly guessed.
 
 ## How AI was used, and where I overruled it
 
