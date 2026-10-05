@@ -233,3 +233,10 @@ test('opening a shared link lands on that page without a stray history entry', a
   await page.goBack();
   await expect(page).toHaveURL(/#\/ledger\/de-sophie$/);
 });
+
+test('stale demo state saved by an older version of the app is discarded', async ({ page }) => {
+  await page.evaluate(() => localStorage.setItem('spine-state-v1', JSON.stringify({ inputs: { requests: [], sickness: [], notices: [] }, overrides: [], employeeId: 'de-lena', rev: 0 })));
+  await page.goto('/#/queue');
+  await expect(page.locator('.tile-v').nth(2)).toHaveText('4');
+  expect(await page.evaluate(() => localStorage.getItem('spine-state-v1'))).toBeNull();
+});

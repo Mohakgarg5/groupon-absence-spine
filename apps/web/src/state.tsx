@@ -21,7 +21,9 @@ type Action =
   | { type: 'consumePreset' }
   | { type: 'reset' };
 
-const KEY = 'spine-state-v1';
+// Saved demo state is tied to the scenario: if the seeded data changes, old browser state is discarded.
+const SCENARIO_SIG = (() => { const t = JSON.stringify([scenario, employees]); let h = 0; for (let i = 0; i < t.length; i++) h = (h * 31 + t.charCodeAt(i)) | 0; return (h >>> 0).toString(36); })();
+const KEY = `spine-state-${SCENARIO_SIG}`;
 const fresh = (): State => ({ view: 'overview', employeeId: 'de-lena', inputs: structuredClone(scenario.inputs), overrides: [], rev: 0, tour: null });
 
 const VIEW_IDS: View[] = ['overview', 'desk', 'ledger', 'queue', 'unify', 'packs', 'update', 'docs'];
@@ -37,6 +39,7 @@ function fromHash(): Partial<State> {
 
 function load(): State {
   try {
+    for (let i = localStorage.length - 1; i >= 0; i--) { const k = localStorage.key(i); if (k && k.startsWith('spine-state-') && k !== KEY) localStorage.removeItem(k); }
     const raw = localStorage.getItem(KEY);
     if (!raw) return { ...fresh(), ...fromHash() };
     const s = JSON.parse(raw);

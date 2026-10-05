@@ -21,7 +21,7 @@ npm install
 npm run dev        # web app on http://localhost:5173
 npm run demo       # the whole case in the terminal, about 1 minute to read
 npm test           # 159 engine tests, one or more per legal rule
-npm run test:e2e   # 22 browser tests of the web app (downloads Chromium on first run)
+npm run test:e2e   # 23 browser tests of the web app (downloads Chromium on first run)
 npm run build      # typecheck everything and build the web app
 ```
 
@@ -78,7 +78,7 @@ packages/engine/            pure TypeScript; no runtime dependencies
   src/queue.ts              the HR work queue generated from the ledgers
   src/data/                 30 fictional employees plus a scenario (today = 2 Oct 2026)
   test/                     159 tests (incl. fixes found by an adversarial fuzzer and a UX test)
-e2e/                        22 Playwright browser tests (no console errors allowed, 400px layout checked)
+e2e/                        23 Playwright browser tests (no console errors allowed, 400px layout checked)
 apps/web/                   Vite + React UI, imports the engine directly
 cli/demo.ts                 terminal walkthrough
 docs/research/              raw research notes, including what was and wasn't verified
@@ -98,7 +98,7 @@ A correction to a rule should be a small, reviewable change to data plus a test,
 ## How it was tested
 
 - **159 engine tests:** one or more per legal rule.
-- **22 browser tests:** they fail on any console error and check the 400px phone layout.
+- **23 browser tests:** they fail on any console error and check the 400px phone layout.
 - **An adversarial fuzzer:** about 28,000 random employees and 150,000 requests, checking invariants (balances equal the sum of events, no approved request ever overdraws, no holiday is ever charged, deterministic replay). It found 7 real edge-case bugs, all fixed and pinned by tests.
 - **Two first-time-reviewer UX passes** in a real browser across five screen sizes and dark mode, plus two independent code reviews. Every confirmed finding was fixed and pinned by a test.
 
