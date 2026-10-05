@@ -1,15 +1,28 @@
 import { useState } from 'react';
 import { useApp, type View } from '../state';
 
-interface Step { title: string; body: string; view: View; employeeId?: string; focus?: string; desk?: boolean }
+type Dispatch = ReturnType<typeof useApp>['dispatch'];
+type AppState = ReturnType<typeof useApp>['state'];
+interface Step { title: string; body: string; view: View; employeeId?: string; focus?: string; desk?: boolean; doIt?: (d: Dispatch, s: AppState) => void; doItLabel?: string }
+
+const PILOT = { from: '2026-12-21', to: '2027-01-08' };
+/** Make sure Lena's Christmas leave is approved and her 29–30 Dec sickness is reported, then show it on the desk. */
+function approveAndReportForMe(d: Dispatch, s: AppState) {
+  const existing = s.inputs.requests.find((r) => r.employeeId === 'de-lena' && r.status === 'approved' && r.from <= PILOT.to && r.to >= PILOT.from);
+  const id = existing?.id ?? 'req-de-lena-tour-pilot';
+  if (!existing) d({ type: 'addRequest', request: { id, employeeId: 'de-lena', from: PILOT.from, to: PILOT.to, kind: 'annual', status: 'approved', submittedOn: '2026-10-02' } });
+  d({ type: 'addSickness', record: { id: 's-de-lena-2026-12-29', employeeId: 'de-lena', from: '2026-12-29', to: '2026-12-30', certified: true, employeeAskedToReschedule: true } });
+  d({ type: 'go', view: 'desk', employeeId: 'de-lena', focus: `sick:${id}` });
+}
 
 export const TOUR: Step[] = [
   { title: 'The decision', view: 'overview',
     body: 'One process, one ledger and one payroll export for every Groupon entity. Each country\'s law lives in its own cited rule pack. The nine stations show where local law plugs in.' },
   { title: 'Watch one real request', view: 'desk', employeeId: 'de-lena', desk: true,
-    body: 'Lena in Berlin books Christmas. Watch the nine stages run. Her request is split across two leave years, the Berlin holidays aren\'t charged, and the 24/31 December assumption is flagged. Then press "Approve as manager".' },
+    body: 'Lena in Berlin, the hardest law we model, books Christmas. Watch the nine stages run: the request is split across two leave years, Berlin holidays aren\'t charged, and the 24/31 December assumption is flagged. Then press "Approve as line manager".' },
   { title: 'The edge case', view: 'desk', employeeId: 'de-lena',
-    body: 'After approving, report her sick on 29–30 December with a medical certificate. German law (BUrlG §9) gives the 2 days back, with the citation on the line. Untick the certificate and the ledger explains why nothing comes back.' },
+    body: 'She is sick on 29–30 December with a medical certificate. German law (BUrlG §9) gives the 2 days back, with the citation on the line. Untick the certificate and update the report: the ledger explains why nothing comes back.',
+    doIt: approveAndReportForMe, doItLabel: 'Approve and report the sickness for me' },
   { title: 'What is left for HR', view: 'queue',
     body: 'Once requests, accruals and year-end run themselves, this is the work left for people: lapse warnings before 31 December, final-pay checks, a Polish replacement-day decision, and check-ins with two team leads who haven\'t taken a day off.' },
   { title: 'Leave that cannot lapse', view: 'ledger', employeeId: 'de-sophie',
@@ -27,7 +40,7 @@ export const TOUR: Step[] = [
 export function goToStep(dispatch: ReturnType<typeof useApp>['dispatch'], i: number) {
   const s = TOUR[i];
   dispatch({ type: 'tour', step: i });
-  dispatch({ type: 'go', view: s.view, employeeId: s.employeeId, focus: s.focus, deskPreset: s.desk ? { from: '2026-12-21', to: '2027-01-08', autorun: true } : undefined });
+  dispatch({ type: 'go', view: s.view, employeeId: s.employeeId, focus: s.focus, deskPreset: s.desk ? { ...PILOT, autorun: true } : undefined });
 }
 
 export function Tour() {
@@ -38,26 +51,29 @@ export function Tour() {
   const s = TOUR[i];
   if (min) return (
     <aside className="tour min" role="dialog" aria-label="Guided tour">
-      <button className="btn btn-quiet small" onClick={() => setMin(false)}>Show tour, step {i + 1} of {TOUR.length}</button>
+      <button className="btn btn-quiet small" onClick={() => setMin(false)}>Show the guided tour, step {i + 1} of {TOUR.length}: {s.title}</button>
     </aside>
   );
   return (
     <aside className="tour reveal" role="dialog" aria-label="Guided tour" aria-live="polite">
-      <div className="row">
-        <span className="small muted">Guided tour, step {i + 1} of {TOUR.length}</span>
-        <span className="spacer" />
-        <button className="btn btn-quiet small" onClick={() => setMin(true)} aria-label="Minimise the tour">Minimise</button>
-        <button className="btn btn-quiet small" onClick={() => dispatch({ type: 'tour', step: null })} aria-label="Close the tour">Close</button>
-      </div>
-      <div className="tour-bar" aria-hidden><span style={{ width: `${((i + 1) / TOUR.length) * 100}%` }} /></div>
-      <h2 className="h3" style={{ margin: '0.5rem 0 0.3rem' }}>{s.title}</h2>
-      <p className="small" style={{ margin: 0 }}>{s.body}</p>
-      <div className="row" style={{ marginTop: '0.8rem' }}>
-        <button className="btn btn-quiet" disabled={i === 0} onClick={() => goToStep(dispatch, i - 1)}>Back</button>
-        <span className="spacer" />
-        {i < TOUR.length - 1
-          ? <button className="btn btn-primary" onClick={() => goToStep(dispatch, i + 1)}>Next: {TOUR[i + 1].title}</button>
-          : <button className="btn btn-primary" onClick={() => dispatch({ type: 'tour', step: null })}>Finish the tour</button>}
+      <div className="tour-inner">
+        <div>
+          <div className="row" style={{ gap: '0.5rem' }}>
+            <span className="small muted">Guided tour, step {i + 1} of {TOUR.length}</span>
+            <strong>{s.title}</strong>
+          </div>
+          <div className="tour-bar" aria-hidden><span style={{ width: `${((i + 1) / TOUR.length) * 100}%` }} /></div>
+          <p className="small" style={{ margin: '0.35rem 0 0', maxWidth: '110ch' }}>{s.body}</p>
+        </div>
+        <div className="row" style={{ justifyContent: 'flex-end' }}>
+          {s.doIt && <button className="btn" onClick={() => s.doIt!(dispatch, state)}>{s.doItLabel}</button>}
+          <button className="btn btn-quiet" disabled={i === 0} onClick={() => goToStep(dispatch, i - 1)}>Back</button>
+          {i < TOUR.length - 1
+            ? <button className="btn btn-primary" onClick={() => goToStep(dispatch, i + 1)}>Next: {TOUR[i + 1].title}</button>
+            : <button className="btn btn-primary" onClick={() => dispatch({ type: 'tour', step: null })}>Finish the tour</button>}
+          <button className="btn btn-quiet small" onClick={() => setMin(true)} aria-label="Minimise the tour">Minimise</button>
+          <button className="btn btn-quiet small" onClick={() => dispatch({ type: 'tour', step: null })} aria-label="Close the tour">Close</button>
+        </div>
       </div>
     </aside>
   );

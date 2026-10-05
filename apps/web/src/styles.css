@@ -84,7 +84,7 @@ a { color: var(--spine-ink); text-underline-offset: 3px; }
 .nav { display: flex; gap: 0.1rem; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .nav::-webkit-scrollbar { display: none; }
 @media (max-width: 1500px) { .topbar-date { display: none; } }
-@media (max-width: 1240px) {
+@media (max-width: 1480px) {
   .nav { order: 3; flex-basis: 100%; flex-wrap: wrap; overflow: visible; }
   .brand-sub { display: none; }
 }
@@ -244,7 +244,7 @@ a { color: var(--spine-ink); text-underline-offset: 3px; }
 .day.hol .day-tag { color: var(--over); }
 .day.booked { background-image: var(--hatch); }
 .day.booked.approved { background: var(--spine-soft); }
-.day.sel { background: var(--spine); color: #fff; border-color: var(--spine); }
+.day.sel, .day.sel.booked, .day.sel.booked.approved { background: var(--spine); color: #fff; border-color: var(--spine); background-image: none; }
 .day.sel .day-tag { color: rgba(255, 255, 255, 0.85); }
 .day.sel.hol { background: color-mix(in srgb, var(--spine) 70%, var(--over)); }
 .day.sel.off { background: color-mix(in srgb, var(--spine) 55%, var(--surface)); }
@@ -360,15 +360,15 @@ a { color: var(--spine-ink); text-underline-offset: 3px; }
 
 /* ---------- guided tour ---------- */
 .tour {
-  position: fixed; z-index: 40; left: clamp(0.75rem, 2vw, 1.5rem); bottom: calc(clamp(0.75rem, 2vw, 1.5rem) + env(safe-area-inset-bottom, 0px));
-  width: min(380px, calc(100vw - 1.5rem)); background: var(--surface); border: 1px solid var(--line-2); border-top: 4px solid var(--spine);
-  border-radius: var(--radius-m); padding: 0.9rem 1rem 1rem; box-shadow: var(--shadow-pop);
+  position: sticky; z-index: 19; top: var(--topbar-h, 0px); background: var(--surface); border-bottom: 1px solid var(--line-2); border-top: 3px solid var(--spine);
+  padding: 0.6rem clamp(1rem, 3vw, 2rem); box-shadow: 0 6px 16px -12px rgba(19, 26, 42, 0.35);
 }
+.tour-inner { max-width: 1320px; margin: 0 auto; display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 0.4rem 1.2rem; align-items: center; }
+@media (max-width: 760px) { .tour-inner { grid-template-columns: 1fr; } }
 .tour-bar { height: 4px; background: var(--line); border-radius: 4px; overflow: hidden; margin-top: 0.4rem; }
 .tour-bar span { display: block; height: 100%; background: var(--spine); transition: width 0.25s ease; }
-.main { padding-bottom: 14rem; }
 
-.tour.min { width: auto; padding: 0.5rem 0.75rem; }
+.tour.min { padding: 0.3rem clamp(1rem, 3vw, 2rem); }
 .day.sick { background: var(--breach-soft); }
 .day.sick .day-tag { color: var(--breach); }
 .person:focus-visible, .cell:focus-visible, .docnav button:focus-visible, .day:focus-visible, .tl-row:focus-visible { outline: 2px solid var(--spine); outline-offset: 2px; }

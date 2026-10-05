@@ -20,14 +20,14 @@ git clone <this repo> && cd <repo>
 npm install
 npm run dev        # web app on http://localhost:5173
 npm run demo       # the whole case in the terminal, about 1 minute to read
-npm test           # 146 engine tests, one or more per legal rule
-npm run test:e2e   # 15 browser tests of the web app (downloads Chromium on first run)
+npm test           # 153 engine tests, one or more per legal rule
+npm run test:e2e   # 21 browser tests of the web app (downloads Chromium on first run)
 npm run build      # typecheck everything and build the web app
 ```
 
 ## A three-minute tour
 
-The easiest way in is the **guided tour** button on the Overview. It walks through these steps for you:
+The easiest way in is the **guided tour** button on the Overview: nine steps that move you to the right screen and person each time. Every page also has its own URL (for example `#/ledger/de-sophie`), so you can share or reload any view.
 
 1. **Overview.** The decision in one sentence and the nine-step spine every request takes.
 2. **Request desk.** Lena (Groupon GmbH, Berlin) books 21 Dec 2026 to 8 Jan 2027.
@@ -77,8 +77,8 @@ packages/engine/            pure TypeScript; no runtime dependencies
   src/diff.ts               annual update: holiday moves, rule changes, seniority crossings, HR tasks
   src/queue.ts              the HR work queue generated from the ledgers
   src/data/                 30 fictional employees plus a scenario (today = 2 Oct 2026)
-  test/                     146 tests (incl. fixes found by an adversarial fuzzer)
-e2e/                        15 Playwright browser tests (no console errors allowed, 400px layout checked)
+  test/                     153 tests (incl. fixes found by an adversarial fuzzer and a UX test)
+e2e/                        21 Playwright browser tests (no console errors allowed, 400px layout checked)
 apps/web/                   Vite + React UI, imports the engine directly
 cli/demo.ts                 terminal walkthrough
 docs/research/              raw research notes, including what was and wasn't verified
@@ -94,6 +94,13 @@ A correction to a rule should be a small, reviewable change to data plus a test,
 3. Edit the JSON, and update the citation and `verification` field.
 4. Add or adjust a test in `packages/engine/test/` that pins the corrected behaviour, then run `npm test`.
 5. If the correction can't be expressed as data, add a named hook in `src/strategies/` and list it in DECISION.md as something that can't be unified.
+
+## How it was tested
+
+- **153 engine tests:** one or more per legal rule.
+- **21 browser tests:** they fail on any console error and check the 400px phone layout.
+- **An adversarial fuzzer:** about 28,000 random employees and 150,000 requests, checking invariants (balances equal the sum of events, no approved request ever overdraws, no holiday is ever charged, deterministic replay). It found 7 real edge-case bugs, all fixed and pinned by tests.
+- **Two first-time-reviewer UX passes** in a real browser across five screen sizes and dark mode. Every P0 and P1 finding was fixed.
 
 ## Known limits of this prototype
 

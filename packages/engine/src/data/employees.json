@@ -38,7 +38,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Pilot case: books Christmas across two leave years, then falls sick on 29 Dec.",
+    "persona": "Worked example (Berlin, the hardest law we model): books Christmas across two leave years, then is sick on 29–30 December.",
     "managerId": "de-max",
     "openingBalances": {
       "annual": 3
@@ -511,7 +511,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Wants January 2027 — but Madrid hasn't published its 2027 holiday decree yet, so the engine refuses to guess.",
+    "persona": "Has asked for 4–8 January 2027. Madrid published its 2027 holiday decree on 1 October 2026, so the request can now be processed (calendar days, with Epifanía inside the block).",
     "managerId": "es-lucia"
   },
   {
@@ -631,7 +631,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Booked 28–31 December, with certified flu on 29–30 December already reported. He has asked to reschedule, so the days come back.",
+    "persona": "Scenario: booked 28–31 December, with a certified sickness for 29–30 December entered in advance. He has asked to reschedule, so the days come back.",
     "managerId": "ie-aoife"
   }
 ]

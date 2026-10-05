@@ -489,8 +489,8 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         if (bal < 0) { issues.push({ code: 'NEGATIVE_AT_TERMINATION', date: td, message: `${fmt(-bal)} ${b.unit} overdrawn in ${b.id} — check whether local law allows deduction from final pay` }); continue; }
         if (bal === 0) continue;
         consume([b.id], bal, td, true);
-        if (b.payoutOnTermination.mode === 'remaining') post('PAYOUT', td, b.id, -bal, y, b.payoutOnTermination.rule, `Employment ends ${td}: ${fmt(bal)} ${b.unit} paid out in final pay`);
-        else post('ADJUST', td, b.id, -bal, y, b.payoutOnTermination.rule, `Employment ends ${td}: ${fmt(bal)} ${b.unit} forfeited — not payable under the rule`);
+        if (b.payoutOnTermination.mode === 'remaining') post('PAYOUT', td, b.id, -bal, y, b.payoutOnTermination.rule, `Employment ends ${formatDate(td)}: ${fmt(bal)} ${b.unit} of ${b.label} paid out in final pay.`);
+        else post('ADJUST', td, b.id, -bal, y, b.payoutOnTermination.rule, `Employment ends ${formatDate(td)}: ${fmt(bal)} ${b.unit} of ${b.label} forfeited, because it is not payable under the rule.`);
       }
     });
   }

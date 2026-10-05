@@ -21,7 +21,7 @@ export function Overview() {
         <div className="row" style={{ marginTop: '1.25rem' }}>
           <button className="btn btn-primary" onClick={() => goToStep(dispatch, 0)}>Take the 3-minute guided tour</button>
           <button className="btn" onClick={() => dispatch({ type: 'go', view: 'desk', employeeId: 'de-lena', deskPreset: { from: '2026-12-21', to: '2027-01-08', autorun: true } })}>
-            Run the Berlin pilot request
+            Run the Berlin example
           </button>
           <button className="btn" onClick={() => dispatch({ type: 'go', view: 'unify' })}>Try to write one global policy</button>
           <button className="btn btn-quiet" onClick={() => dispatch({ type: 'go', view: 'docs' })}>Read the decision</button>

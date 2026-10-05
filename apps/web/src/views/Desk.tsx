@@ -158,14 +158,26 @@ export function Desk() {
     setCursor({ y: 2026, m: 10 });
   }, [e.id]);
 
-  // Overview "Run the Berlin pilot" preset.
+  // Overview "Run the Berlin example" preset. If those dates are already booked in this demo, show the booking instead of a refusal.
   useEffect(() => {
     const p = state.deskPreset;
     if (!p) return;
     dispatch({ type: 'consumePreset' });
-    setFrom(p.from); setTo(p.to); setKind('annual'); setCursor({ y: yearOf(p.from), m: Number(p.from.slice(5, 7)) });
+    setCursor({ y: yearOf(p.from), m: Number(p.from.slice(5, 7)) });
+    const booked = state.inputs.requests.find((r) => r.employeeId === e.id && r.status === 'approved' && r.from <= p.to && r.to >= p.from);
+    if (booked) {
+      setSickFor(booked.id);
+      flash('Already booked in this demo: report sickness below, withdraw it, or use Reset demo to replay from the start');
+      return;
+    }
+    setFrom(p.from); setTo(p.to); setKind('annual');
     if (p.autorun) setTimeout(() => run(p.from, p.to, 'annual'), 250);
   }, [state.deskPreset]);
+
+  // Tour "do it for me": open the sickness panel on that request.
+  useEffect(() => {
+    if (state.focus?.startsWith('sick:')) { clearRun(); setSickFor(state.focus.slice(5)); }
+  }, [state.focus]);
 
   useEffect(() => () => { if (timer.current) window.clearInterval(timer.current); }, []);
 
@@ -287,7 +299,7 @@ export function Desk() {
                           </td>
                         </tr>
                         {state.inputs.sickness.filter((x) => x.employeeId === e.id && r.status === 'approved' && x.from <= r.to && x.to >= r.from).map((x) => (
-                          <tr key={x.id}><td colSpan={4} className="small muted" style={{ paddingLeft: '1.5rem' }}>Sick {fmtDate(x.from)}{x.to !== x.from && <> to {fmtDate(x.to)}</>}, {x.certified ? 'with certificate' : 'no certificate'}</td></tr>
+                          <tr key={x.id}><td colSpan={4} className="small muted" style={{ paddingLeft: '1.5rem' }}>Sick {fmtDate(x.from)}{x.to !== x.from && <> to {fmtDate(x.to)}</>}{sickNote(e, x)}</td></tr>
                         ))}
                         {sickFor === r.id && <tr><td colSpan={4}><SicknessPanel request={r} e={e} onFlash={flash} /></td></tr>}
                       </Fragment>
@@ -335,6 +347,13 @@ const SICK_HELP: Record<string, string> = {
   restore: 'Leave is postponed; the days come back automatically.',
   'convert-to-sick-bank': 'Hours move from Paid Leave to the Paid Sick Leave bank, while it has hours.',
 };
+
+function sickNote(e: Employee, x: { certified: boolean; employeeAskedToReschedule?: boolean; from: string }) {
+  const mode = getPack(e.packId, Math.min(2027, yearOf(x.from))).buckets[0].sickDuringLeave.mode;
+  if (mode === 'restore-if-certified' || mode === 'convert-to-sick-bank') return x.certified ? ', with a medical certificate' : ', no medical certificate';
+  if (mode === 'restore-on-request') return x.employeeAskedToReschedule ? ', employee asked to reschedule' : ', employee did not ask to reschedule';
+  return ', reported';
+}
 
 function defaultSickDates(r: LeaveRequest): [string, string] {
   if (r.from <= '2026-12-29' && r.to >= '2026-12-30') return ['2026-12-29', '2026-12-30'];

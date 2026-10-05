@@ -20,7 +20,7 @@ test('overview states the decision and the force-unify result', async ({ page })
 });
 
 test('Berlin pilot: nine stages, approval, then certified sickness restores 2 days (BUrlG §9)', async ({ page }) => {
-  await page.getByRole('button', { name: 'Run the Berlin pilot request' }).click();
+  await page.getByRole('button', { name: 'Run the Berlin example' }).click();
   await expect(page.locator('.rail-step.ok, .rail-step.warn')).toHaveCount(9);
   await expect(page.getByText('Charged to 2026 leave')).toBeVisible();
   await expect(page.getByText('Charged to 2027 leave')).toBeVisible();
@@ -37,7 +37,7 @@ test('Berlin pilot: nine stages, approval, then certified sickness restores 2 da
 });
 
 test('a second booking over approved leave is refused as an overlap', async ({ page }) => {
-  await page.getByRole('button', { name: 'Run the Berlin pilot request' }).click();
+  await page.getByRole('button', { name: 'Run the Berlin example' }).click();
   await page.getByRole('button', { name: 'Approve as line manager' }).click();
   await page.getByRole('button', { name: /^21 Dec 2026/ }).click();
   await page.getByRole('button', { name: /^23 Dec 2026/ }).click();
@@ -54,7 +54,7 @@ test('Madrid 2027: the decree published on 1 Oct 2026 is loaded, so Carmen\'s pe
 });
 
 test('withdrawing approved leave keeps it in the audit trail and drops its sickness report', async ({ page }) => {
-  await page.getByRole('button', { name: 'Run the Berlin pilot request' }).click();
+  await page.getByRole('button', { name: 'Run the Berlin example' }).click();
   await page.getByRole('button', { name: 'Approve as line manager' }).click();
   await page.locator('aside .receipt').getByRole('button', { name: 'Report sickness' }).click();
   await page.getByRole('row', { name: /21 Dec 2026 to 8 Jan 2027/ }).getByRole('button', { name: 'Withdraw' }).click();
@@ -99,7 +99,7 @@ test('rule packs: a live correction shows who it affects, and an invalid one is 
   const expiry = page.getByLabel('Additional leave: carried leave expires (MM-DD)');
   await expiry.fill('13-45');
   await expiry.blur();
-  await expect(page.getByRole('alert')).toContainText('must be a real MM-DD date');
+  await expect(page.getByRole('alert')).toContainText('use a real date as MM-DD');
 });
 
 test('annual update shows the Madrid 2027 decree and the Polish seniority step', async ({ page }) => {
@@ -183,4 +183,44 @@ test('policy simulator: presets move from 58 breaches to 7 to zero, with the cos
   await expect(page.getByText(/days a year above the legal minimum/)).toBeVisible();
   await page.getByLabel('Days a year').fill('20');
   await expect(page.getByText(/breaks local law \d+ times/)).toBeVisible();
+});
+
+test('Back to the Overview re-renders it (hash routing)', async ({ page }) => {
+  await nav(page, 'Ledger');
+  await page.goBack();
+  await expect(page).toHaveURL(/#\/overview$/);
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Unify the process and the record. Keep the law local.');
+  await page.goForward();
+  await expect(page.getByRole('heading', { name: 'Ledger' })).toBeVisible();
+});
+
+test('simulator "Days a year" can be typed into freely', async ({ page }) => {
+  await nav(page, 'Force-unify');
+  const f = page.getByLabel('Days a year (15–40)');
+  await f.click();
+  await f.press('ControlOrMeta+a');
+  await f.pressSequentially('27');
+  await f.blur();
+  await expect(f).toHaveValue('27');
+  await expect(page.getByText(/27 working days for everyone/)).toBeVisible();
+});
+
+test('the example can be replayed: if already booked, the desk shows the booking instead of a refusal', async ({ page }) => {
+  await page.getByRole('button', { name: 'Run the Berlin example' }).click();
+  await page.getByRole('button', { name: 'Approve as line manager' }).click();
+  await nav(page, 'Overview');
+  await page.getByRole('button', { name: 'Run the Berlin example' }).click();
+  await expect(page.getByText(/Already booked in this demo/)).toBeVisible();
+  await expect(page.getByText('Refused')).toHaveCount(0);
+  await expect(page.getByLabel('Sick from')).toHaveValue('2026-12-29');
+});
+
+test('tour step 3 can approve and report the sickness for the reviewer', async ({ page }) => {
+  await page.getByRole('button', { name: 'Take the 3-minute guided tour' }).click();
+  const tour = page.getByRole('dialog', { name: 'Guided tour' });
+  await tour.getByRole('button', { name: /^Next/ }).click();
+  await tour.getByRole('button', { name: /^Next/ }).click();
+  await tour.getByRole('button', { name: 'Approve and report the sickness for me' }).click();
+  await expect(page.getByText(/Certified sickness 2026-12-29 → 2026-12-30 during leave: 2 days/)).toBeVisible();
+  await expect(page.getByText('20 to 22 days')).toBeVisible();
 });

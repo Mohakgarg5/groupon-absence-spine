@@ -35,6 +35,19 @@ const OPTION_LABEL: Record<string, string> = {
   nothing: 'Nothing extra', 'extra-leave': 'Extra day of leave', 'designate-day-off-task': 'Employer designates a replacement day',
   'hours-worked': 'Accrue per hours worked', 'unlimited-with-floor': 'Unlimited PTO (40-hour floor on leaving)',
 };
+const STRATEGY_LABEL: Record<string, string> = {
+  werktage: 'Werktage converted to the working week', weeks: 'Weeks of the own pattern', 'calendar-days': 'Calendar days',
+  'pl-seniority': 'Seniority incl. education', 'per-hours-worked': 'Per hours worked',
+  'de-waiting-period': '6-month waiting period, then full', 'front-load-prorata': 'Granted on 1 Jan, pro-rated', monthly: 'Monthly',
+  'pl-proportional': 'Proportional, rounded up', 'uk-first-year-monthly': 'Monthly in the first year', 'hours-worked': 'Per hours worked',
+  'unlimited-with-floor': 'Unlimited PTO', 'working-days': 'Working days', 'working-hours': 'Working hours',
+};
+const MONTH = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+const md = (s: string) => `${Number(s.slice(3))} ${MONTH[Number(s.slice(0, 2)) - 1]}`;
+const RANGE: Record<string, [number, number]> = {
+  werktage: [0, 60], weeks: [0, 12], totalCapDays: [0, 60], days: [0, 60], under: [0, 60], over: [0, 60], thresholdYears: [0, 50],
+  per: [1, 200], capPerYear: [0, 400], usableFromDays: [0, 365], max: [0, 400],
+};
 const PARAM_LABEL: Record<string, string> = {
   werktage: 'statutory days on a 6-day week (Werktage)', weeks: 'weeks of the employee\'s own pattern', totalCapDays: 'total cap (days)',
   days: 'calendar days', under: 'days below the seniority step', over: 'days at or above the step', thresholdYears: 'seniority step (years)',
@@ -128,16 +141,16 @@ export function Packs() {
               <div className="panel">
                 <h3 className="h3">Who and how leave is counted</h3>
                 <RuleRow label="Where this pack applies" rule={pack.locationAssumption} />
-                <RuleRow label="Counting" rule={pack.counting.rule}><span className="chip">{pack.counting.mode}</span></RuleRow>
+                <RuleRow label="Counting" rule={pack.counting.rule}><span className="chip">{STRATEGY_LABEL[pack.counting.mode] ?? pack.counting.mode}</span></RuleRow>
                 <RuleRow label="Public holiday policy" rule={pack.holidayPolicy.rule} />
               </div>
               {pack.buckets.map((b) => (
                 <div className="panel" key={b.id}>
                   <h3 className="h3">{b.label} <span className="chip">{b.unit}</span></h3>
-                  <RuleRow label="Entitlement" rule={b.entitlement.rule}><span className="chip">{b.entitlement.strategy}</span></RuleRow>
-                  <RuleRow label="Accrual" rule={b.accrual.rule}><span className="chip">{b.accrual.strategy}</span>{b.usableFromDays > 0 && <span className="chip">usable from day {b.usableFromDays}</span>}</RuleRow>
-                  <RuleRow label="Carry-over" rule={b.carryOver.rule}><span className="chip">{b.carryOver.max === null ? 'no limit' : `max ${b.carryOver.max}`}{b.carryOver.expiresMonthDay ? `, until ${b.carryOver.expiresMonthDay}` : ''}</span></RuleRow>
-                  <RuleRow label="Sick during leave" rule={b.sickDuringLeave.rule}><span className="chip">{b.sickDuringLeave.mode}</span></RuleRow>
+                  <RuleRow label="Entitlement" rule={b.entitlement.rule}><span className="chip">{STRATEGY_LABEL[b.entitlement.strategy] ?? b.entitlement.strategy}</span></RuleRow>
+                  <RuleRow label="Accrual" rule={b.accrual.rule}><span className="chip">{STRATEGY_LABEL[b.accrual.strategy] ?? b.accrual.strategy}</span>{b.usableFromDays > 0 && <span className="chip">usable from day {b.usableFromDays}</span>}</RuleRow>
+                  <RuleRow label="Carry-over" rule={b.carryOver.rule}><span className="chip">{b.carryOver.max === 0 ? 'none' : b.carryOver.max === null ? 'no cap' : `up to ${b.carryOver.max} ${b.unit}`}{b.carryOver.expiresMonthDay ? `, used by ${md(b.carryOver.expiresMonthDay)}` : ''}{b.carryOver.grantByMonthDay ? `, granted by ${md(b.carryOver.grantByMonthDay)}` : ''}{b.carryOver.conditionalOnNotice ? ', lapses only after a warning' : ''}</span></RuleRow>
+                  <RuleRow label="Sick during leave" rule={b.sickDuringLeave.rule}><span className="chip">{OPTION_LABEL[b.sickDuringLeave.mode] ?? b.sickDuringLeave.mode}</span></RuleRow>
                   <RuleRow label="On leaving" rule={b.payoutOnTermination.rule}><span className="chip">{b.payoutOnTermination.mode === 'remaining' ? 'pay out' : 'no payout'}</span></RuleRow>
                 </div>
               ))}
@@ -180,15 +193,18 @@ export function Packs() {
                     ) : ed.kind === 'select' ? (
                       <select value={String(v)} onChange={(x) => change(ed.path, x.target.value)}>{ed.options!.map((o) => <option key={o} value={o}>{OPTION_LABEL[o] ?? o}</option>)}</select>
                     ) : ed.kind === 'text' ? (
-                      <DraftText key={`${id}-${year}-${key}-${String(v)}-${state.rev}`} value={(v as string | null) ?? ''} onCommit={(t) => { if (t && !/^\d{2}-\d{2}$/.test(t)) { setInvalid(`${ed.label}: use MM-DD, e.g. 03-31`); return; } change(ed.path, t || null); }} />
+                      <DraftText key={`${id}-${year}-${key}-${String(v)}-${state.rev}`} value={(v as string | null) ?? ''} onCommit={(t) => { if (t && !(/^\d{2}-\d{2}$/.test(t) && !Number.isNaN(Date.parse(`2024-${t}T00:00:00Z`)) && new Date(`2024-${t}T00:00:00Z`).toISOString().slice(5, 10) === t)) { setInvalid(`${ed.label}: use a real date as MM-DD, e.g. 03-31`); return; } change(ed.path, t || null); }} />
                     ) : (
                       <input type="number" step="any" min={0} value={v ?? ''} placeholder={ed.kind === 'nullableNumber' ? 'no limit' : ''}
                         onChange={(x) => {
                           const t = x.target.value;
                           if (t === '' && ed.kind === 'nullableNumber') change(ed.path, null);
                           else if (t === '') setInvalid(`${ed.label}: enter a number`);
-                          else if (!(Number(t) >= 0)) setInvalid(`${ed.label}: must be 0 or more`);
-                          else change(ed.path, Number(t));
+                          else {
+                            const [lo, hi] = RANGE[String(ed.path[ed.path.length - 1])] ?? [0, 1000];
+                            if (!(Number(t) >= lo && Number(t) <= hi)) setInvalid(`${ed.label}: must be between ${lo} and ${hi}`);
+                            else change(ed.path, Number(t));
+                          }
                         }} />
                     )}
                     {ed.help && <span className="muted" style={{ fontWeight: 400 }}>{ed.help}</span>}
@@ -196,7 +212,6 @@ export function Packs() {
                 );
               })}
             </div>
-            {invalid && <p className="callout bad small" role="alert" style={{ marginBottom: 0 }}>Not applied: {invalid}</p>}
             {corrected && (
               <div className="row" style={{ marginTop: '0.8rem' }}>
                 <span className="chip v-review">Draft correction, sign-off reset to pending</span>
@@ -204,6 +219,7 @@ export function Packs() {
                 <button className="btn btn-quiet small" onClick={() => { setInvalid(null); dispatch({ type: 'override', id, year, pack: null }); }}>Discard correction</button>
               </div>
             )}
+            {invalid && <p className="callout bad small" role="alert" style={{ marginBottom: 0 }}>Not applied: {invalid}</p>}
           </div>
           {corrected && (
             <div className="panel reveal">

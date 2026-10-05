@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { runStressTest, getPack, NAIVE_GLOBAL, type Dimension, type StressRow, type GlobalPolicy } from '@spine/engine';
 import { useApp, people, personById, ENTITY_ORDER } from '../state';
 import { Citation, Ent } from '../components/bits';
@@ -22,12 +22,26 @@ const PRESETS: { id: string; label: string; policy: GlobalPolicy }[] = [
 const GROUPON_HEADCOUNT = 1734; // FY2025 10-K
 const WORKING_DAYS_PER_FTE = 220; // assumption for scaling only
 
+/** Number field that lets people type freely; applies when the value is in range, clamps on blur. */
+function NumberDraft({ value, min, max, onCommit }: { value: number; min: number; max: number; onCommit: (n: number) => void }) {
+  const [draft, setDraft] = useState(String(value));
+  useEffect(() => setDraft(String(value)), [value]);
+  const n = Number(draft);
+  const ok = draft !== '' && Number.isFinite(n) && n >= min && n <= max;
+  return (
+    <input type="number" min={min} max={max} value={draft} aria-invalid={!ok}
+      style={ok ? undefined : { borderColor: 'var(--breach)' }}
+      onChange={(x) => { setDraft(x.target.value); const v = Number(x.target.value); if (x.target.value !== '' && v >= min && v <= max) onCommit(v); }}
+      onBlur={() => { const v = Math.min(max, Math.max(min, Number.isFinite(n) && draft !== '' ? Math.round(n) : value)); setDraft(String(v)); if (v !== value) onCommit(v); }} />
+  );
+}
+
 function PolicyDesigner({ policy, onChange }: { policy: GlobalPolicy; onChange: (p: GlobalPolicy) => void }) {
   const set = <K extends keyof GlobalPolicy>(k: K, v: GlobalPolicy[K]) => onChange({ ...policy, [k]: v, name: 'Your global policy' });
   return (
     <div className="grid" style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(min(100%, 250px), 1fr))', gap: '0.7rem' }}>
-      <label className="field">Days a year
-        <input type="number" min={15} max={40} value={policy.daysPerYear} onChange={(x) => { const n = Number(x.target.value); if (n >= 15 && n <= 40) set('daysPerYear', n); }} />
+      <label className="field">Days a year (15–40)
+        <NumberDraft value={policy.daysPerYear} min={15} max={40} onCommit={(n) => set('daysPerYear', n)} />
       </label>
       <label className="field">Part-timers
         <select value={String(policy.proRataPartTime)} onChange={(x) => set('proRataPartTime', x.target.value === 'true')}>
@@ -47,8 +61,8 @@ function PolicyDesigner({ policy, onChange }: { policy: GlobalPolicy; onChange: 
       </label>
       {policy.carryOver === 'capped' && (
         <>
-          <label className="field">Carry-over cap (days)
-            <input type="number" min={1} max={30} value={policy.carryDays} onChange={(x) => { const n = Number(x.target.value); if (n >= 1 && n <= 30) set('carryDays', n); }} />
+          <label className="field">Carry-over cap (1–30 days)
+            <NumberDraft value={policy.carryDays} min={1} max={30} onCommit={(n) => set('carryDays', n)} />
           </label>
           <label className="field">Carried days must be used by
             <select value={policy.carryUntil} onChange={(x) => set('carryUntil', x.target.value)}>

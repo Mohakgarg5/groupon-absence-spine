@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { buildLedger, getPack, resolvePackId, type LedgerEvent } from '@spine/engine';
+import { buildLedger, getPack, resolvePackId, scenario, type LedgerEvent } from '@spine/engine';
 import { useApp, personById, TODAY } from '../state';
 import { Amount, Citation, Ent, fmt, fmtDate } from '../components/bits';
 import { PeoplePicker } from './Desk';
@@ -21,6 +21,8 @@ export function LedgerView() {
   try { resolvePackId(e); } catch (x) { err = (x as Error).message.replace(/^[A-Z_]+: /, ''); }
   const ledger = useMemo(() => (err ? null : buildLedger(e, state.inputs, asOf, { today: TODAY })), [e.id, asOf, state.rev, err]);
   const pack = getPack(e.packId, 2026);
+  const key = (n: { employeeId: string; leaveYear: number }) => `${n.leaveYear}`;
+  const noticesChanged = scenario.inputs.notices.filter((n) => n.employeeId === e.id).map(key).sort().join() !== state.inputs.notices.filter((n) => n.employeeId === e.id).map(key).sort().join();
   const hasNotice = pack.buckets.some((b) => b.carryOver.conditionalOnNotice);
 
   const events = (ledger?.events ?? []).filter((x) => bucket === 'all' || x.bucket === bucket);
@@ -46,7 +48,7 @@ export function LedgerView() {
                 {[[TODAY, 'Today'], ['2026-12-31', 'End of 2026'], ['2027-12-31', 'End of 2027']].map(([d, l]) => <button key={d} aria-pressed={asOf === d} onClick={() => setAsOf(d)}>{l}</button>)}
               </div>
             </div>
-            {e.persona && <p className="persona" style={{ marginBottom: 0 }}>{e.persona}</p>}
+            {e.persona && <p className="persona" style={{ marginBottom: 0 }}>{e.persona}{noticesChanged && <strong> You have changed this person's written warnings in the demo, so the ledger below reflects your version.</strong>}</p>}
           </div>
 
           {err && <div className="callout bad">{err}</div>}

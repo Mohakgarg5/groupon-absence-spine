@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useApp, people, type View } from './state';
 const personByIdSafe = (id: string) => people.find((p) => p.id === id);
 import { SpineMark } from './components/bits';
@@ -38,10 +38,22 @@ export function App() {
   useEffect(() => { window.scrollTo({ top: 0 }); }, [state.view]);
 
   // Hash routing (#/ledger/de-sophie): Back, reload and shared links land on the same page and person.
+  // Let the tour bar dock exactly under the sticky header at every width.
+  const header = useRef<HTMLElement | null>(null);
+  useEffect(() => {
+    const el = header.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    const ro = new ResizeObserver(() => document.documentElement.style.setProperty('--topbar-h', `${el.offsetHeight}px`));
+    ro.observe(el);
+    return () => ro.disconnect();
+  }, []);
+  const cur = useRef({ view: state.view, employeeId: state.employeeId });
+  cur.current = { view: state.view, employeeId: state.employeeId };
   useEffect(() => {
     const read = () => {
       const [, v, who] = window.location.hash.split('/');
-      if (v && (VIEWS as string[]).includes(v) && (v !== state.view || (who && who !== state.employeeId)))
+      const now = cur.current;
+      if (v && (VIEWS as string[]).includes(v) && (v !== now.view || (who && who !== now.employeeId)))
         dispatch({ type: 'go', view: v as View, employeeId: who && personByIdSafe(who) ? who : undefined });
     };
     read();
@@ -56,7 +68,7 @@ export function App() {
 
   return (
     <div className="shell">
-      <header className="topbar">
+      <header className="topbar" ref={header}>
         <a className="brand" href="#" onClick={(e) => { e.preventDefault(); dispatch({ type: 'go', view: 'overview' }); }}>
           <SpineMark />
           <span>
@@ -77,6 +89,7 @@ export function App() {
           <button className="btn btn-quiet small" onClick={() => { dispatch({ type: 'reset' }); setResetMsg(true); window.setTimeout(() => setResetMsg(false), 2200); }} title="Discard your requests, sickness records and rule corrections">Reset demo</button>
         </div>
       </header>
+      <Tour />
       {state.overrides.length > 0 && (
         <div className="draft-banner" role="status">
           Draft correction active for {state.overrides.map((o) => `${o.id} ${o.year}`).join(', ')}. Every page reflects it.
@@ -95,7 +108,6 @@ export function App() {
         {state.view === 'update' && <Update />}
         {state.view === 'docs' && <Docs />}
       </main>
-      <Tour />
       <footer className="footer">
         Prototype for the Groupon HR Transformation case study. All employees are fictional. Rules come from public sources and are marked
         by verification status; nothing here has been signed off by Groupon legal.
