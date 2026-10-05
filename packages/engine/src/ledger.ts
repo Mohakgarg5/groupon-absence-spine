@@ -470,6 +470,22 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
     }
   }
 
+  // A warning sent after leave was blocked starts the clock again: it lapses at the end of the leave year
+  // in which the employer cured the failure (UK reg.13(18); DE BAG 9 AZR 423/16, 9 AZR 266/20).
+  for (const n of inputs.notices.filter((x) => x.employeeId === e.id)) {
+    at(n.sentOn, 3, () => {
+      for (const l of lots.filter((x) => x.blocked && x.leaveYear === n.leaveYear && x.remaining > 0)) {
+        const b = bucketDef(l.bucket, yearOf(n.sentOn));
+        const md = b?.carryOver.expiresMonthDay;
+        if (!b?.carryOver.conditionalOnNotice || !md) continue;
+        l.blocked = false;
+        l.expiresOn = `${yearOf(n.sentOn) + 1}-${md}`;
+        post('CARRY_OVER', n.sentOn, l.bucket, 0, l.leaveYear, b.carryOver.rule,
+          `Written warning sent on ${formatDate(n.sentOn)} for ${l.leaveYear} leave: ${fmt(l.remaining)} ${b.unit} can now lapse on ${formatDate(l.expiresOn)} if not taken`);
+      }
+    });
+  }
+
   // ---------- termination ----------
   if (e.terminationDate && e.terminationDate <= endDate && yearOf(e.terminationDate) <= lastYear) {
     const td = e.terminationDate, y = yearOf(td);

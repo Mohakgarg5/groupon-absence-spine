@@ -41,15 +41,18 @@ export function hrQueue(employees: Employee[], inputs: Inputs, today: ISODate): 
     for (const b of pack.buckets.filter((x) => x.carryOver.conditionalOnNotice)) {
       const left = yearEnd.balances[b.id]?.byYear[y] ?? 0;
       const warned = inputs.notices.some((n) => n.employeeId === e.id && n.leaveYear === y);
+      const lapse = b.carryOver.expiresMonthDay ?? '12-31';
+      const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+      const when = `${Number(lapse.slice(3))} ${MONTHS[Number(lapse.slice(0, 2)) - 1]}`;
       if (left > 0 && !warned)
         out.push({ kind: 'lapse-warning', priority: 1, packId: e.packId, employeeId: e.id, due: `${y}-12-31`,
-          title: `${e.name}: send the written lapse warning`, detail: `${r1(left)} days of ${y} leave will be left at year end. Without an individual written warning they cannot lapse on 31 March.`, rule: b.carryOver.rule });
+          title: `${e.name}: send the written lapse warning`, detail: `${r1(left)} ${b.unit} of ${y} leave will be left at year end. Without an individual written warning, given in time to take it, they cannot lapse on ${when}.`, rule: b.carryOver.rule });
     }
 
     // Leavers in the next 90 days: the final-pay leave figure needs a human check.
     if (e.terminationDate && e.terminationDate >= today && daysBetween(today, e.terminationDate) <= 90) {
       const fin = buildLedger(e, inputs, e.terminationDate, { today });
-      const pays = fin.events.filter((x) => x.type === 'PAYOUT' || (x.type === 'ADJUST' && x.date === e.terminationDate));
+      const pays = fin.events.filter((x) => x.date === e.terminationDate && (x.type === 'PAYOUT' || (x.type === 'ADJUST' && x.amount !== 0 && /Employment ends/.test(x.explanation))));
       out.push({ kind: 'final-pay', priority: 2, packId: e.packId, employeeId: e.id, due: addDays(e.terminationDate, -14),
         title: `${e.name}: check the leave figure for final pay`, detail: pays.map((x) => x.explanation).join(' ') || 'No leave balance to settle.', rule: pays[0]?.rule ?? pack.buckets[0].payoutOnTermination.rule });
     }

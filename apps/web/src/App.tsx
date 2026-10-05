@@ -60,10 +60,14 @@ export function App() {
     window.addEventListener('hashchange', read);
     return () => window.removeEventListener('hashchange', read);
   }, []);
+  const firstPush = useRef(true);
   useEffect(() => {
     const perPerson = state.view === 'desk' || state.view === 'ledger';
     const h = `#/${state.view}${perPerson ? `/${state.employeeId}` : ''}`;
-    if (window.location.hash !== h) window.history.pushState(null, '', h);
+    if (window.location.hash === h) { firstPush.current = false; return; }
+    // The first sync only normalises the URL; it must not add a history entry.
+    if (firstPush.current) { window.history.replaceState(null, '', h); firstPush.current = false; }
+    else window.history.pushState(null, '', h);
   }, [state.view, state.employeeId]);
 
   return (

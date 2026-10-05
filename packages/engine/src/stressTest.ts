@@ -5,7 +5,7 @@ import { daysBetween } from './dates';
 import { getPack } from './packs/registry';
 import type { Pack } from './packs/types';
 import { annualEntitlement, totalEntitlement, daysPerWeek } from './strategies/entitlement';
-import { plSeniorityYears } from './strategies/seniority';
+import { plSeniorityYears, plThresholdCrossingDate } from './strategies/seniority';
 import { buildLedger } from './ledger';
 import { resolvePackId } from './jurisdiction';
 
@@ -125,13 +125,16 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
     const d = daysPerWeek(e);
     const bonus = policy.tenureBonusPerYears > 0 ? Math.floor(tenure / policy.tenureBonusPerYears) : 0;
     const globalDays = r1((policy.daysPerYear + bonus) * (policy.proRataPartTime ? d / 5 : 1));
-    const local = localDaysOff(e, pack);
+    // A Polish seniority step reached during the year raises that year's entitlement (art. 158 top-up).
+    const pp = pack.buckets[0].entitlement;
+    const crossesInYear = pp.strategy === 'pl-seniority' && !!plThresholdCrossingDate(e, YEAR, pp.params.thresholdYears, pp.params.educationYears);
+    const local = crossesInYear && e.pl ? localDaysOff({ ...e, pl: { ...e.pl, priorServiceYears: e.pl.priorServiceYears + 100 } }, pack) : localDaysOff(e, pack);
     aboveMinimum += Math.max(0, globalDays - local);
 
     // Entitlement & seniority
     const entRule = annual[0].entitlement.rule;
     const plSen = pack.buckets[0].entitlement.strategy === 'pl-seniority' ? plSeniorityYears(e, `${YEAR}-01-01` > e.hireDate ? `${YEAR}-01-01` : e.hireDate, pack.buckets[0].entitlement.params.educationYears) : null;
-    const plOver = plSen && plSen.years >= pack.buckets[0].entitlement.params.thresholdYears;
+    const plOver = (plSen && plSen.years >= pack.buckets[0].entitlement.params.thresholdYears) || crossesInYear;
     if (globalDays < local - 0.05) {
       if (plOver) {
         push({ dimension: 'entitlement', global: `${globalDays} days`, local: `${local} days`, verdict: 'ok', delta: 0 });

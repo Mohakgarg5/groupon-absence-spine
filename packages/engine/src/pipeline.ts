@@ -160,9 +160,11 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   const bRules = [...new Map(res.preview.map((x) => [x.rule.ruleId, x.rule])).values()];
   if (newShort.length) {
     // Report the real total: what is still missing once every grant up to the end of the last affected year has arrived.
-    const finalShort = Object.values(future.balances).filter((b) => b.available < 0 && !b.unlimited);
-    const msg = finalShort.length
-      ? finalShort.map((b) => `${fmt(-b.available)} ${b.unit} short in ${b.label}`).join('; ') + ` (this request needs ${fmt(total)} ${unit})`
+    const baseFuture = buildLedger(e, { ...inputs, requests: others }, asOf, { today });
+    const added = Object.entries(future.balances).filter(([, b]) => !b.unlimited)
+      .map(([id, b]) => ({ b, gap: Math.min(0, b.available) - Math.min(0, baseFuture.balances[id]?.available ?? 0) })).filter((x) => x.gap < 0);
+    const msg = added.length
+      ? added.map(({ b, gap }) => `${fmt(-gap)} ${b.unit} short in ${b.label}`).join('; ') + ` (this request needs ${fmt(total)} ${unit})`
       : `${newShort[0].message}; later accruals arrive too late to cover it`;
     return fail('balance', 'INSUFFICIENT_BALANCE', `Not enough leave: ${msg}.`, kindBuckets(years[0]).map((b) => b.entitlement.rule));
   }

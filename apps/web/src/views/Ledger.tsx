@@ -77,7 +77,7 @@ export function LedgerView() {
                   {hasNotice && (
                     <div className="panel">
                       <h2 className="h3">Written warnings before leave lapses</h2>
-                      <p className="small muted" style={{ marginTop: 0 }}>German leave only lapses on 31 March if the employer warned the employee in writing (CJEU C-684/16). Toggle a warning and watch the ledger replay.</p>
+                      <p className="small muted" style={{ marginTop: 0 }}>{pack.country === 'DE' ? 'German' : 'UK'} statutory leave only lapses if the employer gave the employee the chance to take it and warned them in writing. A late warning restarts the clock. Toggle a warning and watch the ledger replay.</p>
                       {[2025, 2026].map((y) => {
                         const n = state.inputs.notices.find((x) => x.employeeId === e.id && x.leaveYear === y);
                         return (

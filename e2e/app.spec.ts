@@ -224,3 +224,12 @@ test('tour step 3 can approve and report the sickness for the reviewer', async (
   await expect(page.getByText(/Certified sickness 2026-12-29 → 2026-12-30 during leave: 2 days/)).toBeVisible();
   await expect(page.getByText('20 to 22 days')).toBeVisible();
 });
+
+test('opening a shared link lands on that page without a stray history entry', async ({ page }) => {
+  await page.goto('/#/ledger/de-sophie');
+  await expect(page.getByRole('heading', { name: 'Ledger' })).toBeVisible();
+  await expect(page.locator('.person[aria-pressed="true"]')).toContainText('Sophie Krüger');
+  await nav(page, 'Rule packs');
+  await page.goBack();
+  await expect(page).toHaveURL(/#\/ledger\/de-sophie$/);
+});

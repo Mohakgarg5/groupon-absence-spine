@@ -103,7 +103,7 @@ export function annualUpdateImpact(packId: string, fromYear: number, toYear: num
   if (b.owner.signOff.status !== 'signed')
     imp.tasks.push({ date: `${toYear}-01-01`, title: `Legal sign-off pending: ${b.owner.role}`, rule: { packId: b.id, packVersion: b.version, ruleId: 'pack-signoff', citation: 'Rule-pack governance: no pack version activates until its named owner signs it off', verification: 'assumption' } });
 
-  for (const r of inputs.requests.filter((x) => people.some((p) => p.id === x.employeeId) && x.status !== 'rejected' && yearOf(x.to) >= toYear && yearOf(x.from) <= toYear)) {
+  for (const r of inputs.requests.filter((x) => people.some((p) => p.id === x.employeeId) && (x.status === 'approved' || x.status === 'pending') && yearOf(x.to) >= toYear && yearOf(x.from) <= toYear)) {
     const e = people.find((p) => p.id === r.employeeId)!;
     const from = r.from < `${toYear}-01-01` ? `${toYear}-01-01` : r.from;
     const to = r.to > `${toYear}-12-31` ? `${toYear}-12-31` : r.to;

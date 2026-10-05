@@ -24,14 +24,25 @@ type Action =
 const KEY = 'spine-state-v1';
 const fresh = (): State => ({ view: 'overview', employeeId: 'de-lena', inputs: structuredClone(scenario.inputs), overrides: [], rev: 0, tour: null });
 
+const VIEW_IDS: View[] = ['overview', 'desk', 'ledger', 'queue', 'unify', 'packs', 'update', 'docs'];
+/** The page and person in the URL (#/ledger/de-sophie), so the very first render is already right. */
+function fromHash(): Partial<State> {
+  if (typeof window === 'undefined') return {};
+  const [, v, who] = window.location.hash.split('/');
+  const out: Partial<State> = {};
+  if (v && (VIEW_IDS as string[]).includes(v)) out.view = v as View;
+  if (who && employees.some((e) => e.id === who)) out.employeeId = who;
+  return out;
+}
+
 function load(): State {
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return fresh();
+    if (!raw) return { ...fresh(), ...fromHash() };
     const s = JSON.parse(raw);
     if (!s?.inputs?.requests) return fresh();
-    return { ...fresh(), ...s, view: 'overview', deskPreset: undefined, focus: undefined, tour: null };
-  } catch { return fresh(); }
+    return { ...fresh(), ...s, view: 'overview', deskPreset: undefined, focus: undefined, tour: null, ...fromHash() };
+  } catch { return { ...fresh(), ...fromHash() }; }
 }
 
 function syncOverrides(list: Override[]) {
