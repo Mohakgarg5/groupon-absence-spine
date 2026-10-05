@@ -26,19 +26,34 @@ function RuleRow({ label, rule, children }: { label: string; rule: RuleRef; chil
   );
 }
 
-type Edit = { path: (string | number)[]; label: string; kind: 'number' | 'bool' | 'select' | 'nullableNumber' | 'text'; options?: string[] };
+type Edit = { path: (string | number)[]; label: string; kind: 'number' | 'bool' | 'select' | 'nullableNumber' | 'text'; options?: string[]; help?: string };
+
+const OPTION_LABEL: Record<string, string> = {
+  'restore-if-certified': 'Give days back with a medical certificate', 'restore-on-request': 'Give days back if the employee asks',
+  restore: 'Always give days back (postpone)', 'convert-to-sick-bank': 'Move hours to the sick-leave bank',
+  remaining: 'Pay out what is left', none: 'No payout',
+  nothing: 'Nothing extra', 'extra-leave': 'Extra day of leave', 'designate-day-off-task': 'Employer designates a replacement day',
+  'hours-worked': 'Accrue per hours worked', 'unlimited-with-floor': 'Unlimited PTO (40-hour floor on leaving)',
+};
+const PARAM_LABEL: Record<string, string> = {
+  werktage: 'statutory days on a 6-day week (Werktage)', weeks: 'weeks of the employee\'s own pattern', totalCapDays: 'total cap (days)',
+  days: 'calendar days', under: 'days below the seniority step', over: 'days at or above the step', thresholdYears: 'seniority step (years)',
+  per: 'hours worked per hour accrued', capPerYear: 'hours accrued per year (cap)',
+};
 
 function editsFor(p: Pack): Edit[] {
   const out: Edit[] = [];
   p.buckets.forEach((b: Bucket, i) => {
-    const pre = p.buckets.length > 1 ? `${b.id}: ` : '';
-    for (const [k, v] of Object.entries(b.entitlement.params)) if (typeof v === 'number') out.push({ path: ['buckets', i, 'entitlement', 'params', k], label: `${pre}entitlement ${k}`, kind: 'number' });
+    const pre = p.buckets.length > 1 ? `${b.label.split('(')[0].replace(/ —.*/, '').trim()}: ` : '';
+    for (const [k, v] of Object.entries(b.entitlement.params)) if (typeof v === 'number') out.push({ path: ['buckets', i, 'entitlement', 'params', k], label: `${pre}${PARAM_LABEL[k] ?? k}`, kind: 'number' });
     if (['hours-worked', 'unlimited-with-floor'].includes(b.accrual.strategy) && b.requestKinds.includes('annual'))
       out.push({ path: ['buckets', i, 'accrual', 'strategy'], label: `${pre}accrual method`, kind: 'select', options: ['hours-worked', 'unlimited-with-floor'] });
-    out.push({ path: ['buckets', i, 'usableFromDays'], label: `${pre}usable from day`, kind: 'number' });
+    // (labels for options come from OPTION_LABEL)
+    out.push({ path: ['buckets', i, 'usableFromDays'], label: `${pre}usable from day (after starting)`, kind: 'number', help: b.accrual.strategy === 'de-waiting-period' ? 'The 6-month waiting period is applied by the accrual rule (BUrlG §4), so this stays 0.' : undefined });
     out.push({ path: ['buckets', i, 'carryOver', 'max'], label: `${pre}carry-over limit (blank = no limit)`, kind: 'nullableNumber' });
     out.push({ path: ['buckets', i, 'carryOver', 'expiresMonthDay'], label: `${pre}carried leave expires (MM-DD)`, kind: 'text' });
     out.push({ path: ['buckets', i, 'carryOver', 'conditionalOnNotice'], label: `${pre}lapse needs a written warning`, kind: 'bool' });
+    out.push({ path: ['buckets', i, 'carryOver', 'grantByMonthDay'], label: `${pre}employer must grant carried leave by (MM-DD)`, kind: 'text' });
     out.push({ path: ['buckets', i, 'sickDuringLeave', 'mode'], label: `${pre}sick during leave`, kind: 'select', options: ['restore-if-certified', 'restore-on-request', 'restore', 'convert-to-sick-bank'] });
     out.push({ path: ['buckets', i, 'payoutOnTermination', 'mode'], label: `${pre}payout on leaving`, kind: 'select', options: ['remaining', 'none'] });
   });
@@ -163,13 +178,20 @@ export function Packs() {
                     {ed.kind === 'bool' ? (
                       <select value={String(v)} onChange={(x) => change(ed.path, x.target.value === 'true')}><option value="true">yes</option><option value="false">no</option></select>
                     ) : ed.kind === 'select' ? (
-                      <select value={String(v)} onChange={(x) => change(ed.path, x.target.value)}>{ed.options!.map((o) => <option key={o}>{o}</option>)}</select>
+                      <select value={String(v)} onChange={(x) => change(ed.path, x.target.value)}>{ed.options!.map((o) => <option key={o} value={o}>{OPTION_LABEL[o] ?? o}</option>)}</select>
                     ) : ed.kind === 'text' ? (
-                      <DraftText key={`${id}-${year}-${key}-${String(v)}`} value={(v as string | null) ?? ''} onCommit={(t) => change(ed.path, t || null)} />
+                      <DraftText key={`${id}-${year}-${key}-${String(v)}-${state.rev}`} value={(v as string | null) ?? ''} onCommit={(t) => { if (t && !/^\d{2}-\d{2}$/.test(t)) { setInvalid(`${ed.label}: use MM-DD, e.g. 03-31`); return; } change(ed.path, t || null); }} />
                     ) : (
                       <input type="number" step="any" min={0} value={v ?? ''} placeholder={ed.kind === 'nullableNumber' ? 'no limit' : ''}
-                        onChange={(x) => { const t = x.target.value; if (t === '' && ed.kind === 'nullableNumber') change(ed.path, null); else if (t !== '' && Number(t) >= 0) change(ed.path, Number(t)); }} />
+                        onChange={(x) => {
+                          const t = x.target.value;
+                          if (t === '' && ed.kind === 'nullableNumber') change(ed.path, null);
+                          else if (t === '') setInvalid(`${ed.label}: enter a number`);
+                          else if (!(Number(t) >= 0)) setInvalid(`${ed.label}: must be 0 or more`);
+                          else change(ed.path, Number(t));
+                        }} />
                     )}
+                    {ed.help && <span className="muted" style={{ fontWeight: 400 }}>{ed.help}</span>}
                   </label>
                 );
               })}
@@ -179,7 +201,7 @@ export function Packs() {
               <div className="row" style={{ marginTop: '0.8rem' }}>
                 <span className="chip v-review">Draft correction, sign-off reset to pending</span>
                 <span className="spacer" />
-                <button className="btn btn-quiet small" onClick={() => dispatch({ type: 'override', id, year, pack: null })}>Discard correction</button>
+                <button className="btn btn-quiet small" onClick={() => { setInvalid(null); dispatch({ type: 'override', id, year, pack: null }); }}>Discard correction</button>
               </div>
             )}
           </div>

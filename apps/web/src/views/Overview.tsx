@@ -28,6 +28,13 @@ export function Overview() {
         </div>
       </section>
 
+      <dl className="glossary" aria-label="Four terms used throughout">
+        <div><dt>Spine</dt><dd>The nine steps every request takes, identical in every entity.</dd></div>
+        <div><dt>Rule pack</dt><dd>One entity's leave law as data, each rule cited, tagged by how far it is verified, and owned by counsel.</dd></div>
+        <div><dt>Ledger</dt><dd>The event history every balance is replayed from. Nothing is typed in.</dd></div>
+        <div><dt>Lapse</dt><dd>Unused leave expiring. In Germany and the UK it only lapses after a written warning; in Poland it never lapses.</dd></div>
+      </dl>
+
       <section className="section panel" aria-labelledby="spine-h">
         <h2 className="h3" id="spine-h">Every request takes the same nine steps</h2>
         <p className="muted small" style={{ margin: 0 }}>Filled stations read the entity's rule pack. Hollow stations are identical everywhere.</p>
@@ -43,13 +50,14 @@ export function Overview() {
             const rules = walkRules(p);
             const verified = rules.filter((r) => r.verification === 'public-verified').length;
             const assumed = rules.filter((r) => r.verification === 'assumption').length;
+            const unchecked = rules.length - verified - assumed;
             return (
               <button key={p.id} className="pack-cart" onClick={() => dispatch({ type: 'go', view: 'packs', employeeId: people.find((e) => e.packId === p.id)!.id })}>
                 <span className="chip ent">{p.id}</span>
                 <strong>{p.entity.split('(')[0].trim()}</strong>
                 <span className="muted">{p.region}</span><br />
                 <span className="muted">v{p.version}, sign-off {p.owner.signOff.status}</span><br />
-                <span className="muted">{rules.length} rules: {verified} checked, {assumed} assumed</span>
+                <span className="muted">{rules.length} rules: {verified} checked{unchecked ? `, ${unchecked} not yet checked` : ''}, {assumed} assumed</span>
               </button>
             );
           })}
@@ -84,7 +92,8 @@ export function Overview() {
           Applying one sensible-looking global policy to our 30 sample people breaks local law <em>{stress.summary.breaches} times</em>, affecting {stress.summary.employeesAffected} of them, and overpays part-timers by {stress.summary.overspendDays} days a year.
         </p>
         <div className="row">
-          <button className="btn" onClick={() => dispatch({ type: 'go', view: 'unify' })}>Open the force-unify test</button>
+          <button className="btn" onClick={() => dispatch({ type: 'go', view: 'unify' })}>Try to write one global policy</button>
+          <button className="btn btn-quiet" onClick={() => dispatch({ type: 'go', view: 'queue' })}>See what's left for HR</button>
           <span className="muted small">Policy tested: {stress.policy.description!.join('; ')}.</span>
         </div>
       </section>

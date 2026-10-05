@@ -199,8 +199,8 @@ export function runStressTest(employees: Employee[], inputs: Inputs, policy: Glo
     const remedies = led.events.filter((x) => x.rule.ruleId === 'ie-holiday-remedy').length;
     const satTasks = led.tasks.filter((t) => t.rule.ruleId === 'pl-saturday').length;
     const extra = policy.holidayOnDayOff === 'extra-day';
-    if (remedies) push({ dimension: 'holidays', global: extra ? 'A day in lieu for each' : 'Holidays on non-working days ignored', local: `${remedies} public holidays fell on non-working days → ${remedies} remedies owed`, verdict: extra ? 'ok' : 'breach', rule: pack.holidayPolicy.rule });
-    else if (satTasks) push({ dimension: 'holidays', global: extra ? 'A day in lieu for each' : 'Saturday holidays ignored', local: `${satTasks} Saturday holiday(s) → replacement day off owed`, verdict: extra ? 'ok' : 'breach', rule: pack.holidayPolicy.rule });
+    if (remedies) push({ dimension: 'holidays', global: extra ? 'A day in lieu for each' : 'Holidays on non-working days ignored', local: `${remedies} public ${remedies === 1 ? 'holiday falls' : 'holidays fall'} on non-working days, so ${remedies} ${remedies === 1 ? 'remedy is' : 'remedies are'} owed`, verdict: extra ? 'ok' : 'breach', rule: pack.holidayPolicy.rule });
+    else if (satTasks) push({ dimension: 'holidays', global: extra ? 'A day in lieu for each' : 'Saturday holidays ignored', local: `${satTasks} Saturday ${satTasks === 1 ? 'holiday' : 'holidays'}, each owed a replacement day off`, verdict: extra ? 'ok' : 'breach', rule: pack.holidayPolicy.rule });
     else push({ dimension: 'holidays', global: 'Local calendar', local: pack.holidayPolicy.deductFromEntitlement ? 'Bank holidays count toward 5.6 weeks — global is more generous' : 'No extra holiday rule triggered', verdict: 'ok' });
   }
 

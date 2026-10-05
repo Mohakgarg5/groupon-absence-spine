@@ -175,14 +175,15 @@ export function submitRequest(e: Employee, draft: RequestDraft, inputs: Inputs, 
   stage('route', 'ok', `Sent to ${approverName ? `${approverName}, line manager` : 'HR operations (no manager on file)'}. The same approval flow in every entity.`);
 
   // 8. Post
-  stage('post', 'ok', `On approval, ${res.preview.filter((x) => x.type === 'DEBIT').length} ledger event(s) are posted, each stamped with pack version and citation.`);
+  const nDebit = res.preview.filter((x) => x.type === 'DEBIT').length;
+  stage('post', 'ok', `On approval, ${nDebit} ledger ${nDebit === 1 ? 'event is' : 'events are'} posted, each stamped with its pack version and citation.`);
 
   // 9. Export
   res.payroll = res.parts.map((part) => ({
     employeeId: e.id, entity: packs[part.leaveYear].entity, absenceCode: ABSENCE_CODE[request.kind], from: part.from, to: part.to,
     amount: part.amount, unit: part.unit, leaveYear: part.leaveYear, packVersion: packs[part.leaveYear].version,
   }));
-  stage('export', 'ok', `${res.payroll.length} payroll line(s) in the common export format.`);
+  stage('export', 'ok', `${res.payroll.length} payroll ${res.payroll.length === 1 ? 'line' : 'lines'} in the common export format.`);
   res.ok = true;
   return res;
 }

@@ -1,6 +1,8 @@
 // Minimal, safe markdown renderer for the repo's own docs: builds React elements, never injects HTML.
 import type { ReactNode } from 'react';
 
+let onDocLink: ((file: string) => void) | null = null;
+
 function inline(text: string, key = 0): ReactNode[] {
   const out: ReactNode[] = [];
   const re = /(\*\*([^*]+)\*\*|\*([^*]+)\*|`([^`]+)`|\[([^\]]+)\]\(([^)]+)\))/g;
@@ -14,7 +16,10 @@ function inline(text: string, key = 0): ReactNode[] {
     else if (m[5]) {
       const href = m[6];
       const safe = /^(https?:|#|\.\/|\.\.\/|[\w-]+\.md)/.test(href);
-      out.push(safe && /^https?:/.test(href) ? <a key={k} href={href} target="_blank" rel="noreferrer">{m[5]}</a> : <span key={k} className="muted">{m[5]}</span>);
+      const md = /^(\.\/)?([\w-]+\.md)$/.exec(href);
+      out.push(safe && /^https?:/.test(href) ? <a key={k} href={href} target="_blank" rel="noreferrer">{m[5]}</a>
+        : md && onDocLink ? <a key={k} href={`#/docs`} onClick={(ev) => { ev.preventDefault(); onDocLink?.(md[2]); }}>{m[5]}</a>
+        : <span key={k} className="muted">{m[5]}</span>);
     }
     last = m.index + m[0].length;
   }
@@ -22,7 +27,8 @@ function inline(text: string, key = 0): ReactNode[] {
   return out;
 }
 
-export function Markdown({ source }: { source: string }) {
+export function Markdown({ source, onLink }: { source: string; onLink?: (file: string) => void }) {
+  onDocLink = onLink ?? null;
   const lines = source.replace(/\r/g, '').split('\n');
   const blocks: ReactNode[] = [];
   let i = 0, k = 0;

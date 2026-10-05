@@ -4,6 +4,7 @@ import { useApp, personById, TODAY } from '../state';
 import { Amount, Citation, Ent, fmt, fmtDate } from '../components/bits';
 import { PeoplePicker } from './Desk';
 
+const ISSUE_LABEL: Record<string, string> = { NEGATIVE_BALANCE: 'Overdrawn', LEGACY_CONFLICT: 'Reconcile', NEGATIVE_AT_TERMINATION: 'Overdrawn at leaving', CALENDAR_NOT_LOADED: 'No calendar', KIND_NOT_ALLOWED: 'Leave type' };
 const TYPE_LABEL: Record<string, string> = {
   OPENING: 'Migrated', GRANT: 'Granted', ACCRUE: 'Accrued', DEBIT: 'Taken', RESTORE: 'Restored', CARRY_OVER: 'Carried over',
   EXPIRE: 'Lapsed', EXPIRY_BLOCKED: 'Lapse blocked', PAYOUT: 'Paid out', ADJUST: 'Adjusted',
@@ -12,7 +13,7 @@ const TYPE_LABEL: Record<string, string> = {
 export function LedgerView() {
   const { state, dispatch } = useApp();
   const e = personById(state.employeeId);
-  const [asOf, setAsOf] = useState('2027-12-31');
+  const [asOf, setAsOf] = useState('2026-12-31');
   const [open, setOpen] = useState<string | null>(null);
   const [bucket, setBucket] = useState<string>('all');
 
@@ -39,10 +40,11 @@ export function LedgerView() {
               <span className="spacer" />
               <label className="field" style={{ gridAutoFlow: 'column', alignItems: 'center', gap: '0.5rem' }}>
                 Balance as of
-                <input type="date" value={asOf} min="2026-01-01" max="2027-12-31" onChange={(x) => x.target.value && setAsOf(x.target.value)} />
+                <input type="date" value={asOf} min="2026-01-01" max="2027-12-31" onChange={(x) => { const v = x.target.value; if (v) setAsOf(v < '2026-01-01' ? '2026-01-01' : v > '2027-12-31' ? '2027-12-31' : v); }} />
               </label>
-              <button className="btn btn-quiet small" onClick={() => setAsOf(TODAY)}>Today</button>
-              <button className="btn btn-quiet small" onClick={() => setAsOf('2027-12-31')}>End of 2027</button>
+              <div className="seg" role="group" aria-label="Quick dates">
+                {[[TODAY, 'Today'], ['2026-12-31', 'End of 2026'], ['2027-12-31', 'End of 2027']].map(([d, l]) => <button key={d} aria-pressed={asOf === d} onClick={() => setAsOf(d)}>{l}</button>)}
+              </div>
             </div>
             {e.persona && <p className="persona" style={{ marginBottom: 0 }}>{e.persona}</p>}
           </div>
@@ -89,7 +91,7 @@ export function LedgerView() {
                     <div className="panel">
                       <h2 className="h3">Needs a person</h2>
                       <ul className="small" style={{ margin: 0, paddingLeft: '1.1rem' }}>
-                        {ledger.issues.map((i, k) => <li key={`i${k}`}><span className="chip v-breach">{i.code.replace(/_/g, ' ').toLowerCase()}</span> {i.message}</li>)}
+                        {ledger.issues.map((i, k) => <li key={`i${k}`}><span className="chip v-breach">{ISSUE_LABEL[i.code] ?? 'Check'}</span> {i.message}</li>)}
                         {ledger.tasks.map((t, k) => <li key={`t${k}`}>{fmtDate(t.date)}: {t.title}</li>)}
                       </ul>
                     </div>
@@ -104,7 +106,7 @@ export function LedgerView() {
                   <div key={y}>
                     <div className="tl-year">{y}</div>
                     <ul className="tl">
-                      {events.filter((x) => x.date.startsWith(String(y))).map((ev) => <Row key={ev.id} ev={ev} open={open === ev.id} onToggle={() => setOpen(open === ev.id ? null : ev.id)} showBucket={!!multi} />)}
+                      {events.filter((x) => x.date.startsWith(String(y))).map((ev) => <Row key={ev.id} ev={ev} open={open === ev.id} onToggle={() => setOpen(open === ev.id ? null : ev.id)} showBucket={!!multi} bucketLabel={ledger?.balances[ev.bucket]?.label.split('(')[0].trim()} />)}
                     </ul>
                   </div>
                 ))}
@@ -117,14 +119,14 @@ export function LedgerView() {
   );
 }
 
-function Row({ ev, open, onToggle, showBucket }: { ev: LedgerEvent; open: boolean; onToggle: () => void; showBucket: boolean }) {
+function Row({ ev, open, onToggle, showBucket, bucketLabel }: { ev: LedgerEvent; open: boolean; onToggle: () => void; showBucket: boolean; bucketLabel?: string }) {
   return (
     <li>
       <button className={`tl-row ${ev.projected ? 'projected' : ''}`} aria-expanded={open} onClick={onToggle}>
         <span className="tl-date">{fmtDate(ev.date)}</span>
         <span>
           <span className={`evt evt-${ev.type}`}>{TYPE_LABEL[ev.type]}</span>
-          {showBucket && <span className="muted small"> {ev.bucket}</span>}
+          {showBucket && <span className="muted small" style={{ display: 'block' }}>{bucketLabel}</span>}
           {ev.leaveYear !== Number(ev.date.slice(0, 4)) && <span className="muted small" style={{ display: 'block' }}>{ev.leaveYear} leave</span>}
         </span>
         <span className="tl-amt"><Amount n={ev.amount} unit={ev.unit} /></span>

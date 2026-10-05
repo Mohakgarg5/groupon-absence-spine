@@ -84,6 +84,14 @@ a { color: var(--spine-ink); text-underline-offset: 3px; }
 .nav { display: flex; gap: 0.1rem; flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: none; }
 .nav::-webkit-scrollbar { display: none; }
 @media (max-width: 1500px) { .topbar-date { display: none; } }
+@media (max-width: 1240px) {
+  .nav { order: 3; flex-basis: 100%; flex-wrap: wrap; overflow: visible; }
+  .brand-sub { display: none; }
+}
+.draft-banner { display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap; padding: 0.5rem clamp(1rem, 3vw, 2rem); background: var(--review-soft); color: var(--ink); font-size: var(--step--1); border-bottom: 1px solid var(--line); }
+.matrix th[scope='row'] { position: sticky; left: 0; background: var(--surface); z-index: 1; }
+:root[data-theme='dark'] .day.sel.hol, :root[data-theme='dark'] .day.sel.off { color: #0f1420; }
+@media (prefers-color-scheme: dark) { :root:not([data-theme='light']) .day.sel.hol, :root:not([data-theme='light']) .day.sel.off { color: #0f1420; } }
 @media (max-width: 720px) {
   .topbar { gap: 0.5rem 1rem; }
   .nav { order: 3; flex-basis: 100%; }
@@ -361,3 +369,12 @@ a { color: var(--spine-ink); text-underline-offset: 3px; }
 .main { padding-bottom: 14rem; }
 
 .tour.min { width: auto; padding: 0.5rem 0.75rem; }
+.day.sick { background: var(--breach-soft); }
+.day.sick .day-tag { color: var(--breach); }
+.person:focus-visible, .cell:focus-visible, .docnav button:focus-visible, .day:focus-visible, .tl-row:focus-visible { outline: 2px solid var(--spine); outline-offset: 2px; }
+.btn-primary:disabled { background: var(--line-2); border-color: var(--line-2); color: var(--ink-2); opacity: 1; }
+
+.glossary { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 230px), 1fr)); gap: 0.6rem 1.2rem; margin: 1.6rem 0 0; }
+.glossary div { border-left: 3px solid var(--spine); padding: 0.1rem 0 0.1rem 0.7rem; }
+.glossary dt { font: 650 var(--step-0)/1.2 var(--font-display); }
+.glossary dd { margin: 0.15rem 0 0; font-size: var(--step--1); color: var(--ink-2); }

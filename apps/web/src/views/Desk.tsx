@@ -1,8 +1,8 @@
-import { useEffect, useMemo, useRef, useState } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState } from 'react';
 import {
   approveRequest, buildLedger, expandDays, getPack, STAGES, submitRequest, resolvePackId,
   addDays, dow, endOfMonth, iso, yearOf,
-  type DayLine, type Employee, type PipelineResult, type RequestKind,
+  type DayLine, type Employee, type PipelineResult, type RequestKind, type LeaveRequest,
 } from '@spine/engine';
 import { useApp, people, personById, TODAY, ENTITY_ORDER } from '../state';
 import { Amount, Citation, Ent, fmt, fmtDate, Toast } from '../components/bits';
@@ -38,9 +38,9 @@ function monthDays(e: Employee, y: number, m: number): { lines: DayLine[] | null
   try { return { lines: expandDays(e, iso(y, m, 1), endOfMonth(iso(y, m, 1))) }; } catch (err) { return { lines: null, error: (err as Error).message.replace(/^[A-Z_]+: /, '') }; }
 }
 
-function Month({ e, y, m, from, to, booked, onPick }: {
+function Month({ e, y, m, from, to, booked, sick, onPick }: {
   e: Employee; y: number; m: number; from?: string; to?: string;
-  booked: Map<string, 'approved' | 'pending'>; onPick: (d: string) => void;
+  booked: Map<string, 'approved' | 'pending'>; sick: Set<string>; onPick: (d: string) => void;
 }) {
   const { lines, error } = useMemo(() => monthDays(e, y, m), [e.id, y, m, e]);
   const first = iso(y, m, 1);
@@ -64,11 +64,12 @@ function Month({ e, y, m, from, to, booked, onPick }: {
             line?.kind === 'holiday' || (line?.holidayName && line.kind === 'counted') ? 'hol' : '',
             line && line.kind !== 'counted' && line.kind !== 'holiday' ? 'off' : '',
             !line && [0, 6].includes(dow(date)) ? 'off' : '',
-            b ? `booked ${b}` : '', sel ? 'sel' : '', out ? 'out' : ''].join(' ');
-          const tag = line?.holidayName ?? (b === 'approved' ? 'booked' : b === 'pending' ? 'pending' : line?.kind === 'non-working' ? 'off' : '');
+            b ? `booked ${b}` : '', sick.has(date) ? 'sick' : '', sel ? 'sel' : '', out ? 'out' : ''].join(' ');
+          const tag = line?.holidayName ?? (sick.has(date) ? 'sick' : b === 'approved' && line?.kind === 'counted' ? 'booked' : b === 'pending' ? 'pending' : line?.kind === 'non-working' ? 'off' : '');
           return (
             <button key={date} className={cls} disabled={out} onClick={() => onPick(date)}
-              aria-label={`${fmtDate(date)}${line?.holidayName ? `, ${line.holidayName}` : ''}${line?.kind === 'non-working' ? ', not a working day' : ''}${b ? `, ${b} leave` : ''}`}
+              title={line?.holidayName}
+              aria-label={`${fmtDate(date)}${line?.holidayName ? `, ${line.holidayName}` : ''}${line?.kind === 'non-working' ? ', not a working day' : ''}${b ? `, ${b} leave` : ''}${sick.has(date) ? ', reported sick' : ''}`}
               aria-pressed={sel}>
               <span className="day-n">{i + 1}</span>
               <span className="day-tag" title={tag}>{tag}</span>
@@ -129,11 +130,20 @@ export function Desk() {
 
   const booked = useMemo(() => {
     const m = new Map<string, 'approved' | 'pending'>();
-    for (const r of state.inputs.requests.filter((x) => x.employeeId === e.id && x.status !== 'rejected'))
+    for (const r of state.inputs.requests.filter((x) => x.employeeId === e.id && (x.status === 'approved' || x.status === 'pending')))
       for (let d = r.from; d <= r.to; d = addDays(d, 1)) m.set(d, r.status === 'approved' ? 'approved' : 'pending');
     return m;
   }, [state.inputs.requests, e.id]);
 
+  const sickDays = useMemo(() => {
+    const set = new Set<string>();
+    for (const r of state.inputs.sickness.filter((x) => x.employeeId === e.id)) for (let d = r.from; d <= r.to; d = addDays(d, 1)) set.add(d);
+    return set;
+  }, [state.inputs.sickness, e.id]);
+  const [sickFor, setSickFor] = useState<string | null>(null);
+  const [confirmWithdraw, setConfirmWithdraw] = useState<string | null>(null);
+  const railRef = useRef<HTMLDivElement | null>(null);
+  const left = !!e.terminationDate && e.terminationDate < TODAY;
   const ledger = useMemo(() => (jurisdictionError ? null : buildLedger(e, state.inputs, TODAY, { today: TODAY })), [e.id, state.rev, jurisdictionError]);
   const myRequests = state.inputs.requests.filter((r) => r.employeeId === e.id).sort((a, b) => a.from.localeCompare(b.from));
 
@@ -144,7 +154,7 @@ export function Desk() {
 
   // Reset when the person changes.
   useEffect(() => {
-    clearRun(); setFrom(undefined); setTo(undefined); setKind('annual');
+    clearRun(); setFrom(undefined); setTo(undefined); setKind('annual'); setSickFor(null); setConfirmWithdraw(null);
     setCursor({ y: 2026, m: 10 });
   }, [e.id]);
 
@@ -171,7 +181,13 @@ export function Desk() {
     // New requests get a unique id; re-processing a pending one keeps its id so approval replaces it.
     const id = existingId ?? `req-${e.id}-${f}-${t}-${k}-${Date.now().toString(36)}`;
     const r = submitRequest(e, { id, employeeId: e.id, from: f, to: t, kind: k, submittedOn: TODAY }, state.inputs, TODAY);
-    setResult(r); setApprovedId(null);
+    setResult(r); setApprovedId(null); setSickFor(null);
+    // Bring the spine into view when it is off-screen (narrow layouts put it below the calendar).
+    window.setTimeout(() => {
+      const el = railRef.current;
+      if (el && (el.getBoundingClientRect().top > window.innerHeight || el.getBoundingClientRect().bottom < 0))
+        el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'start' });
+    }, 50);
     if (reduceMotion()) { setShown(r.stages.length); return; }
     setShown(0);
     let i = 0;
@@ -231,7 +247,7 @@ export function Desk() {
               )}
             </div>
             <div className="cal-wrap">
-              {months.map((mm) => <Month key={`${mm.y}-${mm.m}`} e={e} y={mm.y} m={mm.m} from={from} to={to} booked={booked} onPick={pick} />)}
+              {months.map((mm) => <Month key={`${mm.y}-${mm.m}`} e={e} y={mm.y} m={mm.m} from={from} to={to} booked={booked} sick={sickDays} onPick={pick} />)}
             </div>
             <div className="legend">
               <span><i style={{ background: 'var(--spine)' }} />Selected</span>
@@ -239,12 +255,13 @@ export function Desk() {
               <span><i style={{ background: 'var(--surface-2)' }} />Not a working day</span>
               <span><i style={{ background: 'var(--spine-soft)' }} />Booked</span>
               <span><i style={{ backgroundImage: 'var(--hatch)' }} />Pending</span>
+              <span><i style={{ background: 'var(--breach-soft)' }} />Reported sick</span>
             </div>
             <div className="row" style={{ marginTop: '1rem' }}>
-              <span className="small">{from ? <>Selected <strong>{fmtDate(from)}</strong>{to && to !== from && <> to <strong>{fmtDate(to)}</strong></>}</> : 'Click a start date, then an end date.'}</span>
+              <span className="small">{left ? <>{e.name.split(' ')[0]} left on {fmtDate(e.terminationDate!)}. New requests can't be booked; the payout is in the Ledger.</> : from ? <>Selected <strong>{fmtDate(from)}</strong>{to && to !== from && <> to <strong>{fmtDate(to)}</strong></>}</> : 'Click a start date, then an end date.'}</span>
               <span className="spacer" />
               {from && <button className="btn btn-quiet" onClick={() => { setFrom(undefined); setTo(undefined); clearRun(); }}>Clear</button>}
-              <button className="btn btn-primary" disabled={!from} onClick={() => run()}>Check request</button>
+              <button className="btn btn-primary" disabled={!from || left} onClick={() => run()}>Check request</button>
             </div>
           </div>
 
@@ -256,15 +273,24 @@ export function Desk() {
                   <thead><tr><th>Dates</th><th>Type</th><th>Status</th><th /></tr></thead>
                   <tbody>
                     {myRequests.map((r) => (
-                      <tr key={r.id}>
-                        <td>{fmtDate(r.from)}{r.to !== r.from && <> to {fmtDate(r.to)}</>}</td>
-                        <td>{KIND_LABEL[r.kind]}</td>
-                        <td><span className={`chip ${r.status === 'approved' ? 'v-ok' : r.status === 'pending' ? 'v-review' : 'v-breach'}`}>{r.status}</span></td>
-                        <td style={{ textAlign: 'right' }}>
-                          {r.status === 'pending' && <button className="btn btn-quiet small" onClick={() => { setFrom(r.from); setTo(r.to); setKind(r.kind); setCursor({ y: yearOf(r.from), m: Number(r.from.slice(5, 7)) }); run(r.from, r.to, r.kind, r.id); }}>Process</button>}
-                          {r.status === 'approved' && r.submittedOn === TODAY && <button className="btn btn-quiet small" onClick={() => { dispatch({ type: 'removeRequest', id: r.id }); clearRun(); flash('Request withdrawn; ledger replayed'); }}>Withdraw</button>}
-                        </td>
-                      </tr>
+                      <Fragment key={r.id}>
+                        <tr style={r.status === 'withdrawn' ? { opacity: 0.55 } : undefined}>
+                          <td>{fmtDate(r.from)}{r.to !== r.from && <> to {fmtDate(r.to)}</>}</td>
+                          <td>{KIND_LABEL[r.kind]}</td>
+                          <td><span className={`chip ${r.status === 'approved' ? 'v-ok' : r.status === 'pending' ? 'v-review' : r.status === 'withdrawn' ? '' : 'v-breach'}`}>{r.status}</span></td>
+                          <td style={{ textAlign: 'right', whiteSpace: 'nowrap' }}>
+                            {r.status === 'pending' && <button className="btn btn-quiet small" onClick={() => { setFrom(r.from); setTo(r.to); setKind(r.kind); setCursor({ y: yearOf(r.from), m: Number(r.from.slice(5, 7)) }); run(r.from, r.to, r.kind, r.id); }}>Process</button>}
+                            {r.status === 'approved' && r.kind !== 'sick-bank' && <button className="btn btn-quiet small" onClick={() => setSickFor(sickFor === r.id ? null : r.id)}>{sickFor === r.id ? 'Close' : 'Report sickness'}</button>}
+                            {r.status === 'approved' && (confirmWithdraw === r.id
+                              ? <><button className="btn btn-quiet small" onClick={() => { dispatch({ type: 'withdrawRequest', id: r.id }); setConfirmWithdraw(null); if (result?.request.id === r.id) clearRun(); flash('Request withdrawn; kept in the audit trail'); }}>Confirm withdraw</button><button className="btn btn-quiet small" onClick={() => setConfirmWithdraw(null)}>Keep</button></>
+                              : <button className="btn btn-quiet small" onClick={() => setConfirmWithdraw(r.id)}>Withdraw</button>)}
+                          </td>
+                        </tr>
+                        {state.inputs.sickness.filter((x) => x.employeeId === e.id && r.status === 'approved' && x.from <= r.to && x.to >= r.from).map((x) => (
+                          <tr key={x.id}><td colSpan={4} className="small muted" style={{ paddingLeft: '1.5rem' }}>Sick {fmtDate(x.from)}{x.to !== x.from && <> to {fmtDate(x.to)}</>}, {x.certified ? 'with certificate' : 'no certificate'}</td></tr>
+                        ))}
+                        {sickFor === r.id && <tr><td colSpan={4}><SicknessPanel request={r} e={e} onFlash={flash} /></td></tr>}
+                      </Fragment>
                     ))}
                   </tbody>
                 </table>
@@ -274,7 +300,7 @@ export function Desk() {
         </div>
 
         <aside className="stack">
-          <div className="panel">
+          <div className="panel" ref={railRef} style={{ scrollMarginTop: '5rem' }}>
             <h2 className="h3">The spine</h2>
             <StageRail result={result} shown={shown} />
           </div>
@@ -296,20 +322,84 @@ export function Desk() {
   );
 }
 
-function Outcome({ result, e, approvedId, onApprove, onFlash }: { result: PipelineResult; e: Employee; approvedId: string | null; onApprove: () => void; onFlash: (m: string) => void }) {
+const REFUSAL_TITLE: Record<string, string> = {
+  INVALID_RANGE: 'Check the dates', ZERO_DAYS: 'No working time in this range', OVERLAP: 'Already booked', NOT_EMPLOYED: 'Outside employment',
+  NOT_YET_USABLE: 'Not usable yet', INSUFFICIENT_BALANCE: 'Not enough leave', KIND_NOT_ALLOWED: 'Leave type not offered here',
+  ON_DEMAND_LIMIT: 'On-demand days used up', CALENDAR_NOT_LOADED: 'Holiday calendar not published yet', PACK_NOT_FOUND: 'No rule pack for that year',
+  NO_PACK_FOR_LOCATION: 'No rule pack for this work location', INVALID_PATTERN: 'Working pattern missing or invalid',
+};
+
+const SICK_HELP: Record<string, string> = {
+  'restore-if-certified': 'Days come back only with a medical certificate.',
+  'restore-on-request': 'Days come back when the employee asks to reschedule them.',
+  restore: 'Leave is postponed; the days come back automatically.',
+  'convert-to-sick-bank': 'Hours move from Paid Leave to the Paid Sick Leave bank, while it has hours.',
+};
+
+function defaultSickDates(r: LeaveRequest): [string, string] {
+  if (r.from <= '2026-12-29' && r.to >= '2026-12-30') return ['2026-12-29', '2026-12-30'];
+  return [r.from, r.from];
+}
+
+/** Report sickness during an approved leave, and show what local law does with it, live. */
+export function SicknessPanel({ request, e, onFlash }: { request: LeaveRequest; e: Employee; onFlash: (m: string) => void }) {
   const { state, dispatch } = useApp();
-  const [sickFrom, setSickFrom] = useState(result.request.from);
-  const [sickTo, setSickTo] = useState(result.request.from);
+  const [d0, d1] = defaultSickDates(request);
+  const [sickFrom, setSickFrom] = useState(d0);
+  const [sickTo, setSickTo] = useState(d1);
   const [certified, setCertified] = useState(true);
   const [asked, setAsked] = useState(true);
+  const mode = getPack(e.packId, Math.min(2027, yearOf(request.from))).buckets[0].sickDuringLeave.mode;
+  const ledger = useMemo(() => buildLedger(e, state.inputs, request.to, { today: TODAY }), [state.rev, request.id]);
+  const without = useMemo(() => buildLedger(e, { ...state.inputs, sickness: state.inputs.sickness.filter((x) => !(x.employeeId === e.id && x.from <= request.to && x.to >= request.from)) }, request.to, { today: TODAY }), [state.rev, request.id]);
+  const records = state.inputs.sickness.filter((x) => x.employeeId === e.id && x.from <= request.to && x.to >= request.from);
+  const events = ledger.events.filter((x) => x.requestId === request.id && (x.type === 'RESTORE' || (x.type === 'ADJUST' && x.amount === 0) || (x.type === 'DEBIT' && /sick/i.test(x.explanation))));
+  const main = Object.keys(ledger.balances)[0];
+  const changed = Object.keys(ledger.balances).filter((b) => Math.abs(ledger.balances[b].available - (without.balances[b]?.available ?? 0)) > 0.001);
+  return (
+    <div className="stack">
+      <div className="callout small">Now the edge case: report sickness during this leave and see what {getPack(e.packId, 2026).country === 'DE' ? 'German' : 'local'} law does. {SICK_HELP[mode]}</div>
+      <div className="row">
+        <label className="field">Sick from<input type="date" value={sickFrom} min={request.from} max={request.to} onChange={(x) => { setSickFrom(x.target.value); if (x.target.value > sickTo) setSickTo(x.target.value); }} /></label>
+        <label className="field">Sick until<input type="date" value={sickTo} min={sickFrom} max={request.to} onChange={(x) => setSickTo(x.target.value)} /></label>
+      </div>
+      <div className="row">
+        {(mode === 'restore-if-certified' || mode === 'convert-to-sick-bank') && <label className="check"><input type="checkbox" checked={certified} onChange={(x) => setCertified(x.target.checked)} />Medical certificate provided</label>}
+        {mode === 'restore-on-request' && <label className="check"><input type="checkbox" checked={asked} onChange={(x) => setAsked(x.target.checked)} />Employee asks to reschedule the days</label>}
+      </div>
+      <div className="row">
+        <button className="btn" disabled={!sickFrom || !sickTo || sickTo < sickFrom} onClick={() => {
+          dispatch({ type: 'addSickness', record: { id: `s-${e.id}-${sickFrom}`, employeeId: e.id, from: sickFrom, to: sickTo, certified, employeeAskedToReschedule: asked } });
+          onFlash(records.length ? 'Sickness report updated; ledger replayed' : 'Sickness recorded; ledger replayed');
+        }}>{records.length ? 'Update sickness report' : 'Report sickness'}</button>
+        {records.length > 0 && <button className="btn btn-quiet" onClick={() => { records.forEach((r) => dispatch({ type: 'removeSickness', id: r.id })); onFlash('Sickness report removed'); }}>Remove report</button>}
+      </div>
+      {events.map((ev) => (
+        <div key={ev.id} className="receipt-line reveal">
+          <span className="small">{ev.explanation}<Citation rule={ev.rule} compact /></span>
+          <Amount n={ev.amount} unit={ev.unit} />
+        </div>
+      ))}
+      {records.length > 0 && (
+        <div className="receipt-line reveal">
+          <span className="small">Balance on {fmtDate(request.to)}{changed.length ? '' : ' (unchanged)'}</span>
+          <span className="num">{changed.length ? <>{fmt(without.balances[changed[0]].available)} to <strong>{fmt(ledger.balances[changed[0]].available)}</strong></> : <strong>{fmt(ledger.balances[main].available)}</strong>} {ledger.balances[changed[0] ?? main].unit}</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function Outcome({ result, e, approvedId, onApprove, onFlash }: { result: PipelineResult; e: Employee; approvedId: string | null; onApprove: () => void; onFlash: (m: string) => void }) {
+  const { state } = useApp();
   const unit = result.parts[0]?.unit ?? 'days';
-  const live = useMemo(() => (approvedId ? buildLedger(e, state.inputs, result.request.to, { today: TODAY }) : null), [approvedId, state.rev]);
-  const sickEvents = live?.events.filter((x) => x.requestId === approvedId && (x.type === 'RESTORE' || (x.type === 'ADJUST' && x.amount === 0) || (x.type === 'DEBIT' && /sick/i.test(x.explanation)))) ?? [];
+  const approver = e.managerId ? personById(e.managerId)?.name : null;
+  const approved = approvedId ? state.inputs.requests.find((r) => r.id === approvedId) : undefined;
 
   if (!result.ok) {
     return (
       <div className="receipt reveal">
-        <div className="receipt-head"><strong>Request refused</strong><div className="muted small">{result.error?.code.replace(/_/g, ' ').toLowerCase()}</div></div>
+        <div className="receipt-head"><strong>Refused: {REFUSAL_TITLE[result.error!.code] ?? 'request refused'}</strong></div>
         <div className="receipt-body"><p className="small" style={{ margin: 0 }}>{result.error?.message}</p></div>
       </div>
     );
@@ -317,50 +407,33 @@ function Outcome({ result, e, approvedId, onApprove, onFlash }: { result: Pipeli
   return (
     <div className="receipt reveal">
       <div className="receipt-head">
-        <div className="row"><strong>{approvedId ? 'Approved' : 'Ready for approval'}</strong><span className="spacer" /><span className="muted small">to {result.approverId}</span></div>
+        <div className="row"><strong>{approvedId ? 'Approved and posted' : 'Ready for approval'}</strong><span className="spacer" /><span className="muted small">{approver ? `${approver}, line manager` : 'HR operations'}</span></div>
         <div className="muted small">{fmtDate(result.request.from)} to {fmtDate(result.request.to)}</div>
       </div>
       <div className="receipt-body">
         {result.parts.map((p) => (
-          <div className="receipt-line" key={p.leaveYear}><span>Charged to leave year {p.leaveYear}</span><Amount n={-p.amount} unit={p.unit} /></div>
+          <div className="receipt-line" key={p.leaveYear}><span>Charged to {p.leaveYear} leave</span><Amount n={-p.amount} unit={p.unit} /></div>
         ))}
         {Object.keys(result.balanceAfter).filter((b) => result.balanceBefore[b] !== result.balanceAfter[b]).map((b) => (
           <div className="receipt-line" key={b}>
-            <span>{result.bucketLabels[b] ?? b}, balance at end of leave</span>
+            <span>{result.bucketLabels[b] ?? b}<span className="muted small" style={{ display: 'block' }}>Balance on {fmtDate(result.request.to)}, including any grant due by then, without and with this leave</span></span>
             <span className="num">{result.balanceAfter[b] < 0 && result.balanceBefore[b] <= 0 ? <>unlimited, <strong>{fmt(-result.balanceAfter[b])}</strong> {unit} used</> : <>{fmt(result.balanceBefore[b])} to <strong>{fmt(result.balanceAfter[b])}</strong> {unit}</>}</span>
           </div>
         ))}
         <details style={{ marginTop: '0.6rem' }}>
-          <summary className="small">Payroll export ({result.payroll.length} line{result.payroll.length > 1 ? 's' : ''})</summary>
-          <div className="payroll" style={{ marginTop: '0.4rem' }}>{result.payroll.map((l) => JSON.stringify(l)).join('\n')}</div>
+          <summary className="small">Payroll export ({result.payroll.length} {result.payroll.length === 1 ? 'line' : 'lines'}, same format in every entity)</summary>
+          <div className="tbl-wrap" style={{ marginTop: '0.4rem' }}>
+            <table className="tbl">
+              <thead><tr><th>Entity</th><th>Code</th><th>From</th><th>To</th><th className="n">Amount</th><th>Leave year</th><th>Pack</th></tr></thead>
+              <tbody>{result.payroll.map((l, i) => <tr key={i}><td>{l.entity.split('(')[0]}</td><td>{l.absenceCode}</td><td>{fmtDate(l.from)}</td><td>{fmtDate(l.to)}</td><td className="n">{fmt(l.amount)} {l.unit === 'hours' ? 'h' : 'd'}</td><td>{l.leaveYear}</td><td>v{l.packVersion}</td></tr>)}</tbody>
+            </table>
+          </div>
         </details>
         {!approvedId ? (
           <div className="row" style={{ marginTop: '0.8rem' }}>
-            <button className="btn btn-primary" onClick={onApprove}>Approve as manager</button>
+            <button className="btn btn-primary" onClick={onApprove}>{approver ? 'Approve as line manager' : 'Approve as HR operations'}</button>
           </div>
-        ) : (
-          <div className="stack" style={{ marginTop: '0.9rem' }}>
-            <div className="callout small">Now test the edge case: report sickness during this leave and watch what local law does.</div>
-            <div className="row">
-              <label className="field">From<input type="date" value={sickFrom} min={result.request.from} max={result.request.to} onChange={(x) => setSickFrom(x.target.value)} /></label>
-              <label className="field">To<input type="date" value={sickTo} min={sickFrom} max={result.request.to} onChange={(x) => setSickTo(x.target.value)} /></label>
-            </div>
-            <div className="row">
-              <label className="check"><input type="checkbox" checked={certified} onChange={(x) => setCertified(x.target.checked)} />Medical certificate</label>
-              <label className="check"><input type="checkbox" checked={asked} onChange={(x) => setAsked(x.target.checked)} />Employee asks to reschedule</label>
-            </div>
-            <button className="btn" disabled={!sickFrom || !sickTo || sickTo < sickFrom} onClick={() => {
-              dispatch({ type: 'addSickness', record: { id: `s-${Date.now()}`, employeeId: e.id, from: sickFrom, to: sickTo, certified, employeeAskedToReschedule: asked } });
-              onFlash('Sickness recorded; ledger replayed');
-            }}>Report sickness</button>
-            {sickEvents.map((ev) => (
-              <div key={ev.id} className="receipt-line reveal" style={{ gridTemplateColumns: '1fr auto' }}>
-                <span className="small">{ev.explanation}<Citation rule={ev.rule} compact /></span>
-                <Amount n={ev.amount} unit={ev.unit} />
-              </div>
-            ))}
-          </div>
-        )}
+        ) : approved && <div style={{ marginTop: '0.9rem' }}><SicknessPanel request={approved} e={e} onFlash={onFlash} /></div>}
       </div>
     </div>
   );

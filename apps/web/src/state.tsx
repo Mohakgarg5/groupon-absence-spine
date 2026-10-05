@@ -13,6 +13,7 @@ type Action =
   | { type: 'select'; employeeId: string }
   | { type: 'addRequest'; request: LeaveRequest }
   | { type: 'removeRequest'; id: string }
+  | { type: 'withdrawRequest'; id: string }
   | { type: 'addSickness'; record: SicknessRecord }
   | { type: 'removeSickness'; id: string }
   | { type: 'toggleNotice'; employeeId: string; leaveYear: number; sentOn: string }
@@ -47,7 +48,15 @@ function reducer(s: State, a: Action): State {
     case 'consumePreset': return { ...s, deskPreset: undefined };
     case 'addRequest': return bump({ inputs: { ...s.inputs, requests: [...s.inputs.requests.filter((r) => r.id !== a.request.id), a.request] } });
     case 'removeRequest': return bump({ inputs: { ...s.inputs, requests: s.inputs.requests.filter((r) => r.id !== a.id), sickness: s.inputs.sickness } });
-    case 'addSickness': return bump({ inputs: { ...s.inputs, sickness: [...s.inputs.sickness, a.record] } });
+    // A new report for overlapping dates replaces the earlier one (e.g. the certificate was withdrawn).
+    case 'addSickness': return bump({ inputs: { ...s.inputs, sickness: [...s.inputs.sickness.filter((x) => !(x.employeeId === a.record.employeeId && x.from <= a.record.to && x.to >= a.record.from)), a.record] } });
+    case 'withdrawRequest': {
+      const r = s.inputs.requests.find((x) => x.id === a.id);
+      if (!r) return s;
+      return bump({ inputs: { ...s.inputs,
+        requests: s.inputs.requests.map((x) => (x.id === a.id ? { ...x, status: 'withdrawn' as const } : x)),
+        sickness: s.inputs.sickness.filter((x) => !(x.employeeId === r.employeeId && x.from <= r.to && x.to >= r.from)) } });
+    }
     case 'removeSickness': return bump({ inputs: { ...s.inputs, sickness: s.inputs.sickness.filter((x) => x.id !== a.id) } });
     case 'toggleNotice': {
       const has = s.inputs.notices.some((n) => n.employeeId === a.employeeId && n.leaveYear === a.leaveYear);

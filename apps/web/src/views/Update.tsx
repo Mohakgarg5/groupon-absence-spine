@@ -11,9 +11,11 @@ export function Update() {
   const all = useMemo(() => ENTITY_ORDER.map((e) => annualUpdateImpact(e, 2026, 2027, people, state.inputs)), [state.rev]);
   const next = getPack(id, 2027);
   const steps = [
-    { label: '2027 holiday calendar loaded from the official source', done: next.holidays.loaded },
+    next.holidays.source.verification === 'assumption'
+      ? { label: '2027 holiday calendar loaded (a placeholder: no official source for company holidays)', done: next.holidays.loaded ? 'placeholder' : false }
+      : { label: '2027 holiday calendar loaded from the official source', done: next.holidays.loaded },
     { label: 'Rule changes reviewed against new legislation', done: imp.diff.ruleChanges.length === 0 ? 'none found' : false },
-    { label: `Seniority thresholds crossed in 2027: ${imp.seniorityCrossings.length}, each topped up automatically`, done: 'listed' },
+    ...(imp.seniorityCrossings.length ? [{ label: `${imp.seniorityCrossings.length} seniority ${imp.seniorityCrossings.length === 1 ? 'step' : 'steps'} in 2027, each topped up automatically (art. 158)`, done: 'automatic' as const }] : []),
     { label: `Legal sign-off: ${next.owner.role}`, done: next.owner.signOff.status === 'signed' },
   ];
 
@@ -31,7 +33,7 @@ export function Update() {
             style={a.packId === id ? { borderColor: 'var(--spine)', borderTopColor: 'var(--spine)' } : undefined}>
             <span className="row"><Ent id={a.packId} /><span className={`chip ${a.diff.blocked ? 'v-breach' : 'v-review'}`}>{a.diff.blocked ? 'Blocked' : 'Awaiting sign-off'}</span></span>
             <span className="muted" style={{ display: 'block', marginTop: '0.4rem' }}>
-              {a.diff.moved.length} holidays moved{a.diff.added.length ? `, ${a.diff.added.length} new` : ''}{a.seniorityCrossings.length ? `, ${a.seniorityCrossings.length} seniority step` : ''}{a.affectedRequests.some((r) => r.status === 'blocked') ? ', a booked request is stuck' : ''}
+              {a.diff.moved.length} {a.diff.moved.length === 1 ? 'holiday moves' : 'holidays move'}, {a.diff.unchanged} unchanged{a.diff.added.length ? `, ${a.diff.added.length} new` : ''}{a.seniorityCrossings.length ? `, ${a.seniorityCrossings.length} seniority step` : ''}{a.affectedRequests.some((r) => r.status === 'blocked') ? ', a booked request is stuck' : ''}
             </span>
           </button>
         ))}
@@ -49,7 +51,7 @@ export function Update() {
             <ul style={{ listStyle: 'none', padding: 0, margin: 0 }}>
               {steps.map((s) => (
                 <li key={s.label} className="row" style={{ padding: '0.35rem 0' }}>
-                  <span className={`chip ${s.done ? 'v-ok' : 'v-breach'}`}>{s.done === true ? 'Done' : s.done ? s.done : 'Open'}</span>
+                  <span className={`chip ${s.done === true || s.done === 'automatic' || s.done === 'none found' ? 'v-ok' : s.done ? 'v-overspend' : 'v-breach'}`}>{s.done === true ? 'Done' : s.done ? String(s.done).replace(/^./, (c) => c.toUpperCase()) : 'Open'}</span>
                   <span className="small">{s.label}</span>
                 </li>
               ))}
@@ -62,7 +64,7 @@ export function Update() {
                 <table className="tbl">
                   <thead><tr><th>Holiday</th><th className="n">2026</th><th className="n">2027</th></tr></thead>
                   <tbody>
-                    {imp.diff.moved.map((m) => <tr key={m.name}><td>{m.name}</td><td className="n">{fmtDate(m.from)}</td><td className="n">{fmtDate(m.to)}</td></tr>)}
+                    {imp.diff.moved.map((m) => <tr key={m.name}><td>{m.name} <span className="chip v-review">moves</span></td><td className="n">{fmtDate(m.from)}</td><td className="n">{fmtDate(m.to)}</td></tr>)}
                     {imp.diff.added.map((m) => <tr key={m.name}><td>{m.name} <span className="chip v-review">new</span></td><td className="n">none</td><td className="n">{fmtDate(m.date)}</td></tr>)}
                     {imp.diff.removed.map((m) => <tr key={m.name}><td>{m.name} <span className="chip v-breach">dropped</span></td><td className="n">{fmtDate(m.date)}</td><td className="n">none</td></tr>)}
                   </tbody>

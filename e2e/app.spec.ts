@@ -22,31 +22,49 @@ test('overview states the decision and the force-unify result', async ({ page })
 test('Berlin pilot: nine stages, approval, then certified sickness restores 2 days (BUrlG §9)', async ({ page }) => {
   await page.getByRole('button', { name: 'Run the Berlin pilot request' }).click();
   await expect(page.locator('.rail-step.ok, .rail-step.warn')).toHaveCount(9);
-  await expect(page.getByText('Charged to leave year 2026')).toBeVisible();
-  await expect(page.getByText('Charged to leave year 2027')).toBeVisible();
-  await page.getByRole('button', { name: 'Approve as manager' }).click();
-  await page.getByLabel('From', { exact: true }).fill('2026-12-29');
-  await page.getByLabel('To', { exact: true }).fill('2026-12-30');
-  await page.getByRole('button', { name: 'Report sickness' }).click();
+  await expect(page.getByText('Charged to 2026 leave')).toBeVisible();
+  await expect(page.getByText('Charged to 2027 leave')).toBeVisible();
+  await page.getByRole('button', { name: 'Approve as line manager' }).click();
+  await expect(page.getByLabel('Sick from')).toHaveValue('2026-12-29'); // prefilled for the pilot story
+  await page.locator('aside .receipt').getByRole('button', { name: 'Report sickness' }).click();
   await expect(page.getByText(/Certified sickness 2026-12-29 → 2026-12-30 during leave: 2 days/)).toBeVisible();
+  await expect(page.getByText('20 to 22 days')).toBeVisible();
+  // Withdrawing the certificate replaces the report and the ledger explains why nothing comes back.
+  await page.getByLabel('Medical certificate provided').uncheck();
+  await page.locator('aside .receipt').getByRole('button', { name: 'Update sickness report' }).click();
+  await expect(page.getByText(/no medical certificate provided/)).toBeVisible();
+  await expect(page.getByText(/Certified sickness 2026-12-29/)).toHaveCount(0);
 });
 
 test('a second booking over approved leave is refused as an overlap', async ({ page }) => {
   await page.getByRole('button', { name: 'Run the Berlin pilot request' }).click();
-  await page.getByRole('button', { name: 'Approve as manager' }).click();
+  await page.getByRole('button', { name: 'Approve as line manager' }).click();
   await page.getByRole('button', { name: /^21 Dec 2026/ }).click();
   await page.getByRole('button', { name: /^23 Dec 2026/ }).click();
   await page.getByRole('button', { name: 'Check request' }).click();
-  await expect(page.getByText('Overlaps approved request 2026-12-21 → 2027-01-08.').last()).toBeVisible();
+  await expect(page.getByText('Overlaps the approved request 21 Dec 2026 to 8 Jan 2027.').last()).toBeVisible();
 });
 
-test('Madrid 2027: pending request is refused because the holiday decree is not loaded, and stays pending', async ({ page }) => {
+test('Madrid 2027: the decree published on 1 Oct 2026 is loaded, so Carmen\'s pending January request now processes', async ({ page }) => {
   await nav(page, 'Request desk');
   await page.getByRole('button', { name: /Carmen López/ }).click();
   await page.getByRole('button', { name: 'Process' }).click();
-  await expect(page.getByText('Request refused')).toBeVisible();
-  await expect(page.getByText(/holiday calendar is not loaded/).first()).toBeVisible();
-  await expect(page.getByRole('cell', { name: 'pending' })).toBeVisible();
+  await expect(page.getByText('Ready for approval')).toBeVisible();
+  await expect(page.getByText('Charged to 2027 leave')).toBeVisible();
+});
+
+test('withdrawing approved leave keeps it in the audit trail and drops its sickness report', async ({ page }) => {
+  await page.getByRole('button', { name: 'Run the Berlin pilot request' }).click();
+  await page.getByRole('button', { name: 'Approve as line manager' }).click();
+  await page.locator('aside .receipt').getByRole('button', { name: 'Report sickness' }).click();
+  await page.getByRole('row', { name: /21 Dec 2026 to 8 Jan 2027/ }).getByRole('button', { name: 'Withdraw' }).click();
+  await page.getByRole('button', { name: 'Confirm withdraw' }).click();
+  await expect(page.getByRole('cell', { name: 'withdrawn' })).toBeVisible();
+  await page.getByRole('button', { name: /^21 Dec 2026/ }).click();
+  await page.getByRole('button', { name: /^8 Jan 2027/ }).click();
+  await page.getByRole('button', { name: 'Check request' }).click();
+  await expect(page.locator('.rail-step.ok, .rail-step.warn')).toHaveCount(9);
+  await expect(page.getByText(/BUrlG §9/)).toHaveCount(0);
 });
 
 test('Chicago: work location outside Chicago stops processing instead of applying the wrong law', async ({ page }) => {
@@ -56,7 +74,7 @@ test('Chicago: work location outside Chicago stops processing instead of applyin
 });
 
 test('force-unify matrix explains the Polish seniority breach with its statute', async ({ page }) => {
-  await nav(page, 'Force-unify test');
+  await nav(page, 'Force-unify');
   await page.getByRole('button', { name: /PL, Seniority/ }).click();
   const kasia = page.locator('.panel-flat', { hasText: 'Katarzyna Nowak' });
   await expect(kasia.getByText('Breaks local law')).toBeVisible();
@@ -78,17 +96,17 @@ test('rule packs: a live correction shows who it affects, and an invalid one is 
   await expect(page.getByRole('heading', { name: 'Who this changes' })).toBeVisible();
   await expect(page.getByRole('button', { name: 'Hannah Clarke' })).toBeVisible();
   await page.getByRole('button', { name: 'Discard correction' }).click();
-  const expiry = page.getByLabel('additional-1.6wk: carried leave expires (MM-DD)');
+  const expiry = page.getByLabel('Additional leave: carried leave expires (MM-DD)');
   await expiry.fill('13-45');
   await expiry.blur();
   await expect(page.getByRole('alert')).toContainText('must be a real MM-DD date');
 });
 
-test('annual update shows the blocked Spanish pack and the Polish seniority step', async ({ page }) => {
+test('annual update shows the Madrid 2027 decree and the Polish seniority step', async ({ page }) => {
   await nav(page, 'Annual update');
   await expect(page.getByText(/Piotr Wiśniewski/).first()).toBeVisible();
   await page.getByRole('button', { name: /ES-MD/ }).click();
-  await expect(page.getByText(/decree not yet published/).first()).toBeVisible();
+  await expect(page.getByText('San José').first()).toBeVisible();
 });
 
 test('docs render inside the app', async ({ page }) => {
@@ -100,7 +118,7 @@ test('docs render inside the app', async ({ page }) => {
 
 test('every view fits a 400px phone without sideways scrolling', async ({ page }) => {
   await page.setViewportSize({ width: 400, height: 860 });
-  for (const name of ['Overview', 'Request desk', 'Ledger', 'Force-unify test', 'Rule packs', 'Annual update', 'Decision & plan']) {
+  for (const name of ['Overview', 'Request desk', 'Ledger', 'HR queue', 'Force-unify', 'Rule packs', 'Annual update', 'Decision & plan']) {
     await nav(page, name);
     const [sw, cw] = await page.evaluate(() => [document.documentElement.scrollWidth, document.documentElement.clientWidth]);
     expect(sw, name).toBeLessThanOrEqual(cw);
@@ -110,42 +128,56 @@ test('every view fits a 400px phone without sideways scrolling', async ({ page }
 test('Chicago unlimited-PTO option: switching the strategy applies the 40-hour separation floor', async ({ page }) => {
   await nav(page, 'Rule packs');
   await page.getByRole('group', { name: 'Entity' }).getByRole('button', { name: 'US-CHI' }).click();
-  await page.getByLabel('paid-leave: accrual method').selectOption('unlimited-with-floor');
+  await page.getByLabel('Chicago Paid Leave: accrual method').selectOption('unlimited-with-floor');
   await expect(page.getByRole('heading', { name: 'Who this changes' })).toBeVisible();
   await nav(page, 'Ledger');
   await page.getByRole('button', { name: /Derek Thompson/ }).click();
   await expect(page.getByText(/unlimited PTO, so pay out 40 hours/)).toBeVisible();
 });
 
-test('guided tour walks all eight steps across the app', async ({ page }) => {
+test('guided tour walks all nine steps across the app', async ({ page }) => {
   await page.getByRole('button', { name: 'Take the 3-minute guided tour' }).click();
   const tour = page.getByRole('dialog', { name: 'Guided tour' });
-  await expect(tour).toContainText('step 1 of 8');
+  await expect(tour).toContainText('step 1 of 9');
   await tour.getByRole('button', { name: /^Next/ }).click();
   await expect(page.locator('.rail-step.ok, .rail-step.warn')).toHaveCount(9);
-  for (let i = 3; i <= 8; i++) {
+  for (let i = 3; i <= 9; i++) {
     await tour.getByRole('button', { name: /^Next/ }).click();
-    await expect(tour).toContainText(`step ${i} of 8`);
+    await expect(tour).toContainText(`step ${i} of 9`);
   }
   await expect(page.getByRole('heading', { name: /Decision: unify the process and the record/ })).toBeVisible();
   await tour.getByRole('button', { name: 'Finish the tour' }).click();
   await expect(tour).toHaveCount(0);
 });
 
-test('tour step 4 lands on Sophie, step 7 on the blocked Spanish pack', async ({ page }) => {
+test('tour lands on the HR queue, on Sophie, and on the Madrid 2027 update', async ({ page }) => {
   await page.getByRole('button', { name: 'Take the 3-minute guided tour' }).click();
   const tour = page.getByRole('dialog', { name: 'Guided tour' });
   for (let i = 0; i < 3; i++) await tour.getByRole('button', { name: /^Next/ }).click();
+  await expect(page.getByRole('heading', { name: 'HR work queue' })).toBeVisible();
+  await tour.getByRole('button', { name: /^Next/ }).click();
   await expect(page.getByText('Lapse blocked').first()).toBeVisible();
   for (let i = 0; i < 3; i++) await tour.getByRole('button', { name: /^Next/ }).click();
-  await expect(page.getByText(/decree not yet published/).first()).toBeVisible();
+  await expect(page.getByText('San José').first()).toBeVisible();
 });
 
-test('policy simulator: presets move from 54 breaches to the UK units trap to zero, with the cost shown', async ({ page }) => {
-  await nav(page, 'Force-unify test');
+test('pages have their own URL: reload and Back keep the reviewer in place', async ({ page }) => {
+  await nav(page, 'Ledger');
+  await page.getByRole('button', { name: /Sophie Krüger/ }).click();
+  await expect(page).toHaveURL(/#\/ledger\/de-sophie$/);
+  await page.reload();
+  await expect(page.getByRole('heading', { name: 'Ledger' })).toBeVisible();
+  await expect(page.locator('.person[aria-pressed="true"]')).toContainText('Sophie Krüger');
+  await nav(page, 'Rule packs');
+  await page.goBack();
+  await expect(page.getByRole('heading', { name: 'Ledger' })).toBeVisible();
+});
+
+test('policy simulator: presets move from 58 breaches to 7 to zero, with the cost shown', async ({ page }) => {
+  await nav(page, 'Force-unify');
   await expect(page.getByText(/breaks local law 58 times/)).toBeVisible();
   await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Generous global policy' }).click();
-  await expect(page.getByText(/breaks local law 1 time,/)).toBeVisible();
+  await expect(page.getByText(/breaks local law 7 times/)).toBeVisible();
   await page.getByRole('group', { name: 'Policy presets' }).getByRole('button', { name: 'Zero-breach policy' }).click();
   await expect(page.getByText(/Zero breaches, but only because/)).toBeVisible();
   await expect(page.getByText(/days a year above the legal minimum/)).toBeVisible();

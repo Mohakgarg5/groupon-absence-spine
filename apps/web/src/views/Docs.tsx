@@ -25,7 +25,7 @@ export function Docs() {
       </nav>
       <article className="panel" style={{ padding: 'clamp(1rem, 3vw, 2.25rem)' }}>
         <p className="small muted" style={{ marginTop: 0 }}>{doc.file}</p>
-        <Markdown source={doc.src} />
+        <Markdown source={doc.src} onLink={(file) => { const t = DOCS.find((d) => d.file === file); if (t) { setId(t.id); window.scrollTo({ top: 0 }); } }} />
       </article>
     </div>
   );

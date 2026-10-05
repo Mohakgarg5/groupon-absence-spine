@@ -79,7 +79,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Joined 1 Sep: waiting period can't complete this year, so leave accrues per month and is rounded (§5).",
+    "persona": "Joined 1 Sep: the 6-month waiting period can't finish this year, so leave accrues 1/12 per full month and is rounded up at year end (§5).",
     "managerId": "de-max"
   },
   {
@@ -166,7 +166,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Legacy system holds no warning letter — her 2025 leave cannot lapse (CJEU C-684/16).",
+    "persona": "Her legacy record holds no written warning for her 2025 leave, so it cannot lapse on 31 March (CJEU C-684/16). Tick the warning in the Ledger to see the difference.",
     "managerId": "de-max",
     "openingBalances": {
       "annual": 6
@@ -374,7 +374,7 @@
       ],
       "hoursPerDay": 7
     },
-    "persona": "Two long days a week: entitlement 8 days; still qualifies for holiday remedies (≥40h in 5 weeks).",
+    "persona": "Two long days a week: 8 days' entitlement, plus a fraction of a day for each public holiday that falls on a day she doesn't work (she qualifies with 40+ hours in 5 weeks).",
     "managerId": "ie-aoife"
   },
   {
@@ -550,7 +550,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Fell sick during Thanksgiving-week leave: hours move from Paid Leave to Paid Sick Leave.",
+    "persona": "Has booked Thanksgiving week and is reported sick on 24 November: those hours move from Paid Leave to Paid Sick Leave.",
     "managerId": "us-chris"
   },
   {
@@ -570,7 +570,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Day 77: Paid Sick Leave usable (day 30), Paid Leave not yet (day 90).",
+    "persona": "Joined 20 July. Paid Sick Leave is usable from 30 days after starting; Paid Leave only from 90 days (18 October).",
     "managerId": "us-chris"
   },
   {
@@ -631,7 +631,7 @@
       ],
       "hoursPerDay": 8
     },
-    "persona": "Took 4 days in late December with certified flu — asked to reschedule.",
+    "persona": "Booked 28–31 December, with certified flu on 29–30 December already reported. He has asked to reschedule, so the days come back.",
     "managerId": "ie-aoife"
   }
 ]

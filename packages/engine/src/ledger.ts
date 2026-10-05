@@ -339,7 +339,7 @@ export function buildLedger(e: Employee, inputs: Inputs, asOf: ISODate, opts: Le
         if (hp.onNonWorkingDay === 'extra-leave' && !works) {
           if (weeklyHours(e) * 5 >= (hp.minHoursInPrior5Weeks ?? 0)) {
             const amt = r4(daysPerWeek(e) / 5);
-            at(h.date, 0, () => credit('GRANT', h.date, pack.buckets[0].id, amt, y, hp.rule, `${h.name} falls on a day you don't work: employer remedy = +${fmt(amt)} day annual leave (s.21)`));
+            at(h.date, 0, () => credit('GRANT', h.date, pack.buckets[0].id, amt, y, hp.rule, `${h.name} falls on a day the employee doesn't work: employer remedy = +${fmt(amt)} day of annual leave (s.21)`));
           }
         }
         if (hp.onNonWorkingDay === 'designate-day-off-task' && dow(h.date) === 6) {
