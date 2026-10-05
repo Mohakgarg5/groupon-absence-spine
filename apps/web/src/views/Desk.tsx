@@ -143,6 +143,7 @@ export function Desk() {
   const [sickFor, setSickFor] = useState<string | null>(null);
   const [confirmWithdraw, setConfirmWithdraw] = useState<string | null>(null);
   const railRef = useRef<HTMLDivElement | null>(null);
+  const scrollSick = useRef(false);
   const left = !!e.terminationDate && e.terminationDate < TODAY;
   const ledger = useMemo(() => (jurisdictionError ? null : buildLedger(e, state.inputs, TODAY, { today: TODAY })), [e.id, state.rev, jurisdictionError]);
   const myRequests = state.inputs.requests.filter((r) => r.employeeId === e.id).sort((a, b) => a.from.localeCompare(b.from));
@@ -166,6 +167,7 @@ export function Desk() {
     setCursor({ y: yearOf(p.from), m: Number(p.from.slice(5, 7)) });
     const booked = state.inputs.requests.find((r) => r.employeeId === e.id && r.status === 'approved' && r.from <= p.to && r.to >= p.from);
     if (booked) {
+      scrollSick.current = true;
       setSickFor(booked.id);
       flash('Already booked in this demo: report sickness below, withdraw it, or use Reset demo to replay from the start');
       return;
@@ -176,7 +178,7 @@ export function Desk() {
 
   // Tour "do it for me": open the sickness panel on that request.
   useEffect(() => {
-    if (state.focus?.startsWith('sick:')) { clearRun(); setSickFor(state.focus.slice(5)); }
+    if (state.focus?.startsWith('sick:')) { clearRun(); scrollSick.current = true; setSickFor(state.focus.slice(5)); }
   }, [state.focus]);
 
   useEffect(() => () => { if (timer.current) window.clearInterval(timer.current); }, []);
@@ -301,7 +303,7 @@ export function Desk() {
                         {state.inputs.sickness.filter((x) => x.employeeId === e.id && r.status === 'approved' && x.from <= r.to && x.to >= r.from).map((x) => (
                           <tr key={x.id}><td colSpan={4} className="small muted" style={{ paddingLeft: '1.5rem' }}>Sick {fmtDate(x.from)}{x.to !== x.from && <> to {fmtDate(x.to)}</>}{sickNote(e, x)}</td></tr>
                         ))}
-                        {sickFor === r.id && <tr><td colSpan={4}><SicknessPanel request={r} e={e} onFlash={flash} /></td></tr>}
+                        {sickFor === r.id && <tr><td colSpan={4}><div ref={(el) => { if (el && scrollSick.current) { scrollSick.current = false; el.scrollIntoView({ behavior: reduceMotion() ? 'auto' : 'smooth', block: 'center' }); } }}><SicknessPanel request={r} e={e} onFlash={flash} /></div></td></tr>}
                       </Fragment>
                     ))}
                   </tbody>
